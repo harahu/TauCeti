@@ -103,7 +103,9 @@ theorem smul_eq_self_of_mem_smul_top {e : R} (he : IsIdempotentElem e) {x : M}
 
 /-- **An element `r` fixed on the left by `f` carries the whole module into `f • M`**: if
 `f * r = r` then every multiple of `r` lies in `f • M`. No idempotency is needed. -/
-theorem smul_mem_smul_top_of_mul_eq_self {f r : R} (hr : f * r = r) (x : M) :
+theorem smul_mem_smul_top_of_mul_eq_self {S M R : Type*} [Semiring S] [Monoid R]
+    [AddCommMonoid M] [Module S M] [DistribMulAction R M] [SMulCommClass R S M]
+    {f r : R} (hr : f * r = r) (x : M) :
     r • x ∈ f • (⊤ : Submodule S M) := by
   rw [← hr, mul_smul]
   exact Submodule.smul_mem_pointwise_smul _ _ _ trivial

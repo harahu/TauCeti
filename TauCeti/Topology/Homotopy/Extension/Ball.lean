@@ -44,7 +44,7 @@ open Metric Set unitInterval
 
 universe u
 
-variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type u} [SeminormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Radial projection of the cylinder over the closed unit ball away from the point at height `2`
 on its axis, written in the ambient coordinates `ℝ × E`.  Where the ray exits through the bottom

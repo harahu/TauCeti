@@ -681,7 +681,7 @@ end Restrict
 section Exact
 
 variable {G : Type*} [Group G] {M M' M'' : Type*} [AddMonoid M] [AddCommGroup M']
-  [AddCommGroup M''] [DistribMulAction G M] [DistribMulAction G M'] [DistribMulAction G M'']
+  [AddGroup M''] [DistribMulAction G M] [DistribMulAction G M'] [DistribMulAction G M'']
   {N : Type*} [AddCommGroup N] [DistribMulAction G N]
 
 /-- Precomposition along an exact pair `f : M →+[G] M'`, `g : M' →+[G] M''` with `g` surjective is

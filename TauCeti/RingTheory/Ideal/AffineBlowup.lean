@@ -162,12 +162,9 @@ theorem algebraMap_mem_nonZeroDivisors_affineBlowup :
   · exact Subtype.ext (hu.mul_right_eq_zero.mp (by simpa using congr_arg Subtype.val hz))
   · exact Subtype.ext (hu.mul_left_eq_zero.mp (by simpa using congr_arg Subtype.val hz))
 
-section UniversalProperty
-
-variable {B : Type*} [CommRing B] [Algebra A B]
-
 /-- An `A`-algebra map out of `A[I/a]` sends `i/a` to an element whose product with `a` is `i`. -/
-theorem algebraMap_mul_algHom_divBy (f : I.affineBlowup a S →ₐ[A] B) {i : A} (hi : i ∈ I) :
+theorem algebraMap_mul_algHom_divBy {B : Type*} [Semiring B] [Algebra A B]
+    (f : I.affineBlowup a S →ₐ[A] B) {i : A} (hi : i ∈ I) :
     algebraMap A B a * f ⟨divBy i a, divBy_mem_affineBlowup hi⟩ = algebraMap A B i := by
   rw [← f.commutes, ← f.commutes, ← map_mul]
   congr 1
@@ -176,7 +173,8 @@ theorem algebraMap_mul_algHom_divBy (f : I.affineBlowup a S →ₐ[A] B) {i : A}
 
 /-- **Uniqueness in the universal property of `A[I/a]`.** Two `A`-algebra maps from `A[I/a]` to
 an `A`-algebra in which `a` is a nonzerodivisor are equal. -/
-theorem affineBlowup_algHom_ext (ha : algebraMap A B a ∈ nonZeroDivisors B)
+theorem affineBlowup_algHom_ext {B : Type*} [Ring B] [Algebra A B]
+    (ha : algebraMap A B a ∈ nonZeroDivisors B)
     {f g : I.affineBlowup a S →ₐ[A] B} : f = g := by
   have hle : I.affineBlowup a S ≤ (AlgHom.equalizer f g).map (I.affineBlowup a S).val := by
     refine affineBlowup_le_iff.mpr fun i hi ↦ ⟨⟨divBy i a, divBy_mem_affineBlowup hi⟩, ?_, rfl⟩
@@ -185,6 +183,10 @@ theorem affineBlowup_algHom_ext (ha : algebraMap A B a ∈ nonZeroDivisors B)
   ext z
   obtain ⟨w, hw, hwz⟩ := hle z.2
   exact Subtype.val_injective hwz ▸ hw
+
+section UniversalProperty
+
+variable {B : Type*} [CommRing B] [Algebra A B]
 
 variable (B) in
 /-- The `A`-algebra map from `S` to the localization of `B` away from the image of `a`. -/

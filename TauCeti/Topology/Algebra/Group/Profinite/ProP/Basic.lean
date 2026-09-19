@@ -122,7 +122,7 @@ variable {H : Type v} [Group H] [TopologicalSpace H]
 
 /-- Each finite quotient of a pro-`p` group is killed by a single power of `p`: the exponent
 in `IsPGroup` can be chosen uniformly in the element. -/
-theorem exists_forall_pow_pow_eq_one [IsTopologicalGroup G] [CompactSpace G] (hG : IsProP p G)
+theorem exists_forall_pow_pow_eq_one [SeparatelyContinuousMul G] [CompactSpace G] (hG : IsProP p G)
     (U : OpenNormalSubgroup G) : ∃ n : ℕ, ∀ g : G ⧸ U.toSubgroup, g ^ p ^ n = 1 :=
   isPGroup_iff_exists_pow_pow_eq_one.mp (isProP_iff.mp hG U)
 
@@ -185,7 +185,7 @@ theorem isPGroup_range [DiscreteTopology H] (hG : IsProP p G) (f : G →* H)
 
 /-- The image of a pro-`p` subgroup in the quotient by an open normal subgroup is a
 `p`-group. -/
-theorem isPGroup_map_mk' [IsTopologicalGroup G] {P : Subgroup G} (hP : IsProP p P)
+theorem isPGroup_map_mk' [SeparatelyContinuousMul G] {P : Subgroup G} (hP : IsProP p P)
     (U : OpenNormalSubgroup G) : IsPGroup p (P.map (QuotientGroup.mk' U.toSubgroup)) := by
   rw [← MonoidHom.domRestrict_range]
   exact hP.isPGroup_range _ (QuotientGroup.continuous_mk.comp continuous_subtype_val)

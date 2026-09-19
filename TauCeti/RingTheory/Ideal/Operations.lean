@@ -170,7 +170,7 @@ theorem Ideal.sup_pow_le_sup_pow_right {R : Type u} [Semiring R] (I J : Ideal R)
 
 namespace Subalgebra
 
-variable {R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
+variable {R S : Type*} [CommSemiring R] [CommSemiring S] [Algebra R S]
 
 /-- If a subalgebra `T` meets every residue class of `S` modulo a principal ideal `I` and contains
 a generator of `I`, then it meets every residue class modulo any power of `I`. -/

@@ -36,8 +36,11 @@ open TauCeti.Localization
 
 namespace Valuation
 
-variable {A : Type*} [CommRing A] {Γ₀ : Type*} [LinearOrderedCommGroupWithZero Γ₀]
-variable (S : Type*) [CommRing S] [Algebra A S]
+variable {A : Type*} [CommRing A] {Γ₀ : Type*}
+
+section MonoidWithZero
+
+variable [LinearOrderedCommMonoidWithZero Γ₀] [Nontrivial Γ₀]
 
 /-- **The powers of an element off the support avoid the support**, so
 `Valuation.extendToLocalization` applies to a localisation away from that element. This is the
@@ -46,6 +49,11 @@ keeps `Submonoid.powers s ≤ v.supp.primeCompl` out of their proofs. -/
 theorem powers_le_supp_primeCompl {v : Valuation A Γ₀} {s : A} (hs : v s ≠ 0) :
     Submonoid.powers s ≤ v.supp.primeCompl :=
   Submonoid.powers_le.mpr (Ideal.mem_primeCompl_iff.mpr fun h ↦ hs ((mem_supp_iff _ _).mp h))
+
+end MonoidWithZero
+
+variable [LinearOrderedCommGroupWithZero Γ₀]
+variable (S : Type*) [CommRing S] [Algebra A S]
 
 /-- **The extension on a distinguished fraction**: `t/s` goes to `v t / v s`. -/
 @[simp]

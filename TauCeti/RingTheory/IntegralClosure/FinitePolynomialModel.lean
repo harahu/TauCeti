@@ -69,7 +69,7 @@ namespace IsIntegralClosure
 
 section
 
-variable {F R A K : Type*} [CommRing F] [CommRing R] [CommRing A] [Field K]
+variable {F R A K : Type*} [CommSemiring F] [CommRing R] [CommRing A] [Field K]
   [Algebra F R] [Algebra F A] [Algebra F K] [Algebra R K] [Algebra A K]
   [IsScalarTower F R K] [IsScalarTower F A K]
 
@@ -101,7 +101,7 @@ end
 
 section
 
-variable {F R A K L C : Type*} [CommRing F] [CommRing R] [CommRing A]
+variable {F R A K L C : Type*} [CommSemiring F] [CommRing R] [CommRing A]
   [Field K] [Field L] [CommRing C]
   [Algebra F R] [Algebra F A] [Algebra F L] [Algebra R L]
   [Algebra A K] [Algebra A L] [Algebra K L]

@@ -104,13 +104,15 @@ namespace SpinPolarizationData
 
 /-- The exterior summand of the hyperbolic quadratic space is cut out by the vanishing of the
 first coordinate. -/
-private theorem mem_snd_iff {p : Module.Dual K M × M} :
+private theorem mem_snd_iff {M : Type v} [AddCommMonoid M] [Module K M]
+    {p : Module.Dual K M × M} :
     p ∈ Submodule.snd K (Module.Dual K M) M ↔ p.1 = 0 :=
   Submodule.mem_comap.trans (Submodule.mem_bot K)
 
 /-- The contraction summand of the hyperbolic quadratic space is cut out by the vanishing of the
 second coordinate. -/
-private theorem mem_fst_iff {p : Module.Dual K M × M} :
+private theorem mem_fst_iff {M : Type v} [AddCommMonoid M] [Module K M]
+    {p : Module.Dual K M × M} :
     p ∈ Submodule.fst K (Module.Dual K M) M ↔ p.2 = 0 :=
   Submodule.mem_comap.trans (Submodule.mem_bot K)
 

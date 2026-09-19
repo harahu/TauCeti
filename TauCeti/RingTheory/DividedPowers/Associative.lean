@@ -86,7 +86,9 @@ theorem dividedPower_eval_zero {n : ℕ} (hn : n ≠ 0) : dividedPower n (0 : A)
 
 section ModuleEnd
 
-variable {V : Type*} [AddCommGroup V] [Module ℚ V]
+section AddCommMonoid
+
+variable {V : Type*} [AddCommMonoid V] [Module ℚ V]
 
 /-- Evaluate a divided power of a rational endomorphism on a vector. -/
 theorem dividedPower_apply (f : Module.End ℚ V) (n : ℕ) (v : V) :
@@ -123,6 +125,10 @@ theorem dividedPower_apply_mem_of_pow_eq_zero
   · rw [dividedPower_def, pow_eq_zero_of_le (Nat.le_of_not_gt hn) hf, smul_zero,
       LinearMap.zero_apply]
     exact hzero
+
+end AddCommMonoid
+
+variable {V : Type*} [AddCommGroup V] [Module ℚ V]
 
 /-- Every divided power of a square-zero endomorphism preserves an additive subgroup once the
 endomorphism itself does. -/

@@ -231,9 +231,10 @@ private theorem add_pow_mem_of_mul_pow_mem {G : AddSubgroup A} {a b : A} (hab : 
 
 end CommRing
 
-section Ring
+section HasDistribNeg
 
-variable {A : Type*} [Ring A] [TopologicalSpace A] [SeparatelyContinuousMul A]
+variable {A : Type*} [MonoidWithZero A] [HasDistribNeg A] [TopologicalSpace A]
+  [SeparatelyContinuousMul A]
 
 /-- The negative of a power-bounded element is power-bounded. -/
 theorem IsPowerBounded.neg {a : A} (ha : IsPowerBounded a) : IsPowerBounded (-a) := by
@@ -250,7 +251,12 @@ theorem IsPowerBounded.neg {a : A} (ha : IsPowerBounded a) : IsPowerBounded (-a)
 theorem isPowerBounded_neg {a : A} : IsPowerBounded (-a) ↔ IsPowerBounded a :=
   ⟨fun h ↦ by simpa using h.neg, IsPowerBounded.neg⟩
 
-omit [SeparatelyContinuousMul A] in
+end HasDistribNeg
+
+section Ring
+
+variable {A : Type*} [Ring A] [TopologicalSpace A]
+
 /-- Topological nilpotence descends to a subring, which carries the subspace topology. -/
 theorem isTopologicallyNilpotent_mk {B : Subring A} {x : A} (hx : x ∈ B)
     (h : IsTopologicallyNilpotent x) : IsTopologicallyNilpotent (⟨x, hx⟩ : B) := by

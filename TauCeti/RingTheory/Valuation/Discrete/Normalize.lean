@@ -301,7 +301,7 @@ theorem ordIndex_eq_mul_of_forall_ord_eq (w : _root_.Valuation F ℤᵐ⁰) {e :
   omega
 
 /-- Normalization preserves triviality on a base ring. -/
-theorem IsTrivialOn.normalization {A : Type*} [CommRing A] [Algebra A F]
+theorem IsTrivialOn.normalization {A : Type*} [CommSemiring A] [Algebra A F]
     [v.IsTrivialOn A] : (_root_.Valuation.normalization v).IsTrivialOn A where
   eq_one a ha := by
     have h1 : v (algebraMap A F a) = 1 := IsTrivialOn.eq_one a ha

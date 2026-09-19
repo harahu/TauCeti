@@ -90,7 +90,7 @@ namespace MvPowerSeries
 
 section Monomial
 
-variable {σ : Type*} {S : Type*} [CommRing S] {a : σ → S} {I : Ideal S}
+variable {σ : Type*} {S : Type*} [CommSemiring S] {a : σ → S} {I : Ideal S}
 
 /-- The monomial estimate behind all three results: a product of powers of elements of `I ^ j`
 lies in `I ^ (j * ∑ exponents)`. Stated over an arbitrary `Finset` so that the induction has

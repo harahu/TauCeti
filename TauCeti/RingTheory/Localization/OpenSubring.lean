@@ -52,7 +52,7 @@ public section
 
 namespace TauCeti.Localization
 
-variable {A : Type*} [CommRing A] [TopologicalSpace A] [ContinuousMul A]
+variable {A : Type*} [CommRing A] [TopologicalSpace A] [SeparatelyContinuousMul A]
 variable {B : Subring A} {s : B}
 
 -- Neither half needs subtraction in the localisations: `IsLocalization.Away.map_surjective_iff` and

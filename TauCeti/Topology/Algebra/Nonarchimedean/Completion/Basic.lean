@@ -86,7 +86,8 @@ This is the injectivity half of the bijection `G ↦ closure (ι '' G)` between 
 `A` and those of `Â` (Wedhorn, Example 5.33); `isOpen_closure_image_coe` says the map lands in open
 subgroups. Note it holds without assuming `A` separated: the kernel of `A → Â` is the closure of
 `⊥`, which lies in every neighbourhood of `0` and hence in the open `G`. -/
-theorem preimage_closure_image_coe {G : AddSubgroup A} (hG : IsOpen (G : Set A)) :
+theorem preimage_closure_image_coe {A : Type*} [AddGroup A] [UniformSpace A]
+    [SeparatelyContinuousAdd A] {G : AddSubgroup A} (hG : IsOpen (G : Set A)) :
     ((↑) : A → Completion A) ⁻¹' closure (((↑) : A → Completion A) '' (G : Set A))
       = (G : Set A) := by
   rw [← Completion.isDenseInducing_coe.isInducing.closure_eq_preimage_closure_image]

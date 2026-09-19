@@ -106,6 +106,11 @@ theorem span_range_piAlgebraMap_eq_top [Finite κ] {ι : Type*} {v : ι → (κ 
     rcases eq_or_ne k j with rfl | hk <;> simp [piAlgebraMap_apply, *]
   exact hj ▸ hmem _
 
+/-- Entrywise base change turns a dot product into the image of the dot product. -/
+private theorem dotProduct_piAlgebraMap [Fintype κ] (x y : κ → R) :
+    Pi.algebraMap κ R S x ⬝ᵥ Pi.algebraMap κ R S y = algebraMap R S (x ⬝ᵥ y) := by
+  simp [dotProduct, piAlgebraMap_apply, map_sum]
+
 end Entrywise
 
 /-! ## The base-changed pairing -/
@@ -114,10 +119,6 @@ section Defs
 
 variable {ι κ R : Type*} (S : Type*) [Fintype κ] [CommRing R] [CommRing S] [Algebra R S]
   (P : RootPairing ι R (κ → R) (κ → R)) (hP : ∀ x y, P.toLinearMap x y = x ⬝ᵥ y)
-
-private theorem dotProduct_piAlgebraMap (x y : κ → R) :
-    Pi.algebraMap κ R S x ⬝ᵥ Pi.algebraMap κ R S y = algebraMap R S (x ⬝ᵥ y) := by
-  simp [dotProduct, piAlgebraMap_apply, map_sum]
 
 variable [FaithfulSMul R S]
 

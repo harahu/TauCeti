@@ -95,15 +95,21 @@ namespace TauCeti
 
 open Module
 
-variable {R : Type*} [Ring R] {M : Type*} [AddCommGroup M] [Module R M]
-
 /-! ### Faithfulness over a simple ring -/
+
+section Faithfulness
+
+variable {R M : Type*} [Ring R] [AddCommMonoid M] [Module R M]
 
 /-- A nontrivial module over a simple ring is faithful: the elements of `R` killing `M` are the
 kernel of a ring homomorphism out of `R`, a two-sided ideal not containing `1`, hence `⊥`. -/
 theorem faithfulSMul_of_isSimpleRing [IsSimpleRing R] [Nontrivial M] : FaithfulSMul R M where
   eq_of_smul_eq_smul {_ _} h :=
     (Module.toModuleEnd (Module.End R M) M (S := R)).injective (LinearMap.ext h)
+
+end Faithfulness
+
+variable {R : Type*} [Ring R] {M : Type*} [AddCommGroup M] [Module R M]
 
 /-! ### The double centralizer theorem -/
 
@@ -218,8 +224,9 @@ theorem exists_smul_eq_of_linearIndependent [IsSimpleModule R M]
 /-- Finiteness over a base ring `K` whose action on `M` commutes with the `R`-action gives the
 finiteness hypothesis density needs: the `K`-scalars are themselves `R`-linear endomorphisms of `M`,
 so `M` is finite over `Module.End R M` along the tower `K → Module.End R M → M`. -/
-theorem finite_end_of_smulCommClass (K : Type*) [Semiring K] [Module K M] [SMulCommClass R K M]
-    [Module.Finite K M] : Module.Finite (Module.End R M) M :=
+theorem finite_end_of_smulCommClass {R M : Type*} [Semiring R] [AddCommMonoid M] [Module R M]
+    (K : Type*) [Semiring K] [Module K M] [SMulCommClass R K M] [Module.Finite K M] :
+    Module.Finite (Module.End R M) M :=
   Module.Finite.of_restrictScalars_finite K (Module.End R M) M
 
 variable (R M)
@@ -258,9 +265,9 @@ theorem algEquivEndEndOfIsSimpleRing_symm_smul (K : Type*) [CommSemiring K] [Alg
 
 /-! ### The double centralizer of a subalgebra of an endomorphism algebra -/
 
-section EndSubalgebra
+section RestrictScalars
 
-variable {K : Type*} [CommRing K] {N : Type*} [AddCommGroup N] [Module K N]
+variable {K : Type*} [CommSemiring K] {N : Type*} [AddCommMonoid N] [Module K N]
   (A : Subalgebra K (Module.End K N))
 
 /-- An `A`-linear endomorphism of `N`, for `A` a `K`-subalgebra of `Module.End K N`, commutes with
@@ -270,6 +277,13 @@ private theorem restrictScalars_mem_centralizer (g : Module.End A N) :
   refine (Subalgebra.mem_centralizer_iff K).2 fun a ha => ?_
   ext m
   exact (g.map_smul ⟨a, ha⟩ m).symm
+
+end RestrictScalars
+
+section EndSubalgebra
+
+variable {K : Type*} [CommRing K] {N : Type*} [AddCommGroup N] [Module K N]
+  (A : Subalgebra K (Module.End K N))
 
 /-- **The double centralizer theorem inside an endomorphism algebra.** Let `A` be a `K`-subalgebra
 of `Module.End K N`, and suppose `N` is semisimple as an `A`-module and finite over

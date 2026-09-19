@@ -235,6 +235,7 @@ extension over an exact constant field; it can fail for an inseparable `k' / k`.
 
 This is the companion of Stichtenoth's Proposition 3.6.6, which splits `[F' : F]` the same way. -/
 theorem finrank_eq_geometricDegree_mul_finrank_of_finrank_constantCompositum_eq
+    {k : Type u} [Semiring k] [Module k k']
     (h : Module.finrank F (constantCompositum F k' F') = Module.finrank k k') :
     Module.finrank F F' = geometricDegree F k' F' * Module.finrank k k' := by
   rw [← finrank_constantCompositum_mul_geometricDegree F k' F', h, mul_comm]
@@ -245,6 +246,7 @@ hypothesis is the degree form of linear disjointness (see
 `TauCeti.finrank_eq_geometricDegree_mul_finrank_of_finrank_constantCompositum_eq`), and the
 conclusion says `[k' : k]` divides `[F' : F]`. -/
 theorem finrank_dvd_finrank_of_finrank_constantCompositum_eq
+    {k : Type u} [Semiring k] [Module k k']
     (h : Module.finrank F (constantCompositum F k' F') = Module.finrank k k') :
     Module.finrank k k' ∣ Module.finrank F F' :=
   ⟨geometricDegree F k' F', by

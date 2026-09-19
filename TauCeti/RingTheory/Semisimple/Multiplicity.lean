@@ -195,7 +195,7 @@ the number of factors isomorphic to `S`.
 Only the right-hand side mentions the decomposition, so this is the statement that the
 multiplicity of `S` in `M` is an invariant of `M`; see
 `TauCeti.natCard_eq_natCard_of_linearEquiv_pi`. -/
-theorem finrank_linearMap_eq_natCard_of_linearEquiv_pi {M : Type*} [AddCommGroup M] [Module k M]
+theorem finrank_linearMap_eq_natCard_of_linearEquiv_pi {M : Type*} [AddCommMonoid M] [Module k M]
     [Module A M] [IsScalarTower k A M] (e : M ≃ₗ[A] ∀ i, N i) :
     Module.finrank k (S →ₗ[A] M) = Nat.card {i // Nonempty (S ≃ₗ[A] N i)} := by
   rw [← finrank_linearMap_pi_eq_natCard (k := k) (S := S) (N := N),
@@ -214,7 +214,7 @@ theorem finiteDimensional_linearMap_of_linearEquiv_pi {M : Type*} [AddCommGroup 
 
 /-- **A hom space detects a constituent.**  There is a nonzero `A`-linear map from the simple
 module `S` into `M` exactly when `S` occurs among the simple factors of `M`. -/
-theorem finrank_linearMap_pos_iff_exists_nonempty_linearEquiv {M : Type*} [AddCommGroup M]
+theorem finrank_linearMap_pos_iff_exists_nonempty_linearEquiv {M : Type*} [AddCommMonoid M]
     [Module k M] [Module A M] [IsScalarTower k A M] (e : M ≃ₗ[A] ∀ i, N i) :
     0 < Module.finrank k (S →ₗ[A] M) ↔ ∃ i, Nonempty (S ≃ₗ[A] N i) := by
   rw [finrank_linearMap_eq_natCard_of_linearEquiv_pi (k := k) (S := S) e, Nat.card_pos_iff,
@@ -343,7 +343,7 @@ variable [FiniteDimensional k S]
 This is the form Clifford theory uses: an isotypic component of a restriction is a power of a
 single constituent, and its multiplicity is read off as a dimension. -/
 theorem finrank_linearMap_eq_natCard_of_linearEquiv_pi_const {ι : Type*} [Finite ι] {M : Type*}
-    [AddCommGroup M] [Module k M] [Module A M] [IsScalarTower k A M] (e : M ≃ₗ[A] (ι → S)) :
+    [AddCommMonoid M] [Module k M] [Module A M] [IsScalarTower k A M] (e : M ≃ₗ[A] (ι → S)) :
     Module.finrank k (S →ₗ[A] M) = Nat.card ι := by
   rw [finrank_linearMap_eq_natCard_of_linearEquiv_pi (k := k) (S := S) (N := fun _ : ι ↦ S) e]
   exact Nat.card_congr (Equiv.subtypeUnivEquiv fun _ ↦ ⟨LinearEquiv.refl A S⟩)

@@ -54,9 +54,9 @@ theorem absNorm_map_of_ringEquiv [Infinite R] [Infinite R'] (e : R ≃+* R') (I 
 
 end Ideal
 
-section Congruence
+section NoncommutativeCongruence
 
-variable {S : Type*} [CommRing S] [Module.Free ℤ S] [Module.Finite ℤ S]
+variable {S : Type*} [Ring S] [Module.Free ℤ S] [Module.Finite ℤ S]
 
 /-- **Congruent elements have congruent norms.** If `a ≡ b` modulo the ideal `(m)` of a ring `S`
 that is free of finite rank over `ℤ`, then `N(a) ≡ N(b)` modulo `m`. -/
@@ -71,6 +71,12 @@ theorem Algebra.intCast_norm_eq_of_sub_mem_span_natCast {m : ℕ} {a b : S}
     RingHom.map_det, sub_eq_iff_eq_add.mp hc.symm, map_add, map_mul, map_natCast, map_add,
     map_mul, map_natCast, ← Matrix.diagonal_natCast, ZMod.natCast_self, Matrix.diagonal_zero,
     mul_zero, zero_add]
+
+end NoncommutativeCongruence
+
+section Congruence
+
+variable {S : Type*} [CommRing S] [Module.Free ℤ S] [Module.Finite ℤ S]
 
 /-- **The ideal `(m)` is the unit ideal only for `m = 1`**, in a nontrivial ring that is free of
 finite rank over `ℤ`. -/

@@ -76,7 +76,7 @@ variable {R σ ι κ : Type*}
 
 section Coefficients
 
-variable [CommRing R]
+variable [CommSemiring R]
   {f : (ι →₀ MvPolynomial σ R) →ₗ[MvPolynomial σ R] (κ →₀ MvPolynomial σ R)}
   {f₀ : (ι →₀ R) →ₗ[R] (κ →₀ R)}
 
@@ -113,6 +113,43 @@ private theorem coeff_apply_of_mem_pow_idealOfVars
     lcoeff_apply]
 
 end Coefficients
+
+section Degrees
+
+variable [CommSemiring R]
+  {d : (ι →₀ MvPolynomial σ R) →ₗ[MvPolynomial σ R] (ι →₀ MvPolynomial σ R)}
+  {d₀ : (ι →₀ R) →ₗ[R] (ι →₀ R)} {w : σ → ℤ} {g : ι → ℤ} {r : ℤ}
+  (hhom : ∀ i j, IsWeightedHomogeneous w (d (Finsupp.single i 1) j) (g i + r - g j))
+  (hd₀ : ∀ x, d₀ (x.mapRange constantCoeff (map_zero _)) =
+    (d x).mapRange constantCoeff (map_zero _))
+include hhom hd₀
+
+/-- The reduction of `d` moves the degree `g` of generators by `r`. -/
+private theorem reduction_single_apply_ne_zero {i j : ι} {c : R}
+    (h : d₀ (Finsupp.single i c) j ≠ 0) : g j = g i + r := by
+  rw [reduction_single_apply hd₀, constantCoeff_eq] at h
+  have := hhom i j (right_ne_zero_of_mul h)
+  rw [map_zero] at this
+  omega
+
+/-- The reduction of `d` commutes with restricting to generators in a set of degrees, up to the
+shift by `r`. -/
+private theorem filter_reduction_apply (P : ℤ → Prop) [DecidablePred P] (u : ι →₀ R) :
+    (d₀ u).filter (fun j ↦ P (g j)) = d₀ (u.filter fun i ↦ P (g i + r)) := by
+  induction u using Finsupp.induction_linear with
+  | zero => rw [filter_zero, map_zero, filter_zero]
+  | add u v hu hv => rw [map_add, filter_add, hu, hv, filter_add, map_add]
+  | single i c =>
+    by_cases hP : P (g i + r)
+    · rw [filter_single_of_pos (p := fun i ↦ P (g i + r)) hP, filter_eq_self_iff]
+      intro j hj
+      rwa [reduction_single_apply_ne_zero hhom hd₀ hj]
+    · rw [filter_single_of_neg (p := fun i ↦ P (g i + r)) hP, map_zero, filter_eq_zero_iff]
+      intro j hj
+      by_contra h
+      exact hP (reduction_single_apply_ne_zero hhom hd₀ h ▸ hj)
+
+end Degrees
 
 section Exactness
 
@@ -167,31 +204,6 @@ variable (hw : ∀ v, w v < 0)
   (hd₀ : ∀ x, d₀ (x.mapRange constantCoeff (map_zero _)) =
     (d x).mapRange constantCoeff (map_zero _))
 include hhom hd₀
-
-/-- The reduction of `d` moves the degree `g` of generators by `r`. -/
-private theorem reduction_single_apply_ne_zero {i j : ι} {c : R}
-    (h : d₀ (Finsupp.single i c) j ≠ 0) : g j = g i + r := by
-  rw [reduction_single_apply hd₀, constantCoeff_eq] at h
-  have := hhom i j (right_ne_zero_of_mul h)
-  rw [map_zero] at this
-  omega
-
-/-- The reduction of `d` commutes with restricting to generators in a set of degrees, up to the
-shift by `r`. -/
-private theorem filter_reduction_apply (P : ℤ → Prop) [DecidablePred P] (u : ι →₀ R) :
-    (d₀ u).filter (fun j ↦ P (g j)) = d₀ (u.filter fun i ↦ P (g i + r)) := by
-  induction u using Finsupp.induction_linear with
-  | zero => rw [filter_zero, map_zero, filter_zero]
-  | add u v hu hv => rw [map_add, filter_add, hu, hv, filter_add, map_add]
-  | single i c =>
-    by_cases hP : P (g i + r)
-    · rw [filter_single_of_pos (p := fun i ↦ P (g i + r)) hP, filter_eq_self_iff]
-      intro j hj
-      rwa [reduction_single_apply_ne_zero hhom hd₀ hj]
-    · rw [filter_single_of_neg (p := fun i ↦ P (g i + r)) hP, map_zero, filter_eq_zero_iff]
-      intro j hj
-      by_contra h
-      exact hP (reduction_single_apply_ne_zero hhom hd₀ h ▸ hj)
 
 /-- One step of the filtration argument: a cycle in `J ^ k • (ι →₀ S)` of degree at least `a` is
 congruent modulo `J ^ (k + 1) • (ι →₀ S)` to a boundary of a chain of degree at least `a - r`. -/

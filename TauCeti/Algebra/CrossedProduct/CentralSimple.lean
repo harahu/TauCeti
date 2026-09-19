@@ -48,9 +48,9 @@ namespace TauCeti
 
 namespace CrossedProduct
 
-section Simple
+section Domain
 
-variable {K : Type u} [CommSemiring K] {L : Type v} [Field L] [Algebra K L]
+variable {K : Type u} [CommSemiring K] {L : Type v} [CommRing L] [NoZeroDivisors L] [Algebra K L]
   {c : TwoCocycle K L}
 
 /-- A nonzero element of a two-sided ideal of the crossed product whose support has at most `n`
@@ -94,6 +94,13 @@ private theorem exists_smul_basis_mem (I : TwoSidedIdeal (CrossedProduct c)) (n 
         have := Finset.card_le_card hsub
         rw [Finset.card_erase_of_mem hρ] at this
         omega
+
+end Domain
+
+section Simple
+
+variable {K : Type u} [CommSemiring K] {L : Type v} [Field L] [Algebra K L]
+  {c : TwoCocycle K L}
 
 /-- A two-sided ideal of the crossed product containing a nonzero single term `y · u_σ` contains
 `1`. -/

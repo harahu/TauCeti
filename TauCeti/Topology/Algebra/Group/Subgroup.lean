@@ -105,7 +105,7 @@ namespace TauCeti
 
 /-- The closed normal closure of relators lies in the kernel of a continuous homomorphism that
 kills them. -/
-theorem topologicalClosure_normalClosure_le_ker {G H : Type*} [Group G] [Group H]
+theorem topologicalClosure_normalClosure_le_ker {G H : Type*} [Group G] [Monoid H]
     [TopologicalSpace G] [IsTopologicalGroup G] [TopologicalSpace H] [T1Space H] {s : Set G}
     {f : G →ₜ* H} (hf : ∀ r ∈ s, f r = 1) :
     (Subgroup.normalClosure s).topologicalClosure ≤ f.toMonoidHom.ker := by
@@ -188,13 +188,14 @@ instance instCompactSpace_of_isClosed [CompactSpace G] (N : Subgroup G) [IsClose
     CompactSpace N :=
   (IsClosed.isClosedEmbedding_subtypeVal ‹_›).compactSpace
 
+omit [IsTopologicalGroup G] in
 /-- The join of two compact subgroups `H` and `N` with `H` normalizing `N` is compact: its
 carrier is the product `H * N` of two compact sets. In a Hausdorff group it is therefore closed. -/
 @[to_additive /-- The join of two compact additive subgroups `H` and `N` with `H` normalizing `N`
 is compact: its carrier is the sum `H + N` of two compact sets. In a Hausdorff additive group it is
 therefore closed. -/]
-theorem isCompact_sup_of_le_normalizer {H N : Subgroup G} (hH : IsCompact (H : Set G))
-    (hN : IsCompact (N : Set G)) (hHN : H ≤ normalizer (N : Set G)) :
+theorem isCompact_sup_of_le_normalizer [ContinuousMul G] {H N : Subgroup G}
+    (hH : IsCompact (H : Set G)) (hN : IsCompact (N : Set G)) (hHN : H ≤ normalizer (N : Set G)) :
     IsCompact ((H ⊔ N : Subgroup G) : Set G) := by
   rw [coe_mul_of_left_le_normalizer_right _ _ hHN]
   exact hH.mul hN

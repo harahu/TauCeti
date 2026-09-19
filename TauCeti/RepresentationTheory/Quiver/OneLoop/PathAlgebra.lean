@@ -67,7 +67,9 @@ end Quiver
 
 namespace PathAlgebra
 
-variable (k : Type w) [CommSemiring k]
+section Semiring
+
+variable (k : Type w) [Semiring k]
 
 private noncomputable def oneLoopLinearEquiv :
     pathAlgebra k Quiver.OneLoop ≃ₗ[k] AddMonoidAlgebra k ℕ :=
@@ -97,6 +99,10 @@ private theorem oneLoopLinearEquiv_map_mul (f g : pathAlgebra k Quiver.OneLoop) 
       obtain ⟨⟨⟩, ⟨⟩, p⟩ := x
       obtain ⟨⟨⟩, ⟨⟩, q⟩ := y
       simp [oneLoopLinearEquiv_single, _root_.Quiver.Path.length_comp, Nat.add_comm]
+
+end Semiring
+
+variable (k : Type w) [CommSemiring k]
 
 /-- The path algebra of the quiver with one vertex and one loop is the additive monoid algebra on
 `ℕ` (equivalently, the polynomial algebra in one variable). -/

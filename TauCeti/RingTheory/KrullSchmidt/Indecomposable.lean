@@ -191,7 +191,7 @@ then `f ∘ₗ (g ∘ₗ f)⁻¹ ∘ₗ g` is an idempotent endomorphism of the 
 in, hence is `0` or `1`; it cannot be `0`, because that would force `f` to vanish on a nontrivial
 module, so it is the identity and `f` is surjective. -/
 theorem IsIndecomposableModule.bijective_of_bijective_comp {N P : Type*}
-    [AddCommGroup N] [Module A N] [AddCommGroup P] [Module A P] [Nontrivial N]
+    [AddCommMonoid N] [Module A N] [AddCommGroup P] [Module A P] [Nontrivial N]
     (hP : IsIndecomposableModule A P) {f : N →ₗ[A] P} {g : P →ₗ[A] N}
     (h : Function.Bijective (g ∘ₗ f)) : Function.Bijective f := by
   set u : N ≃ₗ[A] N := LinearEquiv.ofBijective (g ∘ₗ f) h with hu
@@ -310,7 +310,8 @@ theorem isIndecomposableModule_self [IsLocalRing A] : IsIndecomposableModule A A
 /-- **An indecomposable free module is isomorphic to the ring.** For a basis vector `b i`, the span
 of `b i` and the span of the remaining basis vectors are complementary, so the latter span is zero
 and `i` is the only index. -/
-theorem IsIndecomposableModule.nonempty_linearEquiv_of_free [Module.Free A M]
+theorem IsIndecomposableModule.nonempty_linearEquiv_of_free {A : Type u} {M : Type v}
+    [Semiring A] [AddCommMonoid M] [Module A M] [Module.Free A M]
     (h : IsIndecomposableModule A M) : Nonempty (M ≃ₗ[A] A) := by
   have := h.nontrivial
   have := Module.nontrivial A M

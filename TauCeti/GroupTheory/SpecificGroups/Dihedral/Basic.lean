@@ -123,7 +123,8 @@ private lemma zpow_cast_eq_zpow (hc : orderOf c = n) {i : ZMod n} {k : ℤ} (h :
     c ^ (ZMod.cast i : ℤ) = c ^ k := by
   rw [zpow_eq_zpow_iff_modEq, hc, ← ZMod.intCast_eq_intCast_iff, ZMod.intCast_zmod_cast, h]
 
-private lemma zpow_cast_zero (c : G) : c ^ (ZMod.cast (0 : ZMod n) : ℤ) = 1 := by
+private lemma zpow_cast_zero {M : Type*} [DivInvMonoid M] (c : M) :
+    c ^ (ZMod.cast (0 : ZMod n) : ℤ) = 1 := by
   rw [ZMod.cast_zero, zpow_zero]
 
 private lemma zpow_cast_one (hc : orderOf c = n) : c ^ (ZMod.cast (1 : ZMod n) : ℤ) = c := by
@@ -146,7 +147,8 @@ private lemma zpow_cast_eq_one_iff (hc : orderOf c = n) {i : ZMod n} :
     ZMod.intCast_zmod_cast, Int.cast_zero]
 
 /-- Either of the two involutions inverts their product by conjugation. -/
-private lemma conj_mul_eq_inv (hs : s * s = 1) (ht : t * t = 1) :
+private lemma conj_mul_eq_inv {M : Type*} [DivisionMonoid M] {s t : M} (hs : s * s = 1)
+    (ht : t * t = 1) :
     s * (s * t) * s⁻¹ = (s * t)⁻¹ := by
   rw [mul_inv_rev, inv_eq_of_mul_eq_one_right ht, inv_eq_of_mul_eq_one_right hs, ← mul_assoc, hs,
     one_mul]

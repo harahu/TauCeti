@@ -71,9 +71,9 @@ theorem isTwoSided_of_mem_isotypicComponents {c : Ideal R} (hc : c ∈ isotypicC
     c.IsTwoSided :=
   isFullyInvariant_iff_isTwoSided.mp (Submodule.IsFullyInvariant.of_mem_isotypicComponents hc)
 
-section Field
+section CommSemiring
 
-variable (k R : Type*) [Field k] [Ring R] [Algebra k R] [IsSemisimpleRing R]
+variable (k R : Type*) [CommSemiring k] [Ring R] [Algebra k R] [IsSemisimpleRing R]
 
 /-- The decomposition of `1` along the isotypic components of the regular module: a family of
 nonzero central elements, one in each component. This is the whole content of the section; the two
@@ -125,6 +125,12 @@ theorem exists_ne_zero_mem_center_of_mem_isotypicComponents {c : Submodule R R}
     ∃ e : R, e ∈ c ∧ e ≠ 0 ∧ e ∈ Subalgebra.center k R := by
   obtain ⟨e, hmem, hne, hcen⟩ := exists_center_family k R
   exact ⟨e ⟨c, hc⟩, hmem ⟨c, hc⟩, hne ⟨c, hc⟩, hcen ⟨c, hc⟩⟩
+
+end CommSemiring
+
+section Field
+
+variable (k R : Type*) [Field k] [Ring R] [Algebra k R] [IsSemisimpleRing R]
 
 /-- **The center bounds the number of isomorphism classes of simple modules.** Over a semisimple
 `k`-algebra whose center is finite-dimensional, the isotypic components of the regular module, which

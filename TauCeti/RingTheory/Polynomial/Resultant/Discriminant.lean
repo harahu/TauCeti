@@ -159,6 +159,10 @@ theorem not_isSquare_discr_X_pow_five_sub_C {a : ℚ} (ha : a ≠ 0) :
     linear_combination hr⟩
   exact absurd h5 (by norm_num)
 
+section Reindex
+
+variable {R S : Type*} [Semiring R] [Semiring S]
+
 private noncomputable def Polynomial.sylvesterDerivIndexEquiv {f : R[X]} (φ : R →+* S)
     (hdeg : (f.map φ).natDegree = f.natDegree) :
     Fin ((f.map φ).natDegree - 1 + (f.map φ).natDegree) ≃
@@ -216,6 +220,8 @@ private theorem Polynomial.sylvesterDeriv_map_reindex {f : R[X]} (φ : R →+* S
           rw [sylvesterDerivIndexEquiv_symm_natAdd φ hdeg j]
           simp [sylvesterDerivIndexEquiv, hdeg, hi, sylvester, derivative_map]
           split_ifs <;> simp
+
+end Reindex
 
 /-- Base change of the discriminant along a ring morphism that preserves the degree. -/
 theorem _root_.Polynomial.discr_map_of_natDegree_eq {f : R[X]} (φ : R →+* S)

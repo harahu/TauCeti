@@ -74,7 +74,7 @@ instance isDiscreteValuationRing_localizationAtPrime :
 `Localization.AtPrime v.asIdeal` with the instances above. Together with
 `IsDedekindDomain.HeightOneSpectrum.mem_integers_of_valuation_le_one` this descends membership in
 every localisation to membership in `O`. -/
-theorem valuation_algebraMap_le_one_of_isLocalizationAtPrime {S : Type*} [CommRing S]
+theorem valuation_algebraMap_le_one_of_isLocalizationAtPrime {S : Type*} [CommSemiring S]
     [Algebra O S] [IsLocalization.AtPrime S v.asIdeal] [Algebra S K] [IsScalarTower O S K]
     (x : S) : v.valuation K (algebraMap S K x) ≤ 1 := by
   -- Write `x = r / s` with `s ∉ v`: the valuation of `s` is one and that of `r` at most one.
