@@ -75,7 +75,8 @@ namespace NumberField
 
 variable {K : Type*} [Field K] [NumberField K] {p : ℕ} [Fact p.Prime]
 
-private theorem exists_isArithFrobAt_aux {L : Type*} [Field L] [NumberField L]
+private theorem exists_isArithFrobAt_aux {L : Type*} [Field L]
+    [Ring.HasFiniteQuotients (𝓞 L)]
     (R : Type*) [CommRing R] [Algebra R (𝓞 L)] (G : Type*) [Group G] [Finite G]
     [MulSemiringAction G (𝓞 L)] [SMulCommClass G R (𝓞 L)]
     [Algebra.IsInvariant R (𝓞 L) G] (Q : Ideal (𝓞 L)) [Q.IsPrime] (hQ : Q ≠ ⊥) :
@@ -147,7 +148,7 @@ nonzero.
 
 This is the Galois-group form of `IsArithFrobAt.eq_of_isUnramifiedAt`. -/
 theorem isArithFrobAt_eq_of_isUnramifiedAt {K L : Type*} [Field K] [Field L]
-    [NumberField K] [NumberField L] [Algebra K L] [IsGalois K L]
+    [NumberField K] [NumberField L] [Algebra K L] [IsGaloisGroup Gal(L/K) K L]
     {σ τ : L ≃ₐ[K] L} {Q : Ideal (𝓞 L)} [Q.IsPrime]
     [Algebra.IsUnramifiedAt (𝓞 K) Q] (hσ : IsArithFrobAt (𝓞 K) σ Q)
     (hτ : IsArithFrobAt (𝓞 K) τ Q) : σ = τ := by
@@ -157,7 +158,7 @@ theorem isArithFrobAt_eq_of_isUnramifiedAt {K L : Type*} [Field K] [Field L]
 
 /-- The Frobenius elements at an unramified prime form a subsingleton. -/
 instance subsingleton_isArithFrobAt {K L : Type*} [Field K] [Field L]
-    [NumberField K] [NumberField L] [Algebra K L] [IsGalois K L]
+    [NumberField K] [NumberField L] [Algebra K L] [IsGaloisGroup Gal(L/K) K L]
     {Q : Ideal (𝓞 L)} [Q.IsPrime]
     [Algebra.IsUnramifiedAt (𝓞 K) Q] :
     Subsingleton {σ : L ≃ₐ[K] L // IsArithFrobAt (𝓞 K) σ Q} where

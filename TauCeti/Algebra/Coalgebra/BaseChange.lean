@@ -58,6 +58,11 @@ universe u v w
 variable {k : Type u} {K : Type v} {H : Type w} [Field k] [Field K] [Algebra k K]
   [CommRing H] [_root_.Bialgebra k H]
 
+section Weak
+
+variable {k : Type u} {K : Type v} {H : Type w} [CommSemiring k] [Field K] [Algebra k K]
+  [Semiring H] [_root_.Bialgebra k H]
+
 /-- The tensor bialgebra base-change equivalence agrees with distributivity over base change on
 elements coming from the original tensor square. -/
 private theorem baseChangeTensorBialgEquiv_includeRight (y : H ⊗[k] H) :
@@ -86,6 +91,8 @@ private theorem baseChangeTensorBialgEquiv_includeRight_comm (y : H ⊗[k] H) :
   | tmul x y =>
       simp only [TensorProduct.comm_tmul, Algebra.TensorProduct.includeRight_apply,
         TauCeti.Bialgebra.TensorProduct.baseChangeTensorBialgEquiv_tmul]
+
+end Weak
 
 /-- Cocommutativity descends from a field extension. -/
 theorem of_baseChange [h : _root_.Coalgebra.IsCocomm K (K ⊗[k] H)] :

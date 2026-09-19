@@ -63,6 +63,41 @@ universe u v w x
 
 namespace HopfIdeal
 
+section QuotientKernel
+
+variable {R : Type u} [CommRing R]
+variable {H : Type v} {K : Type w} [Semiring H] [Ring K]
+variable [Algebra R H] [CoalgebraStruct R H] [HopfAlgebra R K]
+
+/-- The ordinary kernel calculation shared by both inverse-image constructions. -/
+private theorem ker_quotient_comp (I : HopfIdeal R K) (f : H →ₐc[R] K) :
+    RingHom.ker ((Bialgebra.Quotient.mkBialgHom I.toIdeal).comp f : H →ₐ[R] K ⧸ I.toIdeal) =
+      Ideal.comap (f : H →+* K) I.toIdeal := by
+  ext h
+  simp only [RingHom.mem_ker, Ideal.mem_comap, BialgHom.comp_apply,
+    Bialgebra.Quotient.mkBialgHom_apply, Ideal.Quotient.eq_zero_iff_mem,
+    BialgHom.coe_toAlgHom, RingHom.coe_coe]
+
+end QuotientKernel
+
+section FinsuppLift
+
+variable {R : Type u} [CommSemiring R]
+variable {H : Type v} {K : Type w} [Semiring H] [Semiring K]
+variable [Algebra R H] [CoalgebraStruct R H] [Algebra R K] [CoalgebraStruct R K]
+
+/-- A finitely supported family over `K` lifts along a surjective bialgebra morphism to a
+finitely supported family over `H` that agrees with it pointwise and has the same total sum. -/
+private theorem exists_finsupp_map_eq {ι : Type*} (f : H →ₐc[R] K)
+    (hf : Function.Surjective f) (s : ι →₀ K) :
+    ∃ t : ι →₀ H, (∀ i, f (t i) = s i) ∧
+      f (t.sum fun _ y => y) = s.sum fun _ y => y := by
+  obtain ⟨t, rfl⟩ := Finsupp.mapRange_surjective (⇑f) (map_zero f) hf s
+  refine ⟨t, fun i => by rw [Finsupp.mapRange_apply], ?_⟩
+  rw [Finsupp.sum_mapRange_index fun _ => rfl, Finsupp.sum, Finsupp.sum, map_sum]
+
+end FinsuppLift
+
 variable {R : Type u} [CommRing R]
 variable {H : Type v} {K : Type w} {L : Type x}
 variable [Ring H] [Ring K] [Ring L]
@@ -78,15 +113,6 @@ noncomputable def comapOfSurjective (I : HopfIdeal R K) (f : H →ₐc[R] K)
     (by
       rw [BialgHom.coe_comp]
       exact (Ideal.Quotient.mkₐ_surjective R I.toIdeal).comp hf)
-
-/-- The ordinary kernel calculation shared by both inverse-image constructions. -/
-private theorem ker_quotient_comp (I : HopfIdeal R K) (f : H →ₐc[R] K) :
-    RingHom.ker ((Bialgebra.Quotient.mkBialgHom I.toIdeal).comp f : H →ₐ[R] K ⧸ I.toIdeal) =
-      Ideal.comap (f : H →+* K) I.toIdeal := by
-  ext h
-  simp only [RingHom.mem_ker, Ideal.mem_comap, BialgHom.comp_apply,
-    Bialgebra.Quotient.mkBialgHom_apply, Ideal.Quotient.eq_zero_iff_mem,
-    BialgHom.coe_toAlgHom, RingHom.coe_coe]
 
 /-- The underlying ideal of `I.comapOfSurjective f hf` is the ordinary ideal-theoretic inverse
 image. -/
@@ -158,16 +184,6 @@ theorem comapOfSurjective_bot (f : H →ₐc[R] K) (hf : Function.Surjective f) 
     (⊥ : HopfIdeal R K).comapOfSurjective f hf = kerOfSurjective f hf := by
   ext h
   rw [mem_comapOfSurjective, mem_kerOfSurjective, mem_bot]
-
-/-- A finitely supported family over `K` lifts along a surjective bialgebra morphism to a
-finitely supported family over `H` that agrees with it pointwise and has the same total sum. -/
-private theorem exists_finsupp_map_eq {ι : Type*} (f : H →ₐc[R] K)
-    (hf : Function.Surjective f) (s : ι →₀ K) :
-    ∃ t : ι →₀ H, (∀ i, f (t i) = s i) ∧
-      f (t.sum fun _ y => y) = s.sum fun _ y => y := by
-  obtain ⟨t, rfl⟩ := Finsupp.mapRange_surjective (⇑f) (map_zero f) hf s
-  refine ⟨t, fun i => by rw [Finsupp.mapRange_apply], ?_⟩
-  rw [Finsupp.sum_mapRange_index fun _ => rfl, Finsupp.sum, Finsupp.sum, map_sum]
 
 /-- The inverse image of a supremum of Hopf ideals is contained in the supremum of the inverse
 images: the nontrivial inclusion of `comapOfSurjective_iSup`. -/

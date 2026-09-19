@@ -383,11 +383,13 @@ end Topological
 
 section Normed
 
+section Seminormed
+
 variable {𝕜 : Type*} [NontriviallyNormedField 𝕜]
 variable {E Λ F : Type*}
-variable [NormedAddCommGroup E] [NormedSpace 𝕜 E]
-variable [NormedAddCommGroup Λ] [NormedSpace 𝕜 Λ]
-variable [NormedAddCommGroup F] [NormedSpace 𝕜 F]
+variable [SeminormedAddCommGroup E] [Module 𝕜 E]
+variable [SeminormedAddCommGroup Λ] [Module 𝕜 Λ]
+variable [SeminormedAddCommGroup F] [Module 𝕜 F]
 variable (D₁ : E →L[𝕜] F) (D₂ : Λ →L[𝕜] F)
 
 /-- The kernel of the parameter projection has the same dimension as the kernel of `D₁`. -/
@@ -414,6 +416,15 @@ theorem finiteDimensional_quotient_range_parameterProj
     FiniteDimensional 𝕜 (Λ ⧸ (parameterProj D₁ D₂).range) :=
   (quotientRangeParameterProjEquivRange D₁ D₂).symm.finiteDimensional
 
+end Seminormed
+
+variable {𝕜 : Type*} [NontriviallyNormedField 𝕜]
+variable {E Λ F : Type*}
+variable [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+variable [NormedAddCommGroup Λ] [NormedSpace 𝕜 Λ]
+variable [NormedAddCommGroup F] [NormedSpace 𝕜 F]
+variable (D₁ : E →L[𝕜] F) (D₂ : Λ →L[𝕜] F)
+
 /-! ### The index and the Fredholm property -/
 
 /-- **The parameter projection of a surjective total linearization has the same index as `D₁`.**
@@ -430,6 +441,12 @@ theorem index_parameterProj (hD : Function.Surjective (D₁.coprod D₂)) :
 
 section Banach
 
+variable {𝕜 : Type*} [NontriviallyNormedField 𝕜]
+variable {E Λ F : Type*}
+variable [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+variable [NormedAddCommGroup Λ] [NormedSpace 𝕜 Λ]
+variable [NormedAddCommGroup F] [Module 𝕜 F]
+variable (D₁ : E →L[𝕜] F) (D₂ : Λ →L[𝕜] F)
 variable [IsRCLikeNormedField 𝕜] [CompleteSpace 𝕜] [CompleteSpace E] [CompleteSpace Λ]
 
 /-- **The parameter projection is Fredholm** as soon as `D₁` is, over Banach spaces. When the

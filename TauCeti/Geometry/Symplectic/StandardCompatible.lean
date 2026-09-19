@@ -40,7 +40,9 @@ namespace TauCeti
 
 open scoped InnerProductSpace
 
-variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+section Weak
+
+variable {V : Type*} [SeminormedAddCommGroup V] [InnerProductSpace ℝ V]
 
 /-- The standard symplectic bilinear form on `V × V`, given by
 `ω₀((x₁, y₁), (x₂, y₂)) = ⟪x₁, y₂⟫ - ⟪y₁, x₂⟫`. -/
@@ -56,6 +58,10 @@ private lemma stdSymplecticBilin_apply (u w : V × V) :
 private lemma stdSymplecticBilin_isAlt : (stdSymplecticBilin (V := V)).IsAlt := by
   intro u
   rw [stdSymplecticBilin_apply, real_inner_comm u.2 u.1, sub_self]
+
+end Weak
+
+variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
 
 private lemma stdSymplecticBilin_nondegenerate :
     (stdSymplecticBilin (V := V)).Nondegenerate := by

@@ -52,6 +52,10 @@ variable {k : Type w} {l : Type z} {Q : Type u}
   [CommRing k] [CommRing l] [Quiver.{v} Q] [Fintype Q]
   [∀ i j : Q, Fintype (i ⟶ j)]
 
+section CommSemiringBase
+
+variable {k : Type w} [CommSemiring k]
+
 private noncomputable def preprojectiveBaseChangePathAlgHom (f : k →+* l) :
     letI : Algebra k (preprojectiveAlgebra l Q) :=
       ((algebraMap l (preprojectiveAlgebra l Q)).comp f).toAlgebra'
@@ -98,6 +102,8 @@ private theorem preprojectiveBaseChangePathAlgHom_tailBacktrackElem (f : k →+*
       (fun c x => Algebra.commutes (R := l) (A := preprojectiveAlgebra l Q) (f c) x)
   rw [tailBacktrackElem_def, preprojectiveBaseChangePathAlgHom_ofPath,
     tailBacktrackElem_def]
+
+end CommSemiringBase
 
 /-! ### Descent through the preprojective relation -/
 

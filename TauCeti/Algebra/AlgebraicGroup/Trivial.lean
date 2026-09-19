@@ -86,7 +86,8 @@ theorem convPoint_eq_one_iff (f : WithConv (R →ₐ[R] A)) : f = 1 ↔ True :=
 
 /-- The underlying algebra map of any trivial-group convolution point is `Algebra.ofId`. -/
 @[simp]
-theorem ofConv_eq_ofId (f : WithConv (R →ₐ[R] A)) :
+theorem ofConv_eq_ofId {A : Type v} [Semiring A] [Algebra R A]
+    (f : WithConv (R →ₐ[R] A)) :
     f.ofConv = Algebra.ofId R A :=
   Subsingleton.elim _ _
 

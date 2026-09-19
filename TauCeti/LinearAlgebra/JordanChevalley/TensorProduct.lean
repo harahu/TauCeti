@@ -61,9 +61,9 @@ theorem IsSemisimple.tensorProduct {g : GeneralLinearGroup K V}
 
 end Semisimple
 
-section CommRing
+section CommSemiring
 
-variable [CommRing K] [AddCommGroup V] [Module K V] [AddCommGroup W] [Module K W]
+variable [CommSemiring K] [AddCommGroup V] [Module K V] [AddCommGroup W] [Module K W]
 
 /-- The tensor product of unipotent linear automorphisms is unipotent. -/
 theorem IsUnipotent.tensorProduct {g : GeneralLinearGroup K V}
@@ -73,7 +73,7 @@ theorem IsUnipotent.tensorProduct {g : GeneralLinearGroup K V}
   rw [coe_tensorProduct]
   exact hg.tensorProduct_map_sub_one hh
 
-end CommRing
+end CommSemiring
 
 section PerfectField
 

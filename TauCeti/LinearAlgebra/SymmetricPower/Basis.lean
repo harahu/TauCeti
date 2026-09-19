@@ -206,13 +206,7 @@ theorem finrank_eq [StrongRankCondition R] [Module.Free R M] [Module.Finite R M]
   rw [Module.finrank_eq_card_basis ((Module.Free.chooseBasis R M).symmetricPower n),
     Sym.card_sym_eq_multichoose, Module.finrank_eq_card_chooseBasisIndex]
 
-end CommSemiring
-
 /-! ### Traces -/
-
-section CommRing
-
-variable [CommRing R] [AddCommGroup M] [Module R M]
 
 /-- If an endomorphism is diagonal in a finite basis, then its trace on the `n`th symmetric power
 is the sum, over the unordered `n`-tuples of basis indices, of the product of the corresponding
@@ -228,6 +222,6 @@ theorem trace_map_of_apply_basis [Fintype κ] [DecidableEq κ] (b : Basis κ R M
     map_basis_symmetricPower_of_apply_basis b f a hf s,
     map_smul, Finsupp.smul_apply, Basis.repr_self, Finsupp.single_eq_same, smul_eq_mul, mul_one]
 
-end CommRing
+end CommSemiring
 
 end SymmetricPower

@@ -51,6 +51,10 @@ theorem oneFoldPfister_smul_equivalent_of_mem_unitValueSet (a : K) (c : Kˣ)
   rw [hscale]
   exact (mem_unitValueSet_binary_iff_equivalent (1 : K) (-a) c).mp hc |>.symm
 
+section CommRing
+
+variable {K : Type u} [CommRing K]
+
 /-- A two-fold Pfister form is round: every unit it represents is a similarity factor. -/
 theorem twoFoldPfister_smul_equivalent_of_mem_unitValueSet (a b : K) (c : Kˣ)
     (hc : c ∈ unitValueSet (weightedSumSquares K ![1, -a, -b, a * b])) :
@@ -80,5 +84,7 @@ theorem twoFoldPfister_smul_equivalent_of_mem_unitValueSet (a b : K) (c : Kˣ)
       (e ((u : ℍ[K,a,b]) * e.symm x)) =
     (c : K) * weightedSumSquares K ![1, -a, -b, a * b] x
   rw [e.map_app, QuaternionAlgebra.normForm_mul, hu, e.symm.map_app]
+
+end CommRing
 
 end TauCeti

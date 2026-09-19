@@ -51,9 +51,9 @@ theorem addConvolutionExists_of_zeroAtFilter_cofinite
       (Function.Injective.tendsto_cofinite Subtype.val_injective)
 
 /-- Additive ring convolution preserves convergence to zero along the cofinite filter in a
-nonarchimedean ring. -/
+nonarchimedean ring, which need not be unital or associative. -/
 theorem ZeroAtFilter.addRingConvolution
-    [Ring A] [TopologicalSpace A] [NonarchimedeanRing A]
+    [NonUnitalNonAssocRing A] [TopologicalSpace A] [NonarchimedeanAddGroup A] [ContinuousMul A]
     {f g : ι → A} (hf : ZeroAtFilter cofinite f) (hg : ZeroAtFilter cofinite g) :
     ZeroAtFilter cofinite (f ⋆ᵣ₊ g) := by
   rw [NonarchimedeanAddGroup.zeroAtFilter_cofinite_iff_finite_notMem]
@@ -75,11 +75,12 @@ theorem ZeroAtFilter.addRingConvolution
   exact hnim ⟨(p.1.1, p.1.2), hp, DiscreteConvolution.mem_addFiber.mp p.2⟩
 
 open DiscreteConvolution in
-/-- In a complete nonarchimedean ring, the family `f a * g b * h c` over the triples with
-`a + b + c = n`, indexed as pairs `((a, b), c)` with `a + b = m` and `m + c = n`, is summable
-when `f`, `g` and `h` tend to zero cofinitely. -/
-theorem ZeroAtFilter.summable_sigma_addFiber_mul_mul [Ring A] [UniformSpace A] [IsUniformAddGroup A]
-    [NonarchimedeanRing A] [CompleteSpace A] {f g h : ι → A} (hf : ZeroAtFilter cofinite f)
+/-- In a complete nonarchimedean ring, not necessarily unital or associative, the family
+`f a * g b * h c` over the triples with `a + b + c = n`, indexed as pairs `((a, b), c)` with
+`a + b = m` and `m + c = n`, is summable when `f`, `g` and `h` tend to zero cofinitely. -/
+theorem ZeroAtFilter.summable_sigma_addFiber_mul_mul [NonUnitalNonAssocRing A] [UniformSpace A]
+    [IsUniformAddGroup A] [NonarchimedeanAddGroup A] [ContinuousMul A] [CompleteSpace A]
+    {f g h : ι → A} (hf : ZeroAtFilter cofinite f)
     (hg : ZeroAtFilter cofinite g) (hh : ZeroAtFilter cofinite h) (n : ι) :
     Summable fun σ : Σ p : addFiber n, addFiber p.1.1 ↦ f σ.2.1.1 * g σ.2.1.2 * h σ.1.1.2 := by
   -- `((a, b), c) ↦ f a * g b * h c` tends to zero cofinitely, and `σ ↦ ((a, b), c)` is injective

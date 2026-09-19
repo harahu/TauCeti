@@ -25,7 +25,7 @@ namespace TauCeti
 
 /-- Contracting against a separating family in the left factor detects zero tensors. -/
 theorem tensor_eq_zero_of_forall_lid_rTensor_eq_zero
-    {k M N ι : Type*} [Field k] [AddCommGroup M] [Module k M]
+    {k M N ι : Type*} [Field k] [AddCommMonoid M] [Module k M]
     [AddCommGroup N] [Module k N]
     (f : ι → M →ₗ[k] k) (hf : ∀ m, (∀ i, f i m = 0) → m = 0)
     (x : M ⊗[k] N)
@@ -43,7 +43,7 @@ theorem tensor_eq_zero_of_forall_lid_rTensor_eq_zero
 
 /-- Products of separating families of linear functionals detect zero tensors. -/
 theorem tensor_eq_zero_of_forall_lid_map_eq_zero
-    {k M N ι κ : Type*} [Field k] [AddCommGroup M] [Module k M]
+    {k M N ι κ : Type*} [Field k] [AddCommMonoid M] [Module k M]
     [AddCommGroup N] [Module k N]
     (f : ι → M →ₗ[k] k) (g : κ → N →ₗ[k] k)
     (hf : ∀ m, (∀ i, f i m = 0) → m = 0)

@@ -60,6 +60,27 @@ namespace Matrix.GeneralLinearGroup
 
 variable {ι : Type*} [DecidableEq ι] [Fintype ι]
 
+section Equalizer
+
+variable {R A : Type*} [CommSemiring R] [CommRing A] [Algebra R A]
+
+/-- An invertible matrix is fixed by an entrywise algebra endomorphism exactly when every one of
+its entries lies in the equalizer of that endomorphism with the identity. -/
+@[simp]
+theorem map_eq_self_iff_mem_equalizer (φ : A →ₐ[R] A) (g : Matrix.GeneralLinearGroup ι A) :
+    Matrix.GeneralLinearGroup.map (n := ι) (φ : A →+* A) g = g ↔
+      ∀ i j, (g : Matrix ι ι A) i j ∈ AlgHom.equalizer φ (AlgHom.id R A) := by
+  simp only [AlgHom.mem_equalizer, AlgHom.coe_id, id_eq]
+  constructor
+  · intro hg i j
+    simpa using congrArg (fun M : Matrix.GeneralLinearGroup ι A => (M : Matrix ι ι A) i j) hg
+  · intro hg
+    refine Matrix.GeneralLinearGroup.ext fun i j => ?_
+    rw [Matrix.GeneralLinearGroup.map_apply]
+    simpa using hg i j
+
+end Equalizer
+
 section Subalgebra
 
 variable {R A : Type*} [CommRing R] [CommRing A] [Algebra R A]
@@ -100,21 +121,6 @@ theorem mem_range_map_val_iff (S : Subalgebra R A) (g : Matrix.GeneralLinearGrou
       Matrix.GeneralLinearGroup.ext fun i j => ?_⟩
     rw [Matrix.GeneralLinearGroup.map_apply]
     exact congrFun (congrFun hM i) j
-
-/-- An invertible matrix is fixed by an entrywise algebra endomorphism exactly when every one of
-its entries lies in the equalizer of that endomorphism with the identity. -/
-@[simp]
-theorem map_eq_self_iff_mem_equalizer (φ : A →ₐ[R] A) (g : Matrix.GeneralLinearGroup ι A) :
-    Matrix.GeneralLinearGroup.map (n := ι) (φ : A →+* A) g = g ↔
-      ∀ i j, (g : Matrix ι ι A) i j ∈ AlgHom.equalizer φ (AlgHom.id R A) := by
-  simp only [AlgHom.mem_equalizer, AlgHom.coe_id, id_eq]
-  constructor
-  · intro hg i j
-    simpa using congrArg (fun M : Matrix.GeneralLinearGroup ι A => (M : Matrix ι ι A) i j) hg
-  · intro hg
-    refine Matrix.GeneralLinearGroup.ext fun i j => ?_
-    rw [Matrix.GeneralLinearGroup.map_apply]
-    simpa using hg i j
 
 /-- **The invertible matrices fixed by an entrywise algebra endomorphism are exactly the ones
 coming from its equalizer subalgebra.** The entries of a fixed matrix are fixed, and so are those

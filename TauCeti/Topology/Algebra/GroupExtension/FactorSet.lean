@@ -126,12 +126,11 @@ instance [DiscreteTopology M] [DiscreteTopology G] : DiscreteTopology α.Extensi
 
 section TopologicalGroup
 
-variable [IsTopologicalGroup G] [IsTopologicalGroup M] [ContinuousSMul G M]
-  (hα : Continuous ⇑α)
+variable [ContinuousSMul G M] (hα : Continuous ⇑α)
 
 include hα
 
-private theorem continuous_mul_extension :
+private theorem continuous_mul_extension [ContinuousMul G] [ContinuousMul M] :
     Continuous fun p : α.Extension × α.Extension => p.1 * p.2 := by
   have hl₁ : Continuous fun p : α.Extension × α.Extension => p.1.left :=
     continuous_left.comp continuous_fst
@@ -145,7 +144,8 @@ private theorem continuous_mul_extension :
   simp only [Function.comp_def, mul_left, mul_right]
   exact ((hl₁.mul (hr₁.smul hl₂)).mul (hα.comp (hr₁.prodMk hr₂))).prodMk (hr₁.mul hr₂)
 
-private theorem continuous_inv_extension : Continuous fun x : α.Extension => x⁻¹ := by
+private theorem continuous_inv_extension [ContinuousInv G] [IsTopologicalGroup M] :
+    Continuous fun x : α.Extension => x⁻¹ := by
   refine isInducing_leftRight.continuous_iff.2 ?_
   simp only [Function.comp_def, inv_left, inv_right]
   exact ((continuous_right.inv).smul
@@ -157,7 +157,8 @@ The twisted multiplication of `TauCeti.FactorSet.Extension` is
 `⟨a, g⟩ * ⟨b, h⟩ = ⟨a * g • b * α (g, h), g * h⟩`, so it is continuous for the product topology
 exactly because the two things appearing in it beyond the group operations — the action and the
 factor set — are. -/
-theorem isTopologicalGroup : IsTopologicalGroup α.Extension where
+theorem isTopologicalGroup [IsTopologicalGroup G] [IsTopologicalGroup M] :
+    IsTopologicalGroup α.Extension where
   continuous_mul := continuous_mul_extension hα
   continuous_inv := continuous_inv_extension hα
 

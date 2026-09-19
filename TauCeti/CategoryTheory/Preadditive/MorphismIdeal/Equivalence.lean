@@ -156,8 +156,9 @@ instance essSurj_map [F.EssSurj] : (I.map J F hF).EssSurj := by
   rw [map_eq_lift I J F hF]
   infer_instance
 
-/-- An equivalence `F` with `J.comap F ≤ I` induces an equivalence of quotients. -/
-theorem isEquivalence_map [F.IsEquivalence] (h : J.comap F ≤ I) :
+/-- A full, essentially surjective `F` with `J.comap F ≤ I`, such as an equivalence, induces an
+equivalence of quotients. -/
+theorem isEquivalence_map [F.Full] [F.EssSurj] (h : J.comap F ≤ I) :
     (I.map J F hF).IsEquivalence := by
   rw [map_eq_lift I J F hF]
   apply I.isEquivalence_lift

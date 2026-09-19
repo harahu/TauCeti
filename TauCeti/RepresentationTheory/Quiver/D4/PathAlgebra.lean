@@ -50,7 +50,7 @@ theorem card_totalPath : Fintype.card (Quiver.TotalPath D4) = 7 := by
 
 /-- The path algebra of the `D₄` quiver is seven-dimensional: four trivial paths and three
 arrows. -/
-theorem finrank_pathAlgebra (k : Type w) [DivisionRing k] :
+theorem finrank_pathAlgebra (k : Type w) [Semiring k] [StrongRankCondition k] :
     Module.finrank k (pathAlgebra k D4) = 7 := by
   rw [TauCeti.finrank_pathAlgebra k D4, Nat.card_eq_fintype_card, card_totalPath]
 

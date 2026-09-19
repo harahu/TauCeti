@@ -65,7 +65,7 @@ theorem map_zero_eq_ofReal_re_of_posSemidef
 /-- A function with positive-definite subtraction kernel is conjugate-symmetric under negation:
 `ψ (-v) = conj (ψ v)`. This is the Hermitian symmetry of the kernel, read along the diagonal
 translate `(v, 0)`. -/
-theorem map_neg_eq_conj_of_posSemidef
+theorem map_neg_eq_conj_of_posSemidef {V : Type*} [SubNegZeroMonoid V] {ψ : V → 𝕜}
     (hpd : Matrix.PosSemidef fun a b : V => ψ (a - b)) (v : V) :
     ψ (-v) = conj (ψ v) := by
   simpa only [sub_zero, zero_sub, starRingEnd_apply] using

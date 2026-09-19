@@ -259,7 +259,7 @@ theorem rename_swap_formalIntercept :
 origin, hence a unit. This is what lets `formalThirdRoot` divide by it, and it is recorded here
 rather than reproved at each use. -/
 @[simp]
-theorem constantCoeff_formalThirdRootDenom :
+theorem constantCoeff_formalThirdRootDenom {R : Type*} [CommSemiring R] (W : WeierstrassCurve R) :
     constantCoeff (1 + C W.a₂ * formalSlope W + C W.a₄ * formalSlope W ^ 2 +
       C W.a₆ * formalSlope W ^ 3) = 1 := by
   simp

@@ -63,7 +63,7 @@ open IsDedekindDomain
 
 namespace IsDedekindDomain.HeightOneSpectrum
 
-variable (k : Type*) (F : Type*) {R : Type*} [Field k] [Field F] [CommRing R]
+variable (k : Type*) (F : Type*) {R : Type*} [Semifield k] [Field F] [CommRing R]
   [IsDedekindDomain R] [Algebra k R] [Algebra R F] [IsFractionRing R F] [Algebra k F]
   [IsScalarTower k R F]
 

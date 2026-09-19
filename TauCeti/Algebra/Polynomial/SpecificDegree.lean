@@ -60,7 +60,30 @@ open Polynomial
 
 namespace Polynomial
 
-variable {F : Type*} [Field F]
+variable {F : Type*}
+
+section Domain
+
+variable [CommRing F] [IsDomain F]
+
+/-- A cubic with a root `a` is `(X - a)` times a quadratic. This is the one factorization step
+shared by the two splitting criteria below. -/
+theorem exists_natDegree_eq_two_of_natDegree_eq_three_of_isRoot {g : F[X]}
+    (hdeg : g.natDegree = 3) {a : F} (ha : g.IsRoot a) :
+    ∃ q : F[X], q.natDegree = 2 ∧ g = (X - C a) * q := by
+  obtain ⟨q, hq⟩ := dvd_iff_isRoot.2 ha
+  have hg0 : g ≠ 0 := fun h0 => by simp [h0] at hdeg
+  have hq0 : q ≠ 0 := by
+    rintro rfl
+    rw [mul_zero] at hq
+    exact hg0 hq
+  refine ⟨q, ?_, hq⟩
+  rw [hq, natDegree_mul (X_sub_C_ne_zero a) hq0, natDegree_X_sub_C] at hdeg
+  omega
+
+end Domain
+
+variable [Field F]
 
 /-- An irreducible polynomial whose degree is nonzero in the coefficient field is separable: the
 derivative then has the nonzero leading coefficient `natDegree • leadingCoeff`. -/
@@ -84,21 +107,6 @@ theorem separable_of_irreducible_of_natDegree_eq_four {f : F[X]} (hchar : ringCh
   have hfour : ((4 : ℕ) : F) = 2 * 2 := by norm_num
   rw [hdeg, hfour]
   exact mul_ne_zero htwo htwo
-
-/-- A cubic with a root `a` in its coefficient field is `(X - a)` times a quadratic. This is the
-one factorization step shared by the two splitting criteria below. -/
-theorem exists_natDegree_eq_two_of_natDegree_eq_three_of_isRoot {g : F[X]}
-    (hdeg : g.natDegree = 3) {a : F} (ha : g.IsRoot a) :
-    ∃ q : F[X], q.natDegree = 2 ∧ g = (X - C a) * q := by
-  obtain ⟨q, hq⟩ := dvd_iff_isRoot.2 ha
-  have hg0 : g ≠ 0 := fun h0 => by simp [h0] at hdeg
-  have hq0 : q ≠ 0 := by
-    rintro rfl
-    rw [mul_zero] at hq
-    exact hg0 hq
-  refine ⟨q, ?_, hq⟩
-  rw [hq, natDegree_mul (X_sub_C_ne_zero a) hq0, natDegree_X_sub_C] at hdeg
-  omega
 
 /-- Away from characteristic two, a quadratic splits over its coefficient field exactly when its
 discriminant is a square. This is `Polynomial.splits_quadratic_iff_isSquare` read on `discr`

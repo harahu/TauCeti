@@ -52,9 +52,12 @@ namespace LinearMap
 
 open TauCeti TauCeti.LaurentSpecialization
 
-variable {R : Type*} [CommRing R] {ε₁ ε₂ : Rˣ}
-variable {N₁ N₂ : Type*} [AddCommGroup N₁] [Module R[T;T⁻¹] N₁] [Module R N₁]
-  [IsScalarTower R R[T;T⁻¹] N₁] [AddCommGroup N₂] [Module R[T;T⁻¹] N₂] [Module R N₂]
+variable {R : Type*} {N₁ N₂ : Type*}
+
+section EvalForm
+
+variable [CommSemiring R] {ε₂ : Rˣ} [AddCommMonoid N₁] [Module R[T;T⁻¹] N₁] [Module R N₁]
+  [IsScalarTower R R[T;T⁻¹] N₁] [AddCommMonoid N₂] [Module R[T;T⁻¹] N₂] [Module R N₂]
   [IsScalarTower R R[T;T⁻¹] N₂]
 
 /-- A q-sesquilinear form evaluated at `q = ε₂`, as an `R`-bilinear form on the unspecialized
@@ -78,6 +81,12 @@ private theorem laurentEvalForm_apply
     (x : N₁) (y : N₂) :
     laurentEvalForm (ε₂ := ε₂) b x y = laurentEval ε₂ (b x y) :=
   LinearMap.mk₂_apply ..
+
+end EvalForm
+
+variable [CommRing R] {ε₁ ε₂ : Rˣ} [AddCommGroup N₁] [Module R[T;T⁻¹] N₁] [Module R N₁]
+  [IsScalarTower R R[T;T⁻¹] N₁] [AddCommGroup N₂] [Module R[T;T⁻¹] N₂] [Module R N₂]
+  [IsScalarTower R R[T;T⁻¹] N₂]
 
 /-- **The specialization of a q-sesquilinear form**, at `q = ε₁` in the first argument and at
 `q = ε₂` in the second, for units with `ε₁⁻¹ = ε₂`.  The form `b` is antilinear in its first

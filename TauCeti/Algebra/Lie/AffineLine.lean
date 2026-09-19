@@ -203,6 +203,19 @@ theorem ad_translation_ne_zero [Nontrivial K] :
   rw [h, LinearMap.zero_apply, eq_comm, neg_eq_zero] at hx
   exact translation_ne_zero K hx
 
+/-- The translation `y` survives in every term of the series `⁅N, ⁅N, … ⁆⁆` attached to an ideal
+`N` containing an element of dilation coordinate `1`, because `⁅x, y⁆ = y`. -/
+theorem translation_mem_lcs_self {N : LieIdeal K (AffineLine K)} {u : AffineLine K} (hu : u ∈ N)
+    (hu1 : u.1 = 1) (k : ℕ) : translation K ∈ LieIdeal.lcs N (AffineLine K) k := by
+  induction k with
+  | zero => rw [LieIdeal.lcs_zero]; exact LieSubmodule.mem_top _
+  | succ k ih =>
+    rw [LieIdeal.lcs_succ]
+    have hmem : ⁅u, translation K⁆ ∈ ⁅N, LieIdeal.lcs N (AffineLine K) k⁆ :=
+      LieSubmodule.lie_mem_lie hu ih
+    have hbracket : ⁅u, translation K⁆ = translation K := by ext <;> simp [hu1]
+    rwa [hbracket] at hmem
+
 section Field
 
 variable (K : Type*) [Field K]
@@ -239,19 +252,6 @@ theorem translation_mem_lcs {N : LieIdeal K (AffineLine K)} (h : N ≠ ⊥) (k :
     rw [LieSubmodule.lcs_succ]
     have hmem := LieSubmodule.lie_mem_lie (LieSubmodule.mem_top (dilation K)) ih
     rwa [lie_dilation_translation] at hmem
-
-/-- The translation `y` survives in every term of the series `⁅N, ⁅N, … ⁆⁆` attached to an ideal
-`N` containing an element of dilation coordinate `1`, because `⁅x, y⁆ = y`. -/
-theorem translation_mem_lcs_self {N : LieIdeal K (AffineLine K)} {u : AffineLine K} (hu : u ∈ N)
-    (hu1 : u.1 = 1) (k : ℕ) : translation K ∈ LieIdeal.lcs N (AffineLine K) k := by
-  induction k with
-  | zero => rw [LieIdeal.lcs_zero]; exact LieSubmodule.mem_top _
-  | succ k ih =>
-    rw [LieIdeal.lcs_succ]
-    have hmem : ⁅u, translation K⁆ ∈ ⁅N, LieIdeal.lcs N (AffineLine K) k⁆ :=
-      LieSubmodule.lie_mem_lie hu ih
-    have hbracket : ⁅u, translation K⁆ = translation K := by ext <;> simp [hu1]
-    rwa [hbracket] at hmem
 
 /-- No nonzero ideal is acted on nilpotently by the whole algebra. -/
 theorem not_isNilpotent_of_ne_bot {N : LieIdeal K (AffineLine K)} (h : N ≠ ⊥) :

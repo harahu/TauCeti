@@ -165,27 +165,29 @@ lemma mem_openDominantChamber_of_isRegularWeight {x : M} (hx : x ∈ dominantCha
 lemma zero_mem_dominantChamber : (0 : M) ∈ dominantChamber P b := by
   simp
 
-variable [IsStrictOrderedRing R]
-
 /-- The closed dominant chamber is closed under addition. -/
-lemma add_mem_dominantChamber {x y : M} (hx : x ∈ dominantChamber P b)
+lemma add_mem_dominantChamber [IsOrderedAddMonoid R] {x y : M} (hx : x ∈ dominantChamber P b)
     (hy : y ∈ dominantChamber P b) : x + y ∈ dominantChamber P b :=
   fun i hi ↦ by simpa using add_nonneg (hx i hi) (hy i hi)
 
 /-- The closed dominant chamber is closed under nonnegative scaling. -/
-lemma smul_mem_dominantChamber {t : R} (ht : 0 ≤ t) {x : M} (hx : x ∈ dominantChamber P b) :
+lemma smul_mem_dominantChamber [PosMulMono R] {t : R} (ht : 0 ≤ t) {x : M}
+    (hx : x ∈ dominantChamber P b) :
     t • x ∈ dominantChamber P b :=
   fun i hi ↦ by simpa using mul_nonneg ht (hx i hi)
 
 /-- The open dominant chamber is closed under addition. -/
-lemma add_mem_openDominantChamber {x y : M} (hx : x ∈ openDominantChamber P b)
-    (hy : y ∈ openDominantChamber P b) : x + y ∈ openDominantChamber P b :=
+lemma add_mem_openDominantChamber [IsOrderedAddMonoid R] {x y : M}
+    (hx : x ∈ openDominantChamber P b) (hy : y ∈ openDominantChamber P b) :
+    x + y ∈ openDominantChamber P b :=
   fun i hi ↦ by simpa using add_pos (hx i hi) (hy i hi)
 
 /-- The open dominant chamber is closed under positive scaling. -/
-lemma smul_mem_openDominantChamber {t : R} (ht : 0 < t) {x : M}
+lemma smul_mem_openDominantChamber [PosMulStrictMono R] {t : R} (ht : 0 < t) {x : M}
     (hx : x ∈ openDominantChamber P b) : t • x ∈ openDominantChamber P b :=
   fun i hi ↦ by simpa using mul_pos ht (hx i hi)
+
+variable [IsStrictOrderedRing R]
 
 /-- A simple reflection carries every point of the open dominant chamber out of the closed
 dominant chamber, since it reverses the sign of the corresponding simple coroot. -/

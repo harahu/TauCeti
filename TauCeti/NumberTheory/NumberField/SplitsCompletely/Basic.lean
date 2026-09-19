@@ -64,10 +64,12 @@ namespace NumberField
 variable (K L : Type*) [Field K] [Field L] [NumberField K] [NumberField L] [Algebra K L]
   [IsGalois K L]
 
+omit [IsGalois K L] in
 /-- In a Galois extension of number fields, the number of primes over a maximal ideal of a
 Dedekind base equals the relative degree iff the common ramification index and inertia degree
 are both `1`. -/
-theorem ncard_primesOver_eq_finrank_iff_of_isGalois {A : Type*} [CommRing A]
+theorem ncard_primesOver_eq_finrank_iff_of_isGalois [IsGaloisGroup Gal(L/K) K L]
+    {A : Type*} [CommRing A]
     [IsDedekindDomain A] [Algebra A (𝓞 L)] [Module.Finite A (𝓞 L)]
     [IsTorsionFree A (𝓞 L)] [IsGaloisGroup Gal(L/K) A (𝓞 L)] (P : Ideal A) [P.IsMaximal] :
     (primesOver P (𝓞 L)).ncard = finrank K L ↔

@@ -399,7 +399,7 @@ variable {k : Type w} {Q : Type u} [Field k] [Quiver.{v} Q] [Finite Q]
 /-- **The arrow ideal of a finite acyclic quiver is contained in the Jacobson radical.** A maximal
 left ideal that missed the arrow ideal would join with it to the whole algebra, writing `1` as a
 sum of an element of the maximal ideal and a nilpotent, and hence containing a unit. -/
-theorem arrowIdeal_le_jacobson (h : Quiver.IsAcyclic Q) :
+theorem arrowIdeal_le_jacobson {k : Type w} [CommRing k] (h : Quiver.IsAcyclic Q) :
     arrowIdeal k Q ≤ Ring.jacobson (pathAlgebra k Q) := by
   rw [Ring.jacobson_eq_sInf_isMaximal]
   refine le_sInf fun m hm => ?_
@@ -419,7 +419,7 @@ theorem arrowIdeal_le_jacobson (h : Quiver.IsAcyclic Q) :
 /-- No vertex idempotent lies in the Jacobson radical: it is a nonzero idempotent, so `1 - eᵥ` is
 not a unit, and the left ideal it generates is contained in a maximal one that would then contain
 `1`. -/
-theorem vertexIdempotent_notMem_jacobson (v : Q) :
+theorem vertexIdempotent_notMem_jacobson {k : Type w} [Ring k] [Nontrivial k] (v : Q) :
     (vertexIdempotent k v : pathAlgebra k Q) ∉ Ring.jacobson (pathAlgebra k Q) := by
   intro hv
   have hne : (vertexIdempotent k v : pathAlgebra k Q) ≠ 0 := vertexIdempotent_ne_zero v

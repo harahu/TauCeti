@@ -153,7 +153,7 @@ lemma ofComplexModule_complexModule {V : Type*} [AddCommGroup V] [Module ℝ V]
 action is the one induced by the complex scalar action. -/
 @[simp]
 lemma re_smul_add_im_smul_I_eq_complex_smul {V : Type*}
-    [AddCommGroup V] [Module ℝ V] [Module ℂ V] [IsScalarTower ℝ ℂ V] (z : ℂ) (v : V) :
+    [AddCommMonoid V] [Module ℝ V] [Module ℂ V] [IsScalarTower ℝ ℂ V] (z : ℂ) (v : V) :
     z.re • v + z.im • (Complex.I • v) = z • v := by
   conv_rhs =>
     rw [← Complex.re_add_im z, add_smul, mul_smul]

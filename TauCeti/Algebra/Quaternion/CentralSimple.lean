@@ -166,9 +166,9 @@ theorem isCentral_of_isLeftRegular_j_sq_or_isLeftRegular_discr {a b c : K}
 
 end Centrality
 
-section FieldCentrality
+section DomainCentrality
 
-variable [Field K] [Invertible (2 : K)]
+variable [CommRing K] [IsDomain K] [Invertible (2 : K)]
 
 /-- A quaternion algebra with nonzero `j`-square or discriminant is central. -/
 theorem isCentral_of_j_sq_ne_zero_or_discr_ne_zero {a b c : K}
@@ -178,7 +178,7 @@ theorem isCentral_of_j_sq_ne_zero_or_discr_ne_zero {a b c : K}
   exact h.imp (fun hc ↦ (isRegular_iff_ne_zero.mpr hc).left)
     (fun hd ↦ (isRegular_iff_ne_zero.mpr hd).left)
 
-end FieldCentrality
+end DomainCentrality
 
 end QuaternionAlgebra
 

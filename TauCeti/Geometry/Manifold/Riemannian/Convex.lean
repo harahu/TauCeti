@@ -69,7 +69,9 @@ namespace TopologicalSpace.Opens
 
 section ConvexOpenSubset
 
-variable {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F]
+section Weak
+
+variable {F : Type*} [SeminormedAddCommGroup F] [NormedSpace ℝ F]
 variable (U : Opens F)
 
 /-- The straight segment in `U`, affinely parametrized on `[0, 1]` at constant speed and clamped
@@ -90,6 +92,29 @@ theorem convexSegment_val_eqOn (hU : Convex ℝ (U : Set F)) (x y : U) :
   intro t ht
   simp only [Function.comp_apply, convexSegment, Subtype.coe_mk,
     ContinuousAffineMap.coe_lineMap_eq, Set.projIcc_of_mem zero_le_one ht]
+
+/-- The straight segment in a convex open subset starts at its first endpoint. -/
+@[simp]
+theorem convexSegment_zero (hU : Convex ℝ (U : Set F)) (x y : U) :
+    convexSegment U hU x y 0 = x := by
+  refine Subtype.ext ?_
+  simp only [convexSegment, Subtype.coe_mk]
+  rw [Set.projIcc_of_mem zero_le_one (left_mem_Icc.2 zero_le_one)]
+  simp [ContinuousAffineMap.coe_lineMap_eq]
+
+/-- The straight segment in a convex open subset ends at its second endpoint. -/
+@[simp]
+theorem convexSegment_one (hU : Convex ℝ (U : Set F)) (x y : U) :
+    convexSegment U hU x y 1 = y := by
+  refine Subtype.ext ?_
+  simp only [convexSegment, Subtype.coe_mk]
+  rw [Set.projIcc_of_mem zero_le_one (right_mem_Icc.2 zero_le_one)]
+  simp [ContinuousAffineMap.coe_lineMap_eq]
+
+end Weak
+
+variable {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F]
+variable (U : Opens F)
 
 /-- The straight segment in a convex open subset is `C¹` on `[0, 1]`. -/
 theorem contMDiffOn_convexSegment (hU : Convex ℝ (U : Set F)) (x y : U) :
@@ -114,24 +139,6 @@ theorem pathELength_convexSegment (hU : Convex ℝ (U : Set F)) (x y : U) :
   rw [TauCeti.Manifold.pathELength_subtypeVal_comp (contMDiffOn_convexSegment U hU x y),
     Manifold.pathELength_congr hval]
   exact TauCeti.Manifold.pathELength_lineMap _ _
-
-/-- The straight segment in a convex open subset starts at its first endpoint. -/
-@[simp]
-theorem convexSegment_zero (hU : Convex ℝ (U : Set F)) (x y : U) :
-    convexSegment U hU x y 0 = x := by
-  refine Subtype.ext ?_
-  simp only [convexSegment, Subtype.coe_mk]
-  rw [Set.projIcc_of_mem zero_le_one (left_mem_Icc.2 zero_le_one)]
-  simp [ContinuousAffineMap.coe_lineMap_eq]
-
-/-- The straight segment in a convex open subset ends at its second endpoint. -/
-@[simp]
-theorem convexSegment_one (hU : Convex ℝ (U : Set F)) (x y : U) :
-    convexSegment U hU x y 1 = y := by
-  refine Subtype.ext ?_
-  simp only [convexSegment, Subtype.coe_mk]
-  rw [Set.projIcc_of_mem zero_le_one (right_mem_Icc.2 zero_le_one)]
-  simp [ContinuousAffineMap.coe_lineMap_eq]
 
 end ConvexOpenSubset
 

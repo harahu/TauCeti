@@ -124,6 +124,10 @@ section Trace
 
 open Polynomial
 
+section CommRingBase
+
+variable {F : Type*} [CommRing F] (W : WeierstrassCurve F)
+
 /-- The tangent quadratic `T² + a₁ T - a₂` of a model singular at the origin, whose roots are the
 slopes of the tangent lines there. -/
 private noncomputable abbrev tangentQuadratic : F[X] :=
@@ -135,6 +139,23 @@ private theorem equation_iff_of_isSingular_zero (h : W.toAffine.IsSingular 0 0) 
   obtain ⟨h₆, h₄, h₃⟩ := (WeierstrassCurve.Affine.isSingular_zero _).1 h
   rw [WeierstrassCurve.Affine.equation_iff, h₆, h₄, h₃]
   ring_nf
+
+/-- The invariants of a model singular at the origin: the tangent quadratic has discriminant `b₂`,
+`c₄ = b₂²`, and the node polynomial is `c₄` times the tangent quadratic. -/
+private theorem invariants_of_isSingular_zero (h : W.toAffine.IsSingular 0 0) :
+    discrim 1 W.a₁ (-W.a₂) = W.b₂ ∧ W.c₄ = W.b₂ ^ 2 ∧
+      W.nodePolynomial = C W.c₄ * tangentQuadratic W := by
+  obtain ⟨h₆, h₄, h₃⟩ := (WeierstrassCurve.Affine.isSingular_zero _).1 h
+  have hb₄ : W.b₄ = 0 := by rw [WeierstrassCurve.b₄, h₄, h₃]; ring
+  have hb₆ : W.b₆ = 0 := by rw [WeierstrassCurve.b₆, h₆, h₃]; ring
+  refine ⟨by rw [discrim, WeierstrassCurve.b₂]; ring, by rw [WeierstrassCurve.c₄, hb₄]; ring, ?_⟩
+  rw [WeierstrassCurve.nodePolynomial_def, hb₄, hb₆, tangentQuadratic]
+  simp only [C_mul, C_neg, C_1, mul_zero, sub_zero, zero_add]
+  ring
+
+end CommRingBase
+
+variable {F : Type*} [Field F] (W : WeierstrassCurve F)
 
 /-- **The solutions at a model singular at the origin are parametrised by the tangent slope.**
 Away from the origin a solution `(x, y)` has `x ≠ 0`, and its slope `t = y / x` satisfies
@@ -180,19 +201,6 @@ private theorem card_equation_add_card_rootSet_of_isSingular_zero [Finite F]
     Nat.card_congr e, ← Nat.card_congr (Equiv.sumCompl fun t : F ↦ t ^ 2 + W.a₁ * t - W.a₂ = 0),
     Nat.card_sum]
   omega
-
-/-- The invariants of a model singular at the origin: the tangent quadratic has discriminant `b₂`,
-`c₄ = b₂²`, and the node polynomial is `c₄` times the tangent quadratic. -/
-private theorem invariants_of_isSingular_zero (h : W.toAffine.IsSingular 0 0) :
-    discrim 1 W.a₁ (-W.a₂) = W.b₂ ∧ W.c₄ = W.b₂ ^ 2 ∧
-      W.nodePolynomial = C W.c₄ * tangentQuadratic W := by
-  obtain ⟨h₆, h₄, h₃⟩ := (WeierstrassCurve.Affine.isSingular_zero _).1 h
-  have hb₄ : W.b₄ = 0 := by rw [WeierstrassCurve.b₄, h₄, h₃]; ring
-  have hb₆ : W.b₆ = 0 := by rw [WeierstrassCurve.b₆, h₆, h₃]; ring
-  refine ⟨by rw [discrim, WeierstrassCurve.b₂]; ring, by rw [WeierstrassCurve.c₄, hb₄]; ring, ?_⟩
-  rw [WeierstrassCurve.nodePolynomial_def, hb₄, hb₆, tangentQuadratic]
-  simp only [C_mul, C_neg, C_1, mul_zero, sub_zero, zero_add]
-  ring
 
 /-- **Moving the singular point to the origin.** Over a finite field a model with `Δ = 0` has a
 rational singular point, and translating it to the origin changes neither the trace, nor `c₄`, nor

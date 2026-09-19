@@ -11,13 +11,13 @@ public import TauCeti.Topology.Algebra.Group.Profinite.ProP.Basic
 /-!
 # Pro-`p` groups are closed under extensions
 
-Let `f : E →* G` be a continuous surjection from a compact topological group onto a Hausdorff
-group. If `G` is pro-`p` and the kernel of `f` is pro-`p` in the subspace topology, then `E` is
-pro-`p` (`TauCeti.IsProP.of_ker_isProP`). The finite input is that an extension of a `p`-group by a
-`p`-group is a `p`-group, `IsPGroup.comap_of_ker_isPGroup`. The topological input is that a
-continuous surjection from a compact group onto a Hausdorff group is an open map, so the image of an
-open normal subgroup `U ≤ E` is an open normal subgroup `f(U) ≤ G`; this exhibits `E ⧸ U` as an
-extension of the finite `p`-group `G ⧸ f(U)` by a quotient of the kernel.
+Let `f : E →* G` be a continuous surjection from a compact group with continuous multiplication onto
+a Hausdorff group. If `G` is pro-`p` and the kernel of `f` is pro-`p` in the subspace topology, then
+`E` is pro-`p` (`TauCeti.IsProP.of_ker_isProP`). The finite input is that an extension of a
+`p`-group by a `p`-group is a `p`-group, `IsPGroup.comap_of_ker_isPGroup`. The topological input is
+that a continuous surjection from a compact group onto a Hausdorff group is an open map, so the
+image of an open normal subgroup `U ≤ E` is an open normal subgroup `f(U) ≤ G`; this exhibits
+`E ⧸ U` as an extension of the finite `p`-group `G ⧸ f(U)` by a quotient of the kernel.
 
 For an extension `1 → M → E → G → 1` of topological groups with compact total group, this says that
 `E` is pro-`p` as soon as `M` and `G` are (`GroupExtension.isProP`). It is what makes the universal
@@ -43,12 +43,12 @@ variable {p : ℕ}
 
 namespace IsProP
 
-variable {E : Type*} [Group E] [TopologicalSpace E] [IsTopologicalGroup E] [CompactSpace E]
+variable {E : Type*} [Group E] [TopologicalSpace E] [ContinuousMul E] [CompactSpace E]
   {G : Type*} [Group G] [TopologicalSpace G] [T2Space G]
 
-/-- **Pro-`p` is closed under extensions.** A compact topological group `E` is pro-`p` when it maps
-onto a Hausdorff pro-`p` group by a continuous surjection whose kernel is pro-`p` in the subspace
-topology. -/
+/-- **Pro-`p` is closed under extensions.** A compact group `E` with continuous multiplication is
+pro-`p` when it maps onto a Hausdorff pro-`p` group by a continuous surjection whose kernel is
+pro-`p` in the subspace topology. -/
 theorem of_ker_isProP (hG : IsProP p G) {f : E →* G} (hf : Continuous f)
     (hsurj : Function.Surjective f) (hker : IsProP p f.ker) : IsProP p E := by
   rw [isProP_iff]

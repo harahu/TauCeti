@@ -84,19 +84,21 @@ universe u v
 
 section Surjective
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
-  {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
+variable {E : Type*} [TopologicalSpace E] {F : Type*} [TopologicalSpace F] [AddCommGroup F]
+  [Module ℝ F]
 
 /-- A map into a trivial space has no critical points, every linear map into it being
 surjective. -/
-private theorem setOf_not_surjective_fderiv_eq_empty [Subsingleton F] (g : E → F) :
+private theorem setOf_not_surjective_fderiv_eq_empty [AddCommGroup E] [Module ℝ E] [Subsingleton F]
+    (g : E → F) :
     {x | ¬ Surjective (fderiv ℝ g x)} = ∅ :=
   eq_empty_of_forall_notMem fun _ hx ↦ hx fun _ ↦ ⟨0, Subsingleton.elim _ _⟩
 
 /-- If a continuous linear map `A` hits every vector annihilated by a functional `φ`, and `φ ∘ A`
 does not vanish identically, then `A` is surjective: rescaling gives `v₁` with `φ (A v₁) = 1`, and
 then `w - φ w • A v₁` is annihilated by `φ`, hence in the range. -/
-private theorem surjective_of_ker_subset_range {A : E →L[ℝ] F} {φ : F →L[ℝ] ℝ}
+private theorem surjective_of_ker_subset_range [AddCommMonoid E] [Module ℝ E] {A : E →L[ℝ] F}
+    {φ : F →L[ℝ] ℝ}
     (hφA : ∃ v, φ (A v) ≠ 0) (h : ∀ y : F, φ y = 0 → ∃ v, A v = y) : Surjective A := by
   obtain ⟨v₀, hv₀⟩ := hφA
   intro w

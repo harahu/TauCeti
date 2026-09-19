@@ -53,6 +53,11 @@ section Compact
 variable {E Y : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [TopologicalSpace Y] [T2Space Y]
   {U : Set E} {K : Set Y} {f : E → Y} {w : E}
 
+section Seminormed
+
+variable {E Y : Type*} [SeminormedAddCommGroup E] [NormedSpace ℝ E] [TopologicalSpace Y]
+  [T2Space Y] {U : Set E} {K : Set Y} {f : E → Y} {w : E}
+
 /-- **On a convex domain the cluster set is preconnected.** The neighbourhood-basis hypothesis of
 `TauCeti.isPreconnected_clusterSetOn` is discharged by the balls around `w`, whose intersections
 with a convex `U` are convex, hence preconnected. -/
@@ -68,11 +73,14 @@ theorem isConnected_clusterSetOn_of_convex (hUc : Convex ℝ U) (hK : IsCompact 
     IsConnected (clusterSetOn f U w) :=
   ⟨clusterSetOn_nonempty hK hfK hw, isPreconnected_clusterSetOn_of_convex hUc hK hfK hfc⟩
 
+end Seminormed
+
 end Compact
 
 section Proper
 
-variable {E Y : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [MetricSpace Y] [ProperSpace Y]
+variable {E Y : Type*} [SeminormedAddCommGroup E] [NormedSpace ℝ E] [MetricSpace Y]
+  [ProperSpace Y]
   {U : Set E} {f : E → Y} {w : E}
 
 /-- **The continuum property in the form it is applied in**: a continuous map on a convex domain,

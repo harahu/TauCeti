@@ -148,13 +148,17 @@ noncomputable instance algebraFractionRingFunctionField :
     Algebra (FractionRing R[X]) W.FunctionField :=
   FractionRing.liftAlgebra R[X] W.FunctionField
 
+section NontrivialBase
+
+variable {R : Type*} [CommRing R] [Nontrivial R] (W : WeierstrassCurve.Affine R)
+
 /-- **The function field of a Weierstrass curve is a quadratic extension of the rational function
 field.** Stated for an arbitrary fraction field `L` of `R[X]`, so that it serves `RatFunc R` as
 well as `FractionRing R[X]`; the latter is found by instance search through
 `algebraFractionRingFunctionField`. -/
 @[simp]
-theorem finrank_functionField (L : Type*) [Field L] [Algebra R[X] L] [IsFractionRing R[X] L]
-    [Algebra L W.FunctionField] [IsScalarTower R[X] L W.FunctionField] :
+theorem finrank_functionField (L : Type*) [CommRing L] [Algebra R[X] L]
+    [IsFractionRing R[X] L] [Algebra L W.FunctionField] [IsScalarTower R[X] L W.FunctionField] :
     Module.finrank L W.FunctionField = 2 := by
   -- `L` and `R(W)` are fraction rings of `R[X]` and `R[W]`, so their degrees agree.
   rw [IsFractionRing.finrank_eq R[X] L W.CoordinateRing W.FunctionField, finrank_coordinateRing]
@@ -165,6 +169,8 @@ instance finiteDimensional_functionField (L : Type*) [Field L] [Algebra R[X] L]
     [IsFractionRing R[X] L] [Algebra L W.FunctionField] [IsScalarTower R[X] L W.FunctionField] :
     FiniteDimensional L W.FunctionField :=
   .of_finrank_pos (by simp)
+
+end NontrivialBase
 
 end Domain
 

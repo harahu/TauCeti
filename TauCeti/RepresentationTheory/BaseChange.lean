@@ -201,6 +201,13 @@ variable {G : Type*} [Monoid G]
 variable {V : Type*} [AddCommGroup V] [Module K V]
 variable {W : Type*} [AddCommGroup W] [Module K W]
 
+section Defect
+
+variable {K : Type*} [CommSemiring K]
+variable {G : Type*} [Monoid G]
+variable {V : Type*} [AddCommMonoid V] [Module K V]
+variable {W : Type*} [AddCommGroup W] [Module K W]
+
 /-- The **intertwining defect** of a linear map `f : V →ₗ[K] W`: the family
 `g ↦ σ g ∘ₗ f - f ∘ₗ ρ g`, whose vanishing is exactly the intertwining condition. Writing the
 intertwiner space as the kernel of a single linear map is what makes it visibly compatible with
@@ -221,6 +228,8 @@ private theorem mem_ker_intertwiningDefect {ρ : _root_.Representation K G V}
   refine forall_congr' fun g => ?_
   rw [intertwiningDefect_apply, Pi.zero_apply, sub_eq_zero, eq_comm]
 
+end Defect
+
 /-- The intertwiner space is the kernel of the intertwining defect. -/
 private def intertwiningMapEquivKerDefect (ρ : _root_.Representation K G V)
     (σ : _root_.Representation K G W) :
@@ -231,6 +240,13 @@ private def intertwiningMapEquivKerDefect (ρ : _root_.Representation K G V)
   invFun f := ⟨f.1, mem_ker_intertwiningDefect.mp f.2⟩
   left_inv _ := rfl
   right_inv _ := rfl
+
+section CommRingBase
+
+variable {L : Type*} [CommRing L]
+variable {K : Type*} [CommRing K] [Algebra K L]
+variable {V : Type*} [AddCommGroup V] [Module K V]
+variable {W : Type*} [AddCommGroup W] [Module K W]
 
 /-- **The intertwining defect of a base-changed map is the base change of its defect**,
 componentwise: base change is compatible with composition and subtraction, and the base-changed
@@ -244,7 +260,13 @@ private theorem intertwiningDefect_baseChange (ρ : _root_.Representation K G V)
     LinearMap.baseChange_comp, LinearMap.baseChange_comp, _root_.Representation.baseChange_apply,
     _root_.Representation.baseChange_apply]
 
+end CommRingBase
+
 variable [FiniteDimensional K V]
+
+section HomBaseChange
+
+variable {W : Type*} [AddCommMonoid W] [Module K W]
 
 variable (K L V W) in
 /-- Scalar extension of linear maps out of a finite-dimensional space: `L ⊗[K] (V →ₗ[K] W)` is the
@@ -274,6 +296,8 @@ private theorem piBaseChangeEquiv_tmul {G : Type*} [Fintype G] [DecidableEq G] (
     piBaseChangeEquiv K L V W G (a ⊗ₜ[K] f) g = a • (f g).baseChange L := by
   rw [piBaseChangeEquiv, LinearEquiv.trans_apply, LinearEquiv.piCongrRight_apply,
     TensorProduct.piRight_apply, TensorProduct.piRightHom_tmul, homBaseChangeEquiv_tmul]
+
+end HomBaseChange
 
 /-- The intertwining defect commutes with scalar extension. -/
 private theorem intertwiningDefect_homBaseChangeEquiv [Fintype G] [DecidableEq G]
@@ -311,7 +335,8 @@ private theorem comap_ker_intertwiningDefect_baseChange [Finite G]
 /-- **The kernel of a base-changed linear map has the dimension of the original kernel.** `L` is
 flat over `K`, so the kernel of the extended map is the extension of the kernel
 (`LinearMap.tensorKerEquiv`), whose dimension over `L` is that of the kernel over `K`. -/
-private theorem finrank_ker_lTensor {M N : Type*} [AddCommGroup M] [Module K M] [AddCommGroup N]
+private theorem finrank_ker_lTensor {L : Type*} [CommRing L] [Nontrivial L] [Algebra K L]
+    {M N : Type*} [AddCommGroup M] [Module K M] [AddCommGroup N]
     [Module K N] (f : M →ₗ[K] N) :
     Module.finrank L (LinearMap.ker (TensorProduct.AlgebraTensorModule.lTensor L L f))
       = Module.finrank K (LinearMap.ker f) :=

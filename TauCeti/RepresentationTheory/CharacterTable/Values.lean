@@ -230,7 +230,8 @@ variable {G : Type v} {V : Type w} [Group G] [AddCommGroup V] [Module ℂ V] [Fi
 /-- **Over `ℂ`, inversion conjugates character values**: if `g ^ n = 1` with `n ≠ 0`, then
 `conj (χ g) = χ g⁻¹`. The eigenvalues of `ρ g` are `n`-th roots of unity, so conjugating them
 inverts them, and `ρ g⁻¹` is the inverse of `ρ g`. -/
-theorem conj_char_eq_char_inv (ρ : Representation ℂ G V) {g : G} {n : ℕ} (hn : n ≠ 0)
+theorem conj_char_eq_char_inv {G : Type v} [DivisionMonoid G] (ρ : Representation ℂ G V) {g : G}
+    {n : ℕ} (hn : n ≠ 0)
     (hg : g ^ n = 1) : (starRingEnd ℂ) (ρ.character g) = ρ.character g⁻¹ := by
   have hf : ρ g ^ n = 1 := by rw [← map_pow, hg, map_one]
   have hinv : g⁻¹ = g ^ (n - 1) :=

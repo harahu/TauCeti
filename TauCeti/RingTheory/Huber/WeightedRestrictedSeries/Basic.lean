@@ -315,7 +315,7 @@ subgroup it generates is `⊥`, a neighbourhood of zero only for the discrete to
 
 This is `TauCeti.Huber.IsWeightFamily.of_exists_isOpenMap_mul` with its hypothesis discharged:
 multiplication by a unit is an open map, needing no open mapping theorem. -/
-theorem IsWeightFamily.of_exists_isUnit [SeparatelyContinuousMul A] {T : Fin k → Set A}
+theorem IsWeightFamily.of_exists_isUnit [ContinuousConstSMul A A] {T : Fin k → Set A}
     (hu : ∀ i, ∃ t ∈ T i, IsUnit t) : IsWeightFamily T :=
   .of_exists_isOpenMap_mul fun i ↦
     let ⟨t, ht, htu⟩ := hu i

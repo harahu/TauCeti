@@ -59,18 +59,18 @@ universe u
 
 /-! ### Central division algebras over a separably closed field -/
 
-section Division
+section Domain
 
 variable (K : Type*) [Field K] [IsSepClosed K]
-variable (D : Type u) [DivisionRing D] [Algebra K D]
+variable (D : Type u) [Ring D] [IsDomain D] [Algebra K D]
 
-/-- An element of a division algebra that is separable over a separably closed base field belongs
+/-- An element of a domain that is separable over a separably closed base field belongs
 to the image of that base field.
 
-The minimal polynomial is irreducible because the ambient algebra is a division ring.  It is
+The minimal polynomial is irreducible because the ambient algebra is a domain.  It is
 separable by hypothesis, hence has degree one over a separably closed field. The degree-one
 calculation adapts Mathlib's `IsSepClosed.algebraMap_surjective` from a field extension to a single
-element of a possibly noncommutative division algebra. -/
+element of a possibly noncommutative domain. -/
 theorem mem_bot_of_isSeparable {x : D} (hx : IsSeparable K x) :
     x ∈ (⊥ : Subalgebra K D) := by
   rw [Algebra.mem_bot]
@@ -82,6 +82,13 @@ theorem mem_bot_of_isSeparable {x : D} (hx : IsSeparable K x) :
   rw [eq_X_add_C_of_degree_eq_one hdegree, hlead, C_1, one_mul, aeval_add, aeval_X,
     aeval_C, add_eq_zero_iff_eq_neg] at heval
   exact (map_neg (algebraMap K D) ((minpoly K x).coeff 0)).trans heval.symm
+
+end Domain
+
+section Division
+
+variable (K : Type*) [Field K] [IsSepClosed K]
+variable (D : Type u) [DivisionRing D] [Algebra K D]
 
 variable [Algebra.IsCentral K D] [FiniteDimensional K D]
 

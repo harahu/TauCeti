@@ -103,6 +103,8 @@ the representatives supplies the factor set.
 
 section FromPGL
 
+variable {G : Type v} [MulOne G]
+
 private noncomputable def pglLift (q : G →* PGL(ι, k)) (g : G) : GL ι k :=
   by
     classical

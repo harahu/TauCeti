@@ -161,10 +161,13 @@ end Combine
 section Coherence
 
 variable {P : Type*}
-variable [Semiring C] [Algebra R C]
 variable [AddCommMonoid M] [Module R M]
 variable [AddCommMonoid N] [Module R N]
 variable [AddCommMonoid P] [Module R P]
+
+section Assoc
+
+variable [NonUnitalSemiring C] [Module R C] [SMulCommClass R C C] [IsScalarTower R C C]
 
 /-- Combining three coacted factors is compatible with reassociation. The two sides multiply
 the coefficient factors as `(c * d) * e` and `c * (d * e)`, respectively. -/
@@ -197,6 +200,12 @@ theorem tensorCombine_assoc_symm (x : M ⊗[R] C) (y : N ⊗[R] C) (z : P ⊗[R]
   simpa [TensorProduct.map_map] using congrArg
     (TensorProduct.map (TensorProduct.assoc R M N P).symm.toLinearMap LinearMap.id)
     (tensorCombine_assoc (R := R) (C := C) x y z).symm
+
+end Assoc
+
+section Unit
+
+variable [NonAssocSemiring C] [Module R C] [SMulCommClass R C C] [IsScalarTower R C C]
 
 /-- Combining the trivial coefficient `1` on the left and applying the left tensor unitor
 scales a coacted vector by the scalar in the trivial factor. -/
@@ -243,6 +252,8 @@ theorem tensorCombine_rid_symm (x : M ⊗[R] C) :
   simpa [TensorProduct.map_map] using congrArg
     (TensorProduct.map (TensorProduct.rid R M).symm.toLinearMap LinearMap.id)
     (tensorCombine_rid (R := R) (C := C) x (r := 1))
+
+end Unit
 
 end Coherence
 

@@ -367,7 +367,7 @@ theorem equivAdjoinRoot_symm_root :
 /-- A ring homomorphism out of the exact cyclotomic integers is determined by the image of the
 distinguished generator `ζ`: the integers admit a unique ring homomorphism, and `ζ` generates
 everything else. -/
-theorem ringHom_ext {R : Type*} [CommRing R] {g₁ g₂ : Cyclotomic e →+* R}
+theorem ringHom_ext {R : Type*} [Semiring R] {g₁ g₂ : Cyclotomic e →+* R}
     (h : g₁ (zeta e) = g₂ (zeta e)) : g₁ = g₂ := by
   have key : g₁.comp (equivAdjoinRoot (e := e)).symm.toRingHom
       = g₂.comp (equivAdjoinRoot (e := e)).symm.toRingHom :=

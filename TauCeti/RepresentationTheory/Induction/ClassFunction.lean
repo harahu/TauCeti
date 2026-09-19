@@ -247,7 +247,9 @@ end AddCommMonoid
 
 section Semiring
 
-variable [Semiring k]
+section NonUnital
+
+variable [NonUnitalNonAssocSemiring k]
 
 private theorem indTerm_smul (c : k) (f : S → k) (g x : G) :
     indTerm (c • f) g x = c * indTerm f g x := by
@@ -260,6 +262,10 @@ theorem indClassFun_smul [S.FiniteIndex] (c : k) (f : S → k) :
     indClassFun S (c • f) = c • indClassFun S f := by
   funext g
   simp [indClassFun, indTerm_smul, Finset.mul_sum]
+
+end NonUnital
+
+variable [Semiring k]
 
 /-! ### Conjugation invariance -/
 
@@ -372,9 +378,9 @@ end Semiring
 
 /-! ### Averaging -/
 
-section Field
+section DivisionSemiring
 
-variable [Field k]
+variable [DivisionSemiring k]
 
 open scoped Classical in
 /-- **The averaged group-sum form of the induced class function.**  The order of the subgroup must
@@ -386,6 +392,6 @@ theorem indClassFun_eq_natCard_inv_mul_sum [Fintype G] {f : S → k}
       (Nat.card S : k)⁻¹ * ∑ x : G, if h : x⁻¹ * g * x ∈ S then f ⟨x⁻¹ * g * x, h⟩ else 0 := by
   rw [← natCard_mul_indClassFun hf g, ← mul_assoc, inv_mul_cancel₀ hS.ne_zero, one_mul]
 
-end Field
+end DivisionSemiring
 
 end TauCeti

@@ -74,7 +74,7 @@ variable {𝕜 α β : Type*} [RCLike 𝕜] {mα : MeasurableSpace α} {mβ : Me
 
 /-- The pointwise product `(x, y) ↦ f x * g y` of an `L²(μ)` and an `L²(ν)` function is `L²` for the
 product measure `μ ⊗ ν`. -/
-theorem memLp_mul_prod [SFinite ν] {f : α → 𝕜} {g : β → 𝕜}
+theorem memLp_mul_prod {𝕜 : Type*} [NormedDivisionRing 𝕜] [SFinite ν] {f : α → 𝕜} {g : β → 𝕜}
     (hf : MemLp f 2 μ) (hg : MemLp g 2 ν) :
     MemLp (fun p : α × β => f p.1 * g p.2) 2 (μ.prod ν) := by
   have hfst : AEStronglyMeasurable (fun p : α × β => f p.1) (μ.prod ν) :=

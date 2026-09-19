@@ -231,6 +231,14 @@ private noncomputable def AdditiveInvariant.toPresented (a : AdditiveInvariant C
     a.toPresented.obj = a.obj :=
   (rfl)
 
+omit [EssentiallySmall.{w} C] in
+/-- An additive invariant vanishes on zero objects. -/
+theorem AdditiveInvariant.obj_eq_zero_of_isZero (v : AdditiveInvariant C G) {X : C}
+    (hX : IsZero X) : v.obj X = 0 := by
+  have h := v.map_biprod X X
+  rw [v.map_iso (isoBiprodZero hX).symm] at h
+  exact add_eq_right.1 h.symm
+
 /-- The homomorphism out of split `K₀` induced by a biproduct-additive invariant. -/
 noncomputable def lift (a : AdditiveInvariant C G) : SplitK0 C →+ G :=
   PresentedK0.lift a.toPresented
@@ -264,24 +272,35 @@ lemma liftEquiv_symm_apply_obj (f : SplitK0 C →+ G) (X : C) :
 
 end SplitK0
 
+section FreeMap
+
+variable {C : Type u} [Category.{v} C] [HasZeroMorphisms C] [HasBinaryBiproducts C]
+  [EssentiallySmall.{w} C]
+  {D : Type u'} [Category.{v'} D] [HasZeroMorphisms D] [HasBinaryBiproducts D]
+  [EssentiallySmall.{w'} D]
+
+private lemma freeMap_splitRelation (F : C ⥤ D) [F.PreservesZeroMorphisms]
+    [PreservesFiniteBiproducts F] (X Y : C) :
+    freeMap F (splitRelation X Y) = splitRelation (F.obj X) (F.obj Y) := by
+  have : PreservesBinaryBiproducts F := preservesBinaryBiproducts_of_preservesBiproducts F
+  rw [splitRelation_def, map_sub, map_sub, freeMap_freeOf, freeMap_freeOf, freeMap_freeOf,
+    freeOf_congr (F.mapBiprod X Y), splitRelation_def]
+
+private lemma freeMap_splitRelations_mem_closure (F : C ⥤ D) [F.PreservesZeroMorphisms]
+    [PreservesFiniteBiproducts F] :
+    ∀ r ∈ splitRelations C, freeMap F r ∈ AddSubgroup.closure (splitRelations D) := by
+  rintro _ ⟨X, Y, rfl⟩
+  rw [freeMap_splitRelation]
+  exact AddSubgroup.subset_closure (splitRelation_mem_splitRelations _ _)
+
+end FreeMap
+
 section Functoriality
 
 variable {C : Type u} [Category.{v} C] [Preadditive C] [HasBinaryBiproducts C]
   [EssentiallySmall.{w} C]
   {D : Type u'} [Category.{v'} D] [Preadditive D] [HasBinaryBiproducts D]
   [EssentiallySmall.{w'} D]
-
-private lemma freeMap_splitRelation (F : C ⥤ D) [F.Additive] (X Y : C) :
-    freeMap F (splitRelation X Y) = splitRelation (F.obj X) (F.obj Y) := by
-  have : PreservesBinaryBiproducts F := preservesBinaryBiproducts_of_preservesBiproducts F
-  rw [splitRelation_def, map_sub, map_sub, freeMap_freeOf, freeMap_freeOf, freeMap_freeOf,
-    freeOf_congr (F.mapBiprod X Y), splitRelation_def]
-
-private lemma freeMap_splitRelations_mem_closure (F : C ⥤ D) [F.Additive] :
-    ∀ r ∈ splitRelations C, freeMap F r ∈ AddSubgroup.closure (splitRelations D) := by
-  rintro _ ⟨X, Y, rfl⟩
-  rw [freeMap_splitRelation]
-  exact AddSubgroup.subset_closure (splitRelation_mem_splitRelations _ _)
 
 namespace SplitK0
 
@@ -342,12 +361,6 @@ variable {C : Type u} [Category.{v} C] [Preadditive C] [HasBinaryBiproducts C]
   {G : Type*} [AddCommGroup G] (v : SplitK0.AdditiveInvariant C G)
 
 namespace SplitK0.AdditiveInvariant
-
-/-- An additive invariant vanishes on zero objects. -/
-theorem obj_eq_zero_of_isZero {X : C} (hX : IsZero X) : v.obj X = 0 := by
-  have h := v.map_biprod X X
-  rw [v.map_iso (isoBiprodZero hX).symm] at h
-  exact add_eq_right.1 h.symm
 
 /-- An additive invariant is additive on finite biproducts. -/
 @[simp]

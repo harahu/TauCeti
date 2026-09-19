@@ -265,10 +265,12 @@ variable {X Y : Type*} [TopologicalSpace X] [TopologicalSpace.MetrizableSpace X]
   [CompactSpace X] [MeasurableSpace X] [BorelSpace X] [TopologicalSpace Y]
   [TopologicalSpace.MetrizableSpace Y] [CompactSpace Y] [MeasurableSpace Y] [BorelSpace Y]
 
+omit [TopologicalSpace.MetrizableSpace X] [TopologicalSpace.MetrizableSpace Y] in
 /-- **Closedness of couplings on compact metrizable spaces.** This is the directly usable
 compact-metrizable specialisation of `TauCeti.isClosed_setOfPred_isCoupling`. -/
-theorem isClosed_setOfPred_isCoupling_of_compactSpace (μ : ProbabilityMeasure X)
-    (ν : ProbabilityMeasure Y) :
+theorem isClosed_setOfPred_isCoupling_of_compactSpace
+    [TopologicalSpace.PseudoMetrizableSpace X] [TopologicalSpace.PseudoMetrizableSpace Y]
+    (μ : ProbabilityMeasure X) (ν : ProbabilityMeasure Y) :
     IsClosed
       {π : ProbabilityMeasure (X × Y) | IsCoupling π.toMeasure μ.toMeasure ν.toMeasure} := by
   let : UniformSpace X := TopologicalSpace.pseudoMetrizableSpaceUniformity X

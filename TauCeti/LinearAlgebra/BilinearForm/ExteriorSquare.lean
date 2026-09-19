@@ -41,7 +41,9 @@ universe u v
 
 namespace TauCeti
 
-variable {K : Type u} [Field K] {V : Type v} [AddCommGroup V] [Module K V]
+section Weak
+
+variable {K : Type u} [CommSemiring K] {V : Type v} [AddCommMonoid V] [Module K V]
 
 private def alternatingBilinFormSubmodule : Submodule K (BilinForm K V) where
   carrier := { A | A.IsAlt }
@@ -55,6 +57,10 @@ private theorem mem_alternatingBilinFormSubmodule (A : BilinForm K V) :
 private theorem BilinForm.IsAlt.linearMapIsAlt {B : BilinForm K V} (hB : B.IsAlt) :
     LinearMap.IsAlt B := by
   simpa only [LinearMap.BilinForm.IsAlt] using hB
+
+end Weak
+
+variable {K : Type u} [Field K] {V : Type v} [AddCommGroup V] [Module K V]
 
 private noncomputable def exteriorDualEquivAlternatingBilinForm :
     Module.Dual K (⋀[K]^2 V) ≃ₗ[K] alternatingBilinFormSubmodule (K := K) (V := V) where

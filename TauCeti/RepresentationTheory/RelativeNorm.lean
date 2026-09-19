@@ -65,11 +65,11 @@ public noncomputable section
 
 namespace Representation
 
-variable {R G V : Type*} [Group G]
+variable {R G V : Type*}
 
 section Semiring
 
-variable [Semiring R] [AddCommMonoid V] [Module R V]
+variable [Group G] [Semiring R] [AddCommMonoid V] [Module R V]
   (ρ : Representation R G V) (H : Subgroup G)
 
 section Defs
@@ -170,7 +170,7 @@ end Semiring
 
 section Ring
 
-variable [CommRing R] [AddCommGroup V] [Module R V]
+variable [Group G] [CommRing R] [AddCommGroup V] [Module R V]
   (ρ : Representation R G V) (H : Subgroup G)
 
 section Invariants
@@ -233,27 +233,6 @@ theorem coinvariantsKer_comp_subtype_le :
   rw [Coinvariants.ker, Coinvariants.ker, Submodule.span_le]
   rintro _ ⟨⟨h, y⟩, rfl⟩
   exact Submodule.subset_span ⟨((h : G), y), rfl⟩
-
-/-- **An intertwining map carries the augmentation submodule into the augmentation submodule.**
-Only the compatibility of the actions is used, so `e` need not be a homomorphism. -/
-theorem coinvariantsKer_map_le {G' V' : Type*} [Group G'] [AddCommGroup V'] [Module R V']
-    {ρ' : Representation R G' V'} (e : G → G') (φ : V →ₗ[R] V')
-    (hφ : ∀ g x, φ (ρ g x) = ρ' (e g) (φ x)) :
-    (Coinvariants.ker ρ).map φ ≤ Coinvariants.ker ρ' := by
-  rw [Coinvariants.ker, Submodule.map_span_le]
-  rintro _ ⟨⟨g, x⟩, rfl⟩
-  rw [map_sub, hφ]
-  exact Coinvariants.sub_mem_ker _ _
-
-/-- **Precomposing the restricting homomorphism with a surjection does not change the
-augmentation submodule.** -/
-theorem coinvariantsKer_comp_comp_of_surjective {G' G'' : Type*} [Group G'] [Group G'']
-    (ψ : G' →* G) (ε : G'' →* G') (hε : Function.Surjective ε) :
-    Coinvariants.ker (ρ.comp (ψ.comp ε)) = Coinvariants.ker (ρ.comp ψ) := by
-  rw [Coinvariants.ker, Coinvariants.ker]
-  exact congrArg (Submodule.span R)
-    ((Prod.map_surjective.2 ⟨hε, Function.surjective_id⟩).range_comp
-      fun gv : G' × V => (ρ.comp ψ) gv.1 gv.2 - gv.2)
 
 variable [Fintype (G ⧸ H)]
 
@@ -353,5 +332,32 @@ theorem relTransfer_relTransfer_sub_relTransfer_mem {K : Subgroup G} (hKH : K �
 end Coinvariants
 
 end Ring
+
+section Monoid
+
+variable [Monoid G] [CommRing R] [AddCommGroup V] [Module R V] {ρ : Representation R G V}
+
+/-- **An intertwining map carries the augmentation submodule into the augmentation submodule.**
+Only the compatibility of the actions is used, so `e` need not be a homomorphism. -/
+theorem coinvariantsKer_map_le {G' V' : Type*} [Monoid G'] [AddCommGroup V'] [Module R V']
+    {ρ' : Representation R G' V'} (e : G → G') (φ : V →ₗ[R] V')
+    (hφ : ∀ g x, φ (ρ g x) = ρ' (e g) (φ x)) :
+    (Coinvariants.ker ρ).map φ ≤ Coinvariants.ker ρ' := by
+  rw [Coinvariants.ker, Submodule.map_span_le]
+  rintro _ ⟨⟨g, x⟩, rfl⟩
+  rw [map_sub, hφ]
+  exact Coinvariants.sub_mem_ker _ _
+
+/-- **Precomposing the restricting homomorphism with a surjection does not change the
+augmentation submodule.** -/
+theorem coinvariantsKer_comp_comp_of_surjective {G' G'' : Type*} [Monoid G'] [Monoid G'']
+    (ψ : G' →* G) (ε : G'' →* G') (hε : Function.Surjective ε) :
+    Coinvariants.ker (ρ.comp (ψ.comp ε)) = Coinvariants.ker (ρ.comp ψ) := by
+  rw [Coinvariants.ker, Coinvariants.ker]
+  exact congrArg (Submodule.span R)
+    ((Prod.map_surjective.2 ⟨hε, Function.surjective_id⟩).range_comp
+      fun gv : G' × V => (ρ.comp ψ) gv.1 gv.2 - gv.2)
+
+end Monoid
 
 end Representation

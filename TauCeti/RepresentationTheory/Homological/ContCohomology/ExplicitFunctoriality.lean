@@ -197,9 +197,9 @@ end Naturality
 hypothesis of the composite pair `(φ.comp ψ, q.comp f)`. -/
 theorem comp_apply_smul
     {G : Type uG} {H : Type uH} {K : Type uK}
-    [Monoid G] [Monoid H] [Monoid K]
+    [MulOne G] [MulOne H] [MulOne K]
     {M : Type uM} {N : Type uN} {P : Type uP}
-    [AddMonoid M] [AddMonoid N] [AddMonoid P]
+    [AddZero M] [AddZero N] [AddZero P]
     [SMul G M] [SMul H N] [SMul K P]
     (φ : H →* G) (ψ : K →* H) (f : M →+ N) (q : N →+ P)
     (hf : ∀ (h : H) (m : M), f (φ h • m) = h • f m)
@@ -209,12 +209,14 @@ theorem comp_apply_smul
 
 section Cocycles
 
+section Mem
+
 variable (G : Type uG) [Monoid G] [TopologicalSpace G]
   (M : Type uM) [AddCommGroup M] [TopologicalSpace M] [IsTopologicalAddGroup M]
-  [DistribMulAction G M]
+  [DistribSMul G M]
   (H : Type uH) [Monoid H] [TopologicalSpace H]
   (N : Type uN) [AddCommGroup N] [TopologicalSpace N] [IsTopologicalAddGroup N]
-  [DistribMulAction H N]
+  [DistribSMul H N]
 
 /-- A compatible pair sends continuous degree-one cocycles to continuous degree-one cocycles. -/
 theorem cochainsMap1_mem_Z1 (φ : H →ₜ* G) (f : M →+ N) (hf : Continuous f)
@@ -236,6 +238,15 @@ theorem cochainsMap2_mem_Z2 (φ : H →ₜ* G) (f : M →+ N) (hf : Continuous f
   rw [← hequiv h, ← map_add, ← map_add]
   exact congrArg f ((mem_Z2_iff.1 hc).2 ((φ : H →* G) h) ((φ : H →* G) k)
     ((φ : H →* G) j))
+
+end Mem
+
+variable (G : Type uG) [Monoid G] [TopologicalSpace G]
+  (M : Type uM) [AddCommGroup M] [TopologicalSpace M] [IsTopologicalAddGroup M]
+  [DistribMulAction G M]
+  (H : Type uH) [Monoid H] [TopologicalSpace H]
+  (N : Type uN) [AddCommGroup N] [TopologicalSpace N] [IsTopologicalAddGroup N]
+  [DistribMulAction H N]
 
 /-- The pullback of continuous degree-one cocycles along a compatible pair, sending a cocycle `c`
 to `h ↦ f (c (φ h))`. -/

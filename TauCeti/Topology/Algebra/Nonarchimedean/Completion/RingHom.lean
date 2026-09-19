@@ -34,7 +34,7 @@ namespace TauCeti
 uniformities agree and the first map satisfies the characterization that uniquely determines the
 second. -/
 theorem completionRingHom_heq_of_uniformSpace_eq
-    {A S S' : Type*} [CommRing A] [CommRing S] [CommRing S']
+    {A S S' : Type*} [NonAssocSemiring A] [CommRing S] [CommRing S']
     {u₁ u₂ : UniformSpace S} (hu : u₂ = u₁) {v₁ v₂ : UniformSpace S'} (hv : v₂ = v₁)
     (g₁ : @IsUniformAddGroup S u₁ _) (g₂ : @IsUniformAddGroup S u₂ _)
     (t₁ : @IsTopologicalRing S u₁.toTopologicalSpace _)

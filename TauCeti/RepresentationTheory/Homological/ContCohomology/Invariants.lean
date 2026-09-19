@@ -154,7 +154,8 @@ variable {U V : OpenNormalSubgroup G}
 /-- The coefficient inclusion `M^U → M^V` is equivariant after restriction along the quotient
 homomorphism `G ⧸ V → G ⧸ U`. -/
 @[simp]
-theorem fixedPointsInclusion_continuousFiniteQuotientMap_smul (hVU : V ≤ U)
+theorem fixedPointsInclusion_continuousFiniteQuotientMap_smul (M : Type*) [AddGroup M]
+    [DistribMulAction G M] (hVU : V ≤ U)
     (q : G ⧸ V.toSubgroup)
     (m : FixedPoints.addSubgroup U.toSubgroup M) :
     fixedPointsInclusion hVU (continuousFiniteQuotientMap G hVU q • m) =

@@ -418,7 +418,7 @@ private theorem det_vandermonde_eq_prod_range {R : Type*} [CommRing R] (m : ℕ)
 /-- Cancelling a common factor of square one carried by every term of a sum and by the value it is
 compared to.  A sign is such a factor over any commutative ring, where it need not be cancellable
 in the sense of `mul_left_cancel₀`. -/
-private theorem mul_self_cancel_sum {ι : Type*} [Fintype ι] {R : Type*} [CommRing R] {c : R}
+private theorem mul_self_cancel_sum {ι : Type*} [Fintype ι] {R : Type*} [CommSemiring R] {c : R}
     (hc : c * c = 1) {f g : ι → R} {a p : R} (h : ∑ i, f i * (c * g i) = a * (c * p)) :
     (∑ i, f i * g i) = a * p := by
   have hsum : ∑ i, f i * (c * g i) = c * ∑ i, f i * g i := by

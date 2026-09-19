@@ -44,7 +44,7 @@ the blocks: corresponding matrix sizes agree and their coefficient division ring
 
 The positivity hypotheses are essential.  A zero-size matrix ring is trivial and can be inserted
 with arbitrary coefficients without changing the product. -/
-theorem wedderburn_blocks_unique {R : Type u} [Ring R]
+theorem wedderburn_blocks_unique {R : Type u} [Distrib R]
     {m n : ℕ} {D : Fin m → Type v} {E : Fin n → Type w}
     [∀ i, DivisionRing (D i)] [∀ j, DivisionRing (E j)]
     {d : Fin m → ℕ} {e : Fin n → ℕ} [∀ i, NeZero (d i)] [∀ j, NeZero (e j)]

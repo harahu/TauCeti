@@ -406,7 +406,7 @@ theorem charFun_cauchyMeasure (x₀ : ℝ) (γ : ℝ≥0) (t : ℝ) :
 /-- **The Cauchy family is stable under averaging.** The sample mean of `n` independent Cauchy
 variables with common location `x₀` and scale `γ` has exactly the same law. -/
 theorem hasLaw_average_of_iIndepFun_cauchyMeasure {Ω : Type*} [MeasurableSpace Ω]
-    {P : Measure Ω} [IsProbabilityMeasure P] {n : ℕ} (hn : 0 < n) {x₀ : ℝ} {γ : ℝ≥0}
+    {P : Measure Ω} [IsFiniteMeasure P] {n : ℕ} (hn : 0 < n) {x₀ : ℝ} {γ : ℝ≥0}
     {X : Fin n → Ω → ℝ} (hindep : iIndepFun X P)
     (hlaw : ∀ i, HasLaw (X i) (cauchyMeasure x₀ γ) P) :
     HasLaw (fun ω ↦ (n : ℝ)⁻¹ * ∑ i, X i ω) (cauchyMeasure x₀ γ) P where

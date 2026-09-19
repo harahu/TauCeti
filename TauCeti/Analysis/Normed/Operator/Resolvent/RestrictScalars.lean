@@ -46,25 +46,11 @@ noncomputable section
 
 namespace TauCeti.LinearPMap
 
-variable {𝕜 𝕜' X : Type*} [NontriviallyNormedField 𝕜] [NontriviallyNormedField 𝕜']
-  [NormedAlgebra 𝕜 𝕜'] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [NormedSpace 𝕜' X]
-  [IsScalarTower 𝕜 𝕜' X] {A : X →ₗ.[𝕜'] X} {mu : 𝕜} {R : X →L[𝕜'] X} {R₀ : X →L[𝕜] X}
+section WeakNormedField
 
-/-- An inverse of `algebraMap 𝕜 𝕜' mu • I - A` restricts to an inverse of `mu • I - A` for the
-restriction of scalars. -/
-theorem IsResolventAt.restrictScalars (h : IsResolventAt A (algebraMap 𝕜 𝕜' mu) R) :
-    IsResolventAt (A.restrictScalars 𝕜) mu (R.restrictScalars 𝕜) where
-  mem_domain y := by
-    simp only [ContinuousLinearMap.coe_restrictScalars']
-    exact (A.mem_restrictScalars_domain 𝕜).mpr (h.mem_domain y)
-  smul_sub_apply y := by
-    simp only [ContinuousLinearMap.coe_restrictScalars', LinearPMap.restrictScalars_apply,
-      ← algebraMap_smul 𝕜' mu]
-    exact h.smul_sub_apply y
-  apply_smul_sub x := by
-    simp only [ContinuousLinearMap.coe_restrictScalars', LinearPMap.restrictScalars_apply,
-      ← algebraMap_smul 𝕜' mu]
-    exact h.apply_smul_sub ⟨(x : X), (A.mem_restrictScalars_domain 𝕜).mp x.property⟩
+variable {𝕜 𝕜' X : Type*} [NontriviallyNormedField 𝕜] [NormedField 𝕜']
+  [Algebra 𝕜 𝕜'] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [NormedSpace 𝕜' X]
+  [IsScalarTower 𝕜 𝕜' X] {A : X →ₗ.[𝕜'] X} {mu : 𝕜} {R₀ : X →L[𝕜] X}
 
 /-- A bounded `𝕜`-linear inverse of `mu • I - A` is homogeneous for the larger field `𝕜'`: it is
 the inverse of a `𝕜'`-linear bijection. -/
@@ -84,6 +70,30 @@ theorem map_smul_of_isResolventAt_restrictScalars
   simp only [LinearPMap.restrictScalars_apply, ← algebraMap_smul 𝕜' mu] at hback
   rw [hkey] at hback
   exact hback
+
+end WeakNormedField
+
+section Weak
+
+variable {𝕜 𝕜' X : Type*} [NontriviallyNormedField 𝕜] [NontriviallyNormedField 𝕜']
+  [Algebra 𝕜 𝕜'] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [NormedSpace 𝕜' X]
+  [IsScalarTower 𝕜 𝕜' X] {A : X →ₗ.[𝕜'] X} {mu : 𝕜} {R : X →L[𝕜'] X} {R₀ : X →L[𝕜] X}
+
+/-- An inverse of `algebraMap 𝕜 𝕜' mu • I - A` restricts to an inverse of `mu • I - A` for the
+restriction of scalars. -/
+theorem IsResolventAt.restrictScalars (h : IsResolventAt A (algebraMap 𝕜 𝕜' mu) R) :
+    IsResolventAt (A.restrictScalars 𝕜) mu (R.restrictScalars 𝕜) where
+  mem_domain y := by
+    simp only [ContinuousLinearMap.coe_restrictScalars']
+    exact (A.mem_restrictScalars_domain 𝕜).mpr (h.mem_domain y)
+  smul_sub_apply y := by
+    simp only [ContinuousLinearMap.coe_restrictScalars', LinearPMap.restrictScalars_apply,
+      ← algebraMap_smul 𝕜' mu]
+    exact h.smul_sub_apply y
+  apply_smul_sub x := by
+    simp only [ContinuousLinearMap.coe_restrictScalars', LinearPMap.restrictScalars_apply,
+      ← algebraMap_smul 𝕜' mu]
+    exact h.apply_smul_sub ⟨(x : X), (A.mem_restrictScalars_domain 𝕜).mp x.property⟩
 
 /-- A bounded inverse of `mu • I - A` over the smaller field is the restriction of scalars of a
 bounded inverse over the larger one. -/
@@ -125,6 +135,8 @@ theorem restrictScalars_resolvent (h : mu ∈ resolventSet (A.restrictScalars �
   (resolvent_eq_of_isResolventAt
     (IsResolventAt.restrictScalars
       (isResolventAt_resolvent (mem_resolventSet_restrictScalars_iff.mp h)))).symm
+
+end Weak
 
 end TauCeti.LinearPMap
 

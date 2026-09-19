@@ -70,7 +70,9 @@ open scoped unitInterval
 
 namespace TauCeti
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+section Interpolation
+
+variable {E : Type*} [SeminormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The `k`-th hat-function formula for a subdivision into `N` equal parts. -/
 private def hatFunction (N k : ℕ) (t : I) : ℝ := max 0 (1 - |(N : ℝ) * (t : ℝ) - (k : ℝ)|)
@@ -81,7 +83,8 @@ private def nodeParam (N k : ℕ) : I :=
 
 /-- The piecewise linear interpolation of the nodes `node 0, …, node N` through the hat
 functions of the subdivision of the unit interval into `N` equal parts. -/
-private def nodeInterp (N : ℕ) (node : ℕ → E) (t : I) : E :=
+private def nodeInterp {E : Type*} [AddCommMonoid E] [Module ℝ E]
+    (N : ℕ) (node : ℕ → E) (t : I) : E :=
   ∑ k ∈ Finset.range (N + 1), hatFunction N k t • node k
 
 private theorem hatFunction_nonneg (N k : ℕ) (t : I) : 0 ≤ hatFunction N k t := le_max_left _ _
@@ -233,13 +236,15 @@ private theorem continuous_nodeInterp (N : ℕ) (node : ℕ → E) :
     Continuous (nodeInterp N node) :=
   continuous_finsetSum _ fun k _ => (continuous_hatFunction N k).smul continuous_const
 
-private theorem nodeInterp_zero (N : ℕ) (node : ℕ → E) : nodeInterp N node 0 = node 0 := by
+private theorem nodeInterp_zero {E : Type*} [AddCommMonoid E] [Module ℝ E]
+    (N : ℕ) (node : ℕ → E) : nodeInterp N node 0 = node 0 := by
   rw [nodeInterp, Finset.sum_eq_single 0]
   · rw [hatFunction_zero_self, one_smul]
   · exact fun k _ hk => by rw [hatFunction_zero_of_ne N hk, zero_smul]
   · exact fun hc => absurd (Finset.mem_range.mpr (Nat.succ_pos N)) hc
 
-private theorem nodeInterp_one (N : ℕ) (node : ℕ → E) : nodeInterp N node 1 = node N := by
+private theorem nodeInterp_one {E : Type*} [AddCommMonoid E] [Module ℝ E]
+    (N : ℕ) (node : ℕ → E) : nodeInterp N node 1 = node N := by
   rw [nodeInterp, Finset.sum_eq_single N]
   · rw [hatFunction_one_self, one_smul]
   · exact fun k hk hkN => by
@@ -247,7 +252,8 @@ private theorem nodeInterp_one (N : ℕ) (node : ℕ → E) : nodeInterp N node 
   · exact fun hc => absurd (Finset.mem_range.mpr (Nat.lt_succ_self N)) hc
 
 /-- The interpolation at `t` lies in the span of the two nodes straddling `t`. -/
-private theorem nodeInterp_mem_span (N : ℕ) (node : ℕ → E) (t : I) :
+private theorem nodeInterp_mem_span {E : Type*} [AddCommMonoid E] [Module ℝ E]
+    (N : ℕ) (node : ℕ → E) (t : I) :
     nodeInterp N node t ∈
       Submodule.span ℝ {node ⌊(N : ℝ) * (t : ℝ)⌋₊, node (⌊(N : ℝ) * (t : ℝ)⌋₊ + 1)} := by
   rw [nodeInterp]
@@ -324,7 +330,9 @@ private theorem segment_ne_zero_of_norm_sub_lt {a b : E} (ha : ‖a‖ = 1)
     exact mul_le_of_le_one_left (norm_nonneg _) (unitInterval.le_one u)
   linarith
 
-private theorem span_pair_ne_top (h : 2 < Module.rank ℝ E) (a b : E) :
+omit [NormedSpace ℝ E] in
+private theorem span_pair_ne_top [Module ℝ E] (h : 2 < Module.rank ℝ E)
+    (a b : E) :
     Submodule.span ℝ ({a, b} : Set E) ≠ ⊤ := by
   intro hab
   have hcard : Cardinal.mk ({a, b} : Set E) ≤ 2 :=
@@ -334,6 +342,10 @@ private theorem span_pair_ne_top (h : 2 < Module.rank ℝ E) (a b : E) :
     (rank_span_le _).trans hcard
   rw [hab, rank_top] at h2
   exact absurd h2 (not_le.mpr h)
+
+end Interpolation
+
+variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- **Every loop on the unit sphere of a real normed space of rank greater than two is
 homotopic to a loop that omits a point of the sphere.** The comparison loop is the radial

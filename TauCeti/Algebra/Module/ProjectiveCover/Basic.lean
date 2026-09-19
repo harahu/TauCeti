@@ -202,7 +202,7 @@ theorem IsProjectiveCover.nonempty_linearEquiv_ker {P' : Type*} [AddCommGroup P'
 
 /-- Composing a projective cover with a surjection whose kernel is superfluous again gives a
 projective cover. -/
-theorem IsProjectiveCover.comp {N : Type*} [AddCommGroup N] [Module R N] {f : P →ₗ[R] M}
+theorem IsProjectiveCover.comp {N : Type*} [AddCommMonoid N] [Module R N] {f : P →ₗ[R] M}
     (hf : IsProjectiveCover f) {g : M →ₗ[R] N} (hg : Function.Surjective g)
     (hgker : IsSuperfluous (LinearMap.ker g)) : IsProjectiveCover (g ∘ₗ f) where
   projective := hf.projective
@@ -220,11 +220,17 @@ section Ring
 variable {R : Type u} {M : Type v} {P : Type w}
   [Ring R] [AddCommGroup M] [Module R M] [AddCommGroup P] [Module R P]
 
+section KerJacobson
+
+variable {M : Type v} [AddCommMonoid M] [Module R M]
+
 /-- The kernel of a projective cover lies in the radical of the covering module, being
 superfluous. -/
 theorem IsProjectiveCover.ker_le_jacobson {f : P →ₗ[R] M} (hf : IsProjectiveCover f) :
     LinearMap.ker f ≤ Module.jacobson R P :=
   hf.isSuperfluous_ker.le_jacobson
+
+end KerJacobson
 
 /-! ### Quotients
 
@@ -258,10 +264,12 @@ section Simple
 
 variable {T : Type*} [AddCommGroup T] [Module R T] [IsSimpleModule R T]
 
+omit [IsSimpleModule R T] in
 /-- Every map from the source of a projective cover into a simple module factors through the
 cover: the kernel of the cover is superfluous, hence contained in the radical of the source, which
 the map annihilates. -/
-theorem IsProjectiveCover.exists_comp_eq {f : P →ₗ[R] M} (hf : IsProjectiveCover f)
+theorem IsProjectiveCover.exists_comp_eq [IsSemisimpleModule R T] {f : P →ₗ[R] M}
+    (hf : IsProjectiveCover f)
     (φ : P →ₗ[R] T) : ∃ ψ : M →ₗ[R] T, ψ ∘ₗ f = φ := by
   have hle : LinearMap.ker f ≤ LinearMap.ker φ :=
     hf.ker_le_jacobson.trans (IsSemisimpleModule.jacobson_le_ker R R P T φ)

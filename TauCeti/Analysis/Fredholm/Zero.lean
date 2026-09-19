@@ -37,10 +37,13 @@ open Module
 
 variable {𝕜 E F : Type*}
 variable [NontriviallyNormedField 𝕜]
-variable [NormedAddCommGroup E] [NormedSpace 𝕜 E]
-variable [NormedAddCommGroup F] [NormedSpace 𝕜 F]
+section Seminormed
 
-private lemma finiteDimensional_domain_of_isFredholm_zero
+variable [SeminormedAddCommGroup E] [NormedSpace 𝕜 E]
+variable [SeminormedAddCommGroup F] [NormedSpace 𝕜 F]
+
+omit [NormedSpace 𝕜 F] in
+private lemma finiteDimensional_domain_of_isFredholm_zero [Module 𝕜 F]
     (hT : ContinuousLinearMap.IsFredholm (0 : E →L[𝕜] F)) : FiniteDimensional 𝕜 E := by
   let := hT.finite_ker
   exact
@@ -48,12 +51,18 @@ private lemma finiteDimensional_domain_of_isFredholm_zero
         LinearMap.ker_zero) ≪≫ₗ
       (Submodule.topEquiv : (⊤ : Submodule 𝕜 E) ≃ₗ[𝕜] E)).finiteDimensional
 
-private lemma finiteDimensional_codomain_of_isFredholm_zero
+omit [NormedSpace 𝕜 E] in
+private lemma finiteDimensional_codomain_of_isFredholm_zero [Module 𝕜 E]
     (hT : ContinuousLinearMap.IsFredholm (0 : E →L[𝕜] F)) : FiniteDimensional 𝕜 F := by
   let := hT.finite_coker
   exact
     (LinearMap.range (0 : E →ₗ[𝕜] F)).quotEquivOfEqBot LinearMap.range_zero
       |>.finiteDimensional
+
+end Seminormed
+
+variable [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+variable [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
 /-- The zero continuous linear map is Fredholm exactly when its domain and codomain are both
 finite dimensional. -/

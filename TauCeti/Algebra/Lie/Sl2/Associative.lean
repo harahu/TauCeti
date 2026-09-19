@@ -165,7 +165,8 @@ section DividedPowers
 
 variable {A : Type*} [Ring A] [Algebra ℚ A] {H E F : A}
 
-private theorem inv_factorial_succ_nsmul (n : ℕ) (x : A) :
+private theorem inv_factorial_succ_nsmul {A : Type*} [Semiring A] [Algebra ℚ A]
+    (n : ℕ) (x : A) :
     (((n + 1).factorial : ℚ))⁻¹ • ((n + 1) • x) = ((n.factorial : ℚ))⁻¹ • x := by
   have hfac : (n.factorial : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr n.factorial_ne_zero
   rw [← Nat.cast_smul_eq_nsmul ℚ, smul_smul]

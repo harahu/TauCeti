@@ -199,8 +199,9 @@ theorem map_adjacent_chainMeasure_of_isCoupling [StandardBorelSpace Y] [Nonempty
 are glued by `chainMeasure` and almost every path is Cauchy, then some measurable `Z` is the
 almost-sure limit of the coordinates, and the joint law of the `n`th coordinate and `Z` couples
 `mu n` with the law of `Z`. -/
-theorem exists_measurable_isCoupling_map_chainMeasure [PseudoMetricSpace Y] [BorelSpace Y]
-    [CompleteSpace Y] [StandardBorelSpace Y] [Nonempty Y] {mu : ℕ → Measure Y}
+theorem exists_measurable_isCoupling_map_chainMeasure [UniformSpace Y]
+    [TopologicalSpace.PseudoMetrizableSpace Y] [BorelSpace Y] [CompleteSpace Y]
+    [StandardBorelSpace Y] [Nonempty Y] {mu : ℕ → Measure Y}
     {pi : ℕ → Measure (Y × Y)} [∀ n, IsProbabilityMeasure (pi n)]
     (hpi : ∀ n, IsCoupling (pi n) (mu n) (mu (n + 1)))
     (hcauchy : ∀ᵐ x ∂chainMeasure (X := fun _ ↦ Y) pi, CauchySeq fun n ↦ x n) :

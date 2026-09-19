@@ -47,7 +47,22 @@ namespace MvPowerSeries
 
 open Filter Finsupp Topology
 
-variable {σ R : Type*} [Ring R]
+variable {σ R : Type*}
+
+section Semiring
+
+variable [Semiring R]
+
+/-- **Along one ray the coefficients tend to zero.** The step `d` must be nonzero, so that
+`n ↦ ν + n • d` is injective and cofinite sets pull back to cofinite sets. -/
+theorem tendsto_coeff_add_nsmul [TopologicalSpace R] {u : MvPowerSeries σ R}
+    (hu : Tendsto (coeff · u) cofinite (𝓝 0)) {d : σ →₀ ℕ} (hd : d ≠ 0) (ν : σ →₀ ℕ) :
+    Tendsto (fun n : ℕ ↦ coeff (ν + n • d) u) cofinite (𝓝 0) :=
+  hu.comp ((nsmul_left_strictMono hd.bot_lt).const_add ν).injective.tendsto_cofinite
+
+end Semiring
+
+variable [Ring R]
 
 /-- **The ray sums tend to zero**: if the coefficients of `u` tend to zero along `cofinite`, so
 does `ν ↦ ∑' n, coeff (ν + n • d) u`. A nonarchimedean subgroup `W` is closed, so a ray sum
@@ -61,13 +76,6 @@ theorem tendsto_tsum_coeff_add_nsmul [TopologicalSpace R] [NonarchimedeanAddGrou
     fun μ _ ↦ Set.finite_Iic μ).subset fun ν hν ↦ ?_
   obtain ⟨n, hn⟩ := not_forall.mp (mt (tsum_mem W.isClosed) hν)
   exact Set.mem_biUnion hn (Set.mem_Iic.mpr le_self_add)
-
-/-- **Along one ray the coefficients tend to zero.** The step `d` must be nonzero, so that
-`n ↦ ν + n • d` is injective and cofinite sets pull back to cofinite sets. -/
-theorem tendsto_coeff_add_nsmul [TopologicalSpace R] {u : MvPowerSeries σ R}
-    (hu : Tendsto (coeff · u) cofinite (𝓝 0)) {d : σ →₀ ℕ} (hd : d ≠ 0) (ν : σ →₀ ℕ) :
-    Tendsto (fun n : ℕ ↦ coeff (ν + n • d) u) cofinite (𝓝 0) :=
-  hu.comp ((nsmul_left_strictMono hd.bot_lt).const_add ν).injective.tendsto_cofinite
 
 /-- **Peeling the first term of a ray**: the ray at `ν` is its own first coefficient plus the ray
 at `ν + d`. Summability comes from `tendsto_coeff_add_nsmul` over a complete nonarchimedean

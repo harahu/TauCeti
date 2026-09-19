@@ -291,7 +291,7 @@ private theorem shortPathIndex_injective : Function.Injective (shortPathIndex G)
 independent in the path algebra of a doubled quiver: they are distinct basis paths, of lengths
 `0`, `1`, and `2` respectively. -/
 theorem linearIndependent_vertexIdempotent_ofArrow_backtrackElem
-    (k : Type w) [CommSemiring k] :
+    (k : Type w) [Semiring k] :
     LinearIndependent k
       (Sum.elim (fun v : V => (vertexIdempotent k (vertex G v) : pathAlgebra k (DoubledQuiver G)))
         (Sum.elim (fun d : G.Dart => (ofArrow (arrow G d.adj) : pathAlgebra k (DoubledQuiver G)))

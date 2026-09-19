@@ -127,11 +127,13 @@ Nothing in this section looks at the value group: an integral model bounds the c
 the two sides of the Weierstrass equation are estimated, for any `Γ₀`. Only the dichotomy below
 needs `Γ₀ = ℤᵐ⁰`.
 
-`Field F` cannot be weakened here: `Valuation.valuationSubring` is defined only for a field
+`Field F` cannot be weakened for the coefficient bounds themselves: they read the valuation
+subring of a valuation on `F`, and `Valuation.valuationSubring` is defined only for a field
 (`Mathlib/RingTheory/Valuation/ValuationSubring.lean:33`). -/
 
 section TrivialBase
 
+variable {F : Type*} [CommRing F]
 variable {K Γ₀ : Type*} [Field K] [LinearOrderedCommGroupWithZero Γ₀] [Algebra F K]
   (v : Valuation K Γ₀) [v.IsTrivialOn F]
 
@@ -158,11 +160,18 @@ section Coefficients
 
 variable {Γ₀ : Type*} [LinearOrderedCommGroupWithZero Γ₀] (v : Valuation F Γ₀) {W : Affine F}
 
+section Weak
+
+variable {F : Type*} [CommRing F] {Γ₀ : Type*} [LinearOrderedCommMonoidWithZero Γ₀]
+  (v : Valuation F Γ₀) {W : Affine F}
+
 /-- The two sides of the Weierstrass equation have the same valuation, for any point on the
 curve. -/
 private lemma valuation_lhs_eq_rhs {x y : F} (hxy : W.Equation x y) :
     v (y ^ 2 + (W.a₁ * x * y + W.a₃ * y)) = v (x ^ 3 + (W.a₂ * x ^ 2 + (W.a₄ * x + W.a₆))) :=
   congrArg v (by linear_combination (W.equation_iff x y).mp hxy)
+
+end Weak
 
 section Integral
 

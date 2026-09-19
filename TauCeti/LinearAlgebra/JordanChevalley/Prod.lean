@@ -50,7 +50,8 @@ theorem IsSemisimple.prodMap {g : GeneralLinearGroup K V} {h : GeneralLinearGrou
   exact Module.End.IsSemisimple.prodMap hg hh
 
 /-- The product map of two unipotent automorphisms is unipotent. -/
-theorem IsUnipotent.prodMap {g : GeneralLinearGroup K V} {h : GeneralLinearGroup K W}
+theorem IsUnipotent.prodMap {K : Type u} [Semiring K] [Module K V] [Module K W]
+    {g : GeneralLinearGroup K V} {h : GeneralLinearGroup K W}
     (hg : IsUnipotent g) (hh : IsUnipotent h) : IsUnipotent (prodMap g h) := by
   rw [isUnipotent_def] at hg hh ⊢
   have hp := hg.prodMap hh

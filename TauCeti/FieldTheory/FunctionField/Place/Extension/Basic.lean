@@ -263,6 +263,9 @@ end Constants
 
 section Restrict
 
+section WeakBase
+
+variable {F : Type v} [CommRing F] [Algebra k F] [Algebra F F'] [IsScalarTower k F F']
 variable (k F) (P' : Place k' F')
 
 /-- The valuation of `P'` restricted to `F` is trivial on the constants of `F`. -/
@@ -273,6 +276,10 @@ private theorem isTrivialOn_comap : (P'.valuation.comap (algebraMap F F')).IsTri
     have hc' : algebraMap k k' c ≠ 0 := fun h ↦ hc
       ((algebraMap k k').injective (by rw [h, map_zero]))
     simpa only [Valuation.comap_apply, hmap] using P'.isTrivialOn.eq_one _ hc'
+
+end WeakBase
+
+variable (k F) (P' : Place k' F')
 
 /-- The order function of `P'` restricted to `F` is the order function of the restricted
 valuation. -/

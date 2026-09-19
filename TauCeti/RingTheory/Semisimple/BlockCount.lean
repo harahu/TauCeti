@@ -25,10 +25,11 @@ carries central idempotents to central idempotents, they are computed coordinate
 and a simple ring has exactly two of them; so a product of `m` simple rings has exactly `2 ^ m`
 central idempotents, and `m` is recovered from `R`.  Those three ingredients are supplied by
 `TauCeti/RingTheory/CentralIdempotent.lean`; this file combines them, first in the natural
-generality of products of arbitrary simple rings and then for a Wedderburn presentation, whose
-matrix blocks are simple rings by `IsSimpleRing.matrix`.  It also strengthens the count for an
-isomorphism between two products: the coordinate central idempotents determine a permutation of
-the factors, and the original isomorphism restricts to an isomorphism on every matched pair.
+generality of products of arbitrary simple rings and then for products of matrix algebras over
+simple rings, such as Wedderburn presentations, whose blocks are simple by `IsSimpleRing.matrix`.
+It also strengthens the count for an isomorphism between two products: the coordinate central
+idempotents determine a permutation of the factors, and the original isomorphism restricts to an
+isomorphism on every matched pair.
 
 Positivity of the block sizes is essential and not decoration: `Matₒ(D)` is the trivial ring, which
 is not simple, and a presentation could be padded with any number of such blocks without changing
@@ -49,8 +50,8 @@ the coordinate central idempotents themselves determine the factor permutation, 
   product of simple rings have the same number of factors.
 * `TauCeti.exists_equiv_factors_of_ringEquiv_pi`: an isomorphism between finite products of simple
   rings induces a permutation and compatible isomorphisms of the matched factors.
-* `TauCeti.card_blocks_eq`: **the number of blocks of a Wedderburn presentation is an invariant of
-  the ring.**
+* `TauCeti.card_blocks_eq`: **the number of blocks of a presentation as a product of matrix
+  algebras over simple rings, such as a Wedderburn presentation, is an invariant of the ring.**
 
 ## References
 
@@ -257,8 +258,8 @@ theorem exists_equiv_factors_of_ringEquiv_pi
 
 end Products
 
-/-- **Invariance of the block count.** Two Wedderburn presentations of the same ring have the same
-number of blocks.
+/-- **Invariance of the block count.** Two presentations of the same ring as products of matrix
+algebras over simple rings, such as two Wedderburn presentations, have the same number of blocks.
 
 The `NeZero` hypotheses on the block sizes are essential, exactly as in Mathlib's
 `IsSemisimpleRing.exists_ringEquiv_pi_matrix_divisionRing`: a block of size `0` is the trivial
@@ -266,7 +267,8 @@ ring, so without them any presentation could be padded with empty blocks and the
 an invariant.  Semisimplicity of `R` is not needed — it is what makes a presentation exist, not
 what makes the count well defined. -/
 theorem card_blocks_eq {R : Type*} [Ring R] {m n : ℕ} {D : Fin m → Type*} {D' : Fin n → Type*}
-    [∀ i, DivisionRing (D i)] [∀ i, DivisionRing (D' i)] {d : Fin m → ℕ} {d' : Fin n → ℕ}
+    [∀ i, Ring (D i)] [∀ i, IsSimpleRing (D i)] [∀ i, Ring (D' i)] [∀ i, IsSimpleRing (D' i)]
+    {d : Fin m → ℕ} {d' : Fin n → ℕ}
     [∀ i, NeZero (d i)] [∀ i, NeZero (d' i)]
     (f : R ≃+* ∀ i, Matrix (Fin (d i)) (Fin (d i)) (D i))
     (g : R ≃+* ∀ i, Matrix (Fin (d' i)) (Fin (d' i)) (D' i)) : m = n := by

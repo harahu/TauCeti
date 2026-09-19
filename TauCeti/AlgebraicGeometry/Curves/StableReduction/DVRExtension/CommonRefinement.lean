@@ -61,10 +61,10 @@ variable {R K : Type u} [CommRing R] [IsDomain R] [IsDiscreteValuationRing R]
   [Field K] [Algebra R K] [IsFractionRing R K] (E F : FiniteDVRExtension R K)
 
 /-- The chosen place of a chosen extension lifts along any `K`-embedding of its extension field
-into a further field `L` over `R`: some prime of the integral closure of `R` in `L` lies above the
-closed point of `R` and restricts to the chosen place. -/
-theorem exists_isPrime_liesOver_comap_mapIntegralClosure_eq (L : Type*) [Field L] [Algebra K L]
-    [Algebra R L] [IsScalarTower R K L] (k : E.extensionField →ₐ[K] L) :
+into a further nontrivial commutative ring `L` over `R`: some prime of the integral closure of `R`
+in `L` lies above the closed point of `R` and restricts to the chosen place. -/
+theorem exists_isPrime_liesOver_comap_mapIntegralClosure_eq (L : Type*) [CommRing L] [Nontrivial L]
+    [Algebra K L] [Algebra R L] [IsScalarTower R K L] (k : E.extensionField →ₐ[K] L) :
     ∃ Q : Ideal (_root_.integralClosure R L), Q.IsPrime ∧ Q.LiesOver (maximalIdeal R) ∧
       Q.comap (k.restrictScalars R).mapIntegralClosure = E.prime := by
   obtain ⟨Q, hQ, hQE⟩ :=

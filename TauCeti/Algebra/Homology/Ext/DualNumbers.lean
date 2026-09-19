@@ -198,6 +198,10 @@ theorem dualNumberProj_surjective : Function.Surjective (dualNumberProj k).hom :
   obtain ⟨y, hy⟩ := TrivSqZeroExt.fst_surjective (R := k) (M := k) (dualNumberResidueEquiv k x)
   exact ⟨y, (dualNumberResidueEquiv k).injective (by rw [dualNumberProj_apply]; exact hy)⟩
 
+/-- The residue module `k[ε]/(ε)` is a finitely generated `k[ε]`-module. -/
+instance : Module.Finite (DualNumber k) (dualNumberResidue k) :=
+  .of_surjective _ (dualNumberProj_surjective k)
+
 section Field
 
 variable (F : Type u) [Field F]
@@ -225,10 +229,6 @@ private noncomputable def quotMaximalIdealEquivDualNumberResidue :
       dualNumberResidue F :=
   (Submodule.quotEquivOfEq _ _ (ker_dualNumberProj F).symm).trans
     ((dualNumberProj F).hom.quotKerEquivOfSurjective (dualNumberProj_surjective F))
-
-/-- The residue module `F[ε]/(ε)` is a finitely generated `F[ε]`-module. -/
-instance : Module.Finite (DualNumber F) (dualNumberResidue F) :=
-  .of_surjective _ (dualNumberProj_surjective F)
 
 /-- The residue module `F[ε]/(ε)` is a simple `F[ε]`-module. -/
 instance : IsSimpleModule (DualNumber F) (dualNumberResidue F) :=

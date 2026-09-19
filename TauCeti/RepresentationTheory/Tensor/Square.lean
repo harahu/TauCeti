@@ -96,7 +96,7 @@ private theorem toTensorPower_ιMulti_two {R : Type} {M : Type*}
   simp [sub_eq_add_neg]
 
 private theorem mk_comp_toTensorPower {R : Type} {M : Type*}
-    [Field R] [AddCommGroup M] [Module R M] : (SymmetricPower.mk R (Fin 2) M).comp
+    [CommRing R] [AddCommGroup M] [Module R M] : (SymmetricPower.mk R (Fin 2) M).comp
       (exteriorPower.toTensorPower R M 2) = 0 := by
   classical
   apply exteriorPower.linearMap_ext
@@ -115,7 +115,7 @@ private theorem mk_comp_toTensorPower {R : Type} {M : Type*}
 
 /-- The symmetric-square map to the quotient of the tensor square by alternating tensors. -/
 private noncomputable def symToAlternatingQuotient {R : Type} {M : Type*}
-    [Field R] [AddCommGroup M] [Module R M] :
+    [CommRing R] [AddCommGroup M] [Module R M] :
     Sym[R]^2 M →ₗ[R]
       (⨂[R]^2 M) ⧸ LinearMap.range (exteriorPower.toTensorPower R M 2) where
   toFun :=
@@ -140,7 +140,7 @@ private noncomputable def symToAlternatingQuotient {R : Type} {M : Type*}
       ((LinearMap.id.map_smul r x))
 
 private theorem symToAlternatingQuotient_mk {R : Type} {M : Type*}
-    [Field R] [AddCommGroup M] [Module R M] (x : ⨂[R]^2 M) :
+    [CommRing R] [AddCommGroup M] [Module R M] (x : ⨂[R]^2 M) :
     symToAlternatingQuotient (R := R) (M := M)
         (SymmetricPower.mk R (Fin 2) M x) =
       Submodule.Quotient.mk x := by
@@ -149,7 +149,7 @@ private theorem symToAlternatingQuotient_mk {R : Type} {M : Type*}
 
 -- These maps form the characteristic-free exact sequence `⋀²M → M⊗M → Sym²M`.
 private theorem range_toTensorPower_eq_ker_mk {R : Type} {M : Type*}
-    [Field R] [AddCommGroup M] [Module R M] :
+    [CommRing R] [AddCommGroup M] [Module R M] :
     LinearMap.range (exteriorPower.toTensorPower R M 2) =
       LinearMap.ker (SymmetricPower.mk R (Fin 2) M) := by
   apply le_antisymm
@@ -214,7 +214,7 @@ private theorem swap_comp_toTensorPower {R : Type} {M : Type*}
 
 /-- The swap acts as `+1` on the symmetric part: that is exactly the relation defining `Sym²`. -/
 private theorem mk_comp_swap {R : Type} {M : Type*}
-    [CommRing R] [AddCommGroup M] [Module R M] :
+    [CommSemiring R] [AddCommMonoid M] [Module R M] :
     (SymmetricPower.mk R (Fin 2) M).comp (tensorSwap R M).toLinearMap
       = SymmetricPower.mk R (Fin 2) M := by
   apply LinearMap.ext_on (PiTensorProduct.span_tprod_eq_top (R := R))

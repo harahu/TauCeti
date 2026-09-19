@@ -139,7 +139,7 @@ end Labelling
 
 section LabellingMul
 
-variable [Monoid k]
+variable [MulOneClass k]
 
 /-- Pointwise multiplication of labels on the original arrows becomes pointwise multiplication
 of their gauge labellings on the doubled quiver. -/

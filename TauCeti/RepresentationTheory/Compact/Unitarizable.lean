@@ -70,7 +70,7 @@ namespace ContRepresentation
 section NormedField
 
 variable {𝕜 G V : Type*} [NontriviallyNormedField 𝕜] [Group G] [TopologicalSpace G]
-  [CompactSpace G] [NormedAddCommGroup V] [NormedSpace 𝕜 V]
+  [CompactSpace G] [SeminormedAddCommGroup V] [NormedSpace 𝕜 V]
 
 /-- The action operators of a continuous representation of a compact group are uniformly
 bounded below: there is a `c > 0` with `c * ‖v‖ ≤ ‖π g v‖` for every `g` and `v`.

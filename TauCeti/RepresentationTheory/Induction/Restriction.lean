@@ -121,7 +121,7 @@ end Functor
 
 section Intertwining
 
-variable [Field k] {M M' : Type*} [Group M] [Group M']
+variable [CommRing k] {M M' : Type*} [Monoid M] [Monoid M']
 
 /-- Restriction along an isomorphism of groups is an equivalence of representation categories, so
 it leaves the dimension of an intertwining space unchanged. -/

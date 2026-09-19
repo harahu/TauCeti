@@ -70,7 +70,7 @@ variable {lam mu beta : ℝ}
 /-- The square of the product sup norm is controlled by the two squared coordinate norms
 with the smaller coefficient. -/
 private lemma min_mul_prod_norm_sq_le_add (hlam : 0 ≤ lam) (hmu : 0 ≤ mu)
-    {E F : Type*} [SeminormedAddCommGroup E] [SeminormedAddCommGroup F] (U : E × F) :
+    {E F : Type*} [Norm E] [Norm F] (U : E × F) :
     min lam mu * ‖U‖ ^ 2 ≤ lam * ‖U.2‖ ^ 2 + mu * ‖U.1‖ ^ 2 := by
   have hmin_lam : min lam mu ≤ lam := min_le_left _ _
   have hmin_mu : min lam mu ≤ mu := min_le_right _ _
