@@ -64,9 +64,9 @@ variable {A : Type v}
 
 /-! ### Collapsing the paths onto the matrix units -/
 
-section ToMatrix
+section ToMatrixUnit
 
-variable (k : Type w) [CommSemiring k]
+variable (k : Type w) [NonAssocSemiring k]
 
 /-- The matrix unit a path goes to: the one in the row of its target and the column of its
 source. -/
@@ -98,13 +98,20 @@ private theorem sum_toMatrixUnit_nil (fq : Fintype (Kronecker A)) :
   (Fintype.sum_equiv vertexEquiv _ (fun i => Matrix.single i i (1 : k)) fun _ => rfl).trans
     Matrix.sum_single_one
 
+end ToMatrixUnit
+
+section ToMatrix
+
+variable (k : Type w) [CommSemiring k]
+
 /-- The path algebra of the generalized Kronecker quiver as `2 × 2` matrices: a path goes to the
 matrix unit in the row of its target and the column of its source. This is the universal property
 `TauCeti.PathAlgebra.liftAlgHom` applied to `toMatrixUnit`. -/
 private noncomputable def toMatrixAlgHom :
     pathAlgebra k (Kronecker A) →ₐ[k] Matrix (Fin 2) (Fin 2) k :=
-  PathAlgebra.liftAlgHom k (toMatrixUnit k) (toMatrixUnit_mul_toMatrixUnit_of_comp k)
-    (toMatrixUnit_mul_toMatrixUnit_of_not_composable k)
+  PathAlgebra.liftAlgHom k (toMatrixUnit k)
+    (fun p q => toMatrixUnit_mul_toMatrixUnit_of_comp k p q)
+    (fun h => toMatrixUnit_mul_toMatrixUnit_of_not_composable k h)
     (sum_toMatrixUnit_nil k (Fintype.ofFinite _))
 
 private theorem toMatrixAlgHom_single (x : Quiver.TotalPath (Kronecker A)) (c : k) :
@@ -112,16 +119,16 @@ private theorem toMatrixAlgHom_single (x : Quiver.TotalPath (Kronecker A)) (c : 
       = Matrix.single (vertexEquiv x.2.1) (vertexEquiv x.1) c := by
   rw [toMatrixAlgHom, PathAlgebra.liftAlgHom_single, toMatrixUnit, Matrix.smul_single,
     smul_eq_mul, mul_one]
+  -- `toMatrixUnit` and the two multiplication lemmas live in the weaker `NonAssocSemiring`
+  -- section, so `rw` cannot infer these two hypotheses of `liftAlgHom_single`; supply them.
+  case hcomp => exact fun p q => toMatrixUnit_mul_toMatrixUnit_of_comp k p q
+  case hzero => exact fun h => toMatrixUnit_mul_toMatrixUnit_of_not_composable k h
 
 end ToMatrix
 
-/-! ### The identification with the upper-triangular matrices -/
+section OfMatrixLinearWeak
 
-variable [Unique A]
-
-section AlgEquiv
-
-variable (k : Type w) [CommSemiring k]
+variable [Inhabited A] (k : Type w) [CommSemiring k]
 
 /-- The linear map assembling a matrix into a combination of the three paths of the `A₂` quiver.
 It inverts `toMatrixAlgHom` on the upper-triangular matrices, discarding the entry below the
@@ -139,15 +146,6 @@ private noncomputable def ofMatrixLinear :
     simp only [Matrix.smul_apply, smul_eq_mul, RingHom.id_apply, smul_add,
       PathAlgebra.smul_single]
 
-private theorem ofMatrixLinear_toMatrixAlgHom (f : pathAlgebra k (Kronecker A)) :
-    ofMatrixLinear k (toMatrixAlgHom k f) = f := by
-  induction f using PathAlgebra.induction_linear with
-  | zero => simp
-  | add f g ihf ihg => rw [map_add, map_add, ihf, ihg]
-  | single x c =>
-    rcases totalPath_eq_or x with h | h | h <;> subst h <;>
-      simp [toMatrixAlgHom_single, ofMatrixLinear]
-
 private theorem toMatrixAlgHom_ofMatrixLinear {M : Matrix (Fin 2) (Fin 2) k}
     (hM : M.BlockTriangular (id : Fin 2 → Fin 2)) :
     toMatrixAlgHom k (ofMatrixLinear (A := A) k M) = M := by
@@ -157,6 +155,25 @@ private theorem toMatrixAlgHom_ofMatrixLinear {M : Matrix (Fin 2) (Fin 2) k}
     vertexEquiv_tgt]
   ext i j
   fin_cases i <;> fin_cases j <;> simp [h₁₀]
+
+end OfMatrixLinearWeak
+
+/-! ### The identification with the upper-triangular matrices -/
+
+variable [Unique A]
+
+section AlgEquiv
+
+variable (k : Type w) [CommSemiring k]
+
+private theorem ofMatrixLinear_toMatrixAlgHom (f : pathAlgebra k (Kronecker A)) :
+    ofMatrixLinear k (toMatrixAlgHom k f) = f := by
+  induction f using PathAlgebra.induction_linear with
+  | zero => simp
+  | add f g ihf ihg => rw [map_add, map_add, ihf, ihg]
+  | single x c =>
+    rcases totalPath_eq_or x with h | h | h <;> subst h <;>
+      simp [toMatrixAlgHom_single, ofMatrixLinear]
 
 private theorem range_toMatrixAlgHom : (toMatrixAlgHom (A := A) k).range
       = Matrix.blockTriangularSubalgebra k k (id : Fin 2 → Fin 2) := by
@@ -238,9 +255,9 @@ end AlgEquiv
 
 /-! ### The dimension -/
 
-section Field
+section Dimension
 
-variable (k : Type w) [Field k]
+variable (k : Type w) [CommSemiring k] [StrongRankCondition k]
 
 /-- The algebra of upper-triangular `2 × 2` matrices is three-dimensional, since it is the path
 algebra of the `A₂` quiver. -/
@@ -249,7 +266,7 @@ theorem finrank_blockTriangularSubalgebra_eq_three :
   rw [← (upperTriangularAlgEquiv (A := Unit) k).toLinearEquiv.finrank_eq]
   exact finrank_pathAlgebra_eq_three (A := Unit) k
 
-end Field
+end Dimension
 
 end Quiver.Kronecker
 

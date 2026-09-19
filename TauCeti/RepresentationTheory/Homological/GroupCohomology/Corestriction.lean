@@ -196,12 +196,13 @@ private theorem res_map_restrictCoind_comp_counit :
     (Equiv.symm_apply_apply _ _)
 
 private theorem resCoindAdjunction_counit_app_hom_apply
-    {D E : Type u} [Group D] [Group E] (f : D →* E) (N : Rep k D) (x : coind f N) :
+    {D E : Type u} [Monoid D] [Monoid E] (f : D →* E) (N : Rep k D) (x : coind f N) :
     ((resCoindAdjunction k f).counit.app N).hom x = x.1 1 :=
   rfl
 
 private theorem coind_ρ_apply_coe_apply
-    {D E V : Type u} [Group D] [Group E] [AddCommGroup V] [Module k V] (f : D →* E)
+    {k : Type u} [Semiring k] {D E V : Type u} [Monoid D] [Monoid E] [AddCommMonoid V]
+    [Module k V] (f : D →* E)
     (N : Representation k D V) (x : Representation.coindV f N) (e e' : E) :
     ((Representation.coind f N e) x).1 e' = x.1 (e' * e) :=
   rfl

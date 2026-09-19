@@ -203,7 +203,7 @@ theorem mem_limitSubgroup_iff {g : G} :
     g ∈ limitSubgroup H ↔ ∀ U : OpenNormalSubgroup G, (g : G ⧸ U.toSubgroup) ∈ H U :=
   Subgroup.mem_iInf
 
-variable [IsTopologicalGroup G]
+variable [SeparatelyContinuousMul G]
 
 /-- The subgroup cut out by a family of subgroups of the quotients by open normal subgroups is
 closed. -/
@@ -212,10 +212,12 @@ theorem isClosed_limitSubgroup (H : ∀ U : OpenNormalSubgroup G, Subgroup (G �
   rw [limitSubgroup, Subgroup.coe_iInf]
   exact isClosed_iInter fun U ↦ (isClosed_discrete _).preimage QuotientGroup.continuous_mk
 
+omit [SeparatelyContinuousMul G] in
 /-- A closed subgroup of a profinite group is cut out by the family of its images in the finite
 quotients. Together with `map_mk'_limitSubgroup` this identifies the closed subgroups of `G` with
 the compatible families of subgroups of the quotients `G ⧸ U`. -/
-theorem limitSubgroup_map_mk' [CompactSpace G] [TotallyDisconnectedSpace G] (P : Subgroup G)
+theorem limitSubgroup_map_mk' [IsTopologicalGroup G] [CompactSpace G]
+    [TotallyDisconnectedSpace G] (P : Subgroup G)
     (hP : IsClosed (P : Set G)) :
     limitSubgroup (fun U ↦ P.map (QuotientGroup.mk' U.toSubgroup)) = P := by
   rw [limitSubgroup]

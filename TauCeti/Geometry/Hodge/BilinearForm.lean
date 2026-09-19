@@ -189,7 +189,7 @@ private theorem integralFormToRat_nondegenerate {Q : LinearMap.BilinForm ℤ V}
     rw [hv, map_zero] at hs
     exact (IsLocalizedModule.smul_injective f s) (by simpa using hs)
 
-private theorem rationalFormToComplex_separatingLeft {W : Type*} [AddCommGroup W] [Module ℚ W]
+private theorem rationalFormToComplex_separatingLeft {W : Type*} [AddCommMonoid W] [Module ℚ W]
     {B : LinearMap.BilinForm ℚ W} (hB : B.SeparatingLeft) :
     (B.baseChange ℂ).SeparatingLeft := by
   classical
@@ -220,13 +220,13 @@ private theorem rationalFormToComplex_separatingLeft {W : Type*} [AddCommGroup W
       simp [hci]
   exact e.injective (by simpa [c] using hc)
 
-private theorem rationalFormToComplex_baseChange_flip {W : Type*} [AddCommGroup W] [Module ℚ W]
+private theorem rationalFormToComplex_baseChange_flip {W : Type*} [AddCommMonoid W] [Module ℚ W]
     (B : LinearMap.BilinForm ℚ W) :
     B.flip.baseChange ℂ = (B.baseChange ℂ).flip := by
   ext z v
   simp
 
-private theorem rationalFormToComplex_nondegenerate {W : Type*} [AddCommGroup W] [Module ℚ W]
+private theorem rationalFormToComplex_nondegenerate {W : Type*} [AddCommMonoid W] [Module ℚ W]
     {B : LinearMap.BilinForm ℚ W} (hB : B.Nondegenerate) :
     (B.baseChange ℂ).Nondegenerate := by
   constructor

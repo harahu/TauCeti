@@ -189,20 +189,19 @@ lemma valuation_two_eq_one_of_notMem_badPrimes (hv : v ∉ W.badPrimes R) :
 
 end BadPrimes
 
-section RingOfIntegers
+section RingOfIntegersDef
 
-variable (R : Type*) [CommRing R] [IsDedekindDomain R] [Algebra R K] [IsFractionRing R K]
+variable (R : Type*) [CommRing R] [Algebra R K] [IsFractionRing R K]
 
 /-- The ring of integers of the field factor `K[X] ⧸ (p)` over `R`. -/
 noncomputable abbrev ringOfIntegersFactor (p : W.f.Factors) : Type _ :=
   integralClosure R (𝕃 p)
 
-/-- The ring of integers of a field factor is a Dedekind domain: it is the integral closure of
-`R` in a finite separable extension of the fraction field `K`. -/
-instance isDedekindDomain_ringOfIntegersFactor [W.IsElliptic] [W.IsCharNeTwoNF]
-    (p : W.f.Factors) : IsDedekindDomain (W.ringOfIntegersFactor R p) :=
-  have := AdjoinRoot.isSeparable_of_separable (separable_f W) p
-  IsIntegralClosure.isDedekindDomain R K (𝕃 p) _
+end RingOfIntegersDef
+
+section RingOfIntegersWeak
+
+variable (R : Type*) [CommRing R] [IsDomain R] [Algebra R K] [IsFractionRing R K]
 
 /-- A field factor is the fraction field of its ring of integers. -/
 instance isFractionRing_ringOfIntegersFactor [W.IsElliptic] [W.IsCharNeTwoNF]
@@ -218,6 +217,19 @@ instance instIsTorsionFreeRingOfIntegersFactor (p : W.f.Factors) :
     rw [IsScalarTower.algebraMap_eq R K (𝕃 p)]
     exact (ι p).injective.comp (IsFractionRing.injective R K)
   exact fun a b hab ↦ hinj (congrArg Subtype.val hab)
+
+end RingOfIntegersWeak
+
+section RingOfIntegers
+
+variable (R : Type*) [CommRing R] [IsDedekindDomain R] [Algebra R K] [IsFractionRing R K]
+
+/-- The ring of integers of a field factor is a Dedekind domain: it is the integral closure of
+`R` in a finite separable extension of the fraction field `K`. -/
+instance isDedekindDomain_ringOfIntegersFactor [W.IsElliptic] [W.IsCharNeTwoNF]
+    (p : W.f.Factors) : IsDedekindDomain (W.ringOfIntegersFactor R p) :=
+  have := AdjoinRoot.isSeparable_of_separable (separable_f W) p
+  IsIntegralClosure.isDedekindDomain R K (𝕃 p) _
 
 /-- The `w`-adic valuation of an element of `K` is the valuation at the prime of `R` under `w`,
 raised to the ramification index. -/

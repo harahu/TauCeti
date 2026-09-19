@@ -167,9 +167,9 @@ theorem exists_simpleSubmodule_of_ringEquiv_pi (e : R ≃+* ∀ i, A i) :
     refine ⟨φ.symm (SimpleSubmoduleClasses.mk I), SimpleSubmoduleClasses.mk_eq_mk_iff.mp ?_⟩
     rw [hmk, Equiv.apply_symm_apply]
 
-/-- **Blocks enumerate the simple modules**, for a Wedderburn presentation
-`R ≃+* ∏ᵢ Matₙᵢ(Dᵢ)`: the `n` blocks yield `n` pairwise non-isomorphic simple left ideals which
-exhaust the simple left ideals up to isomorphism.
+/-- **Blocks enumerate the simple modules**, for a presentation `R ≃+* ∏ᵢ Matₙᵢ(Dᵢ)` over simple
+rings `Dᵢ`, such as a Wedderburn presentation: the `n` blocks yield `n` pairwise non-isomorphic
+simple left ideals which exhaust the simple left ideals up to isomorphism.
 
 The positivity hypotheses `NeZero (d i)` are what make the matrix blocks simple rings; they are the
 same hypotheses that `IsSemisimpleRing.exists_ringEquiv_pi_matrix_divisionRing` produces and that
@@ -177,7 +177,8 @@ same hypotheses that `IsSemisimpleRing.exists_ringEquiv_pi_matrix_divisionRing` 
 
 The name is the one the roadmap pins for this target; the content is the family, so the general
 statement it specializes is `TauCeti.exists_simpleSubmodule_of_ringEquiv_pi`. -/
-theorem blocks_equiv_simpleModules {n : ℕ} {D : Fin n → Type v} [∀ i, DivisionRing (D i)]
+theorem blocks_equiv_simpleModules {n : ℕ} {D : Fin n → Type v} [∀ i, Ring (D i)]
+    [∀ i, IsSimpleRing (D i)]
     {d : Fin n → ℕ} [∀ i, NeZero (d i)]
     (e : R ≃+* ∀ i, Matrix (Fin (d i)) (Fin (d i)) (D i)) :
     ∃ S : Fin n → Submodule R R,

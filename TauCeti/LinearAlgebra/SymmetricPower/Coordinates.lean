@@ -64,7 +64,7 @@ variable [CommSemiring R] [AddCommMonoid M] [Module R M]
 
 /-- The product of the coordinates listed by an ordered tuple depends only on the unordered tuple
 underlying it: reordering the factors permutes the terms of the product. -/
-private theorem prod_eq_of_ofFn_eq (c : κ → R) {p q : Fin n → κ}
+private theorem prod_eq_of_ofFn_eq {R : Type} [CommMonoid R] (c : κ → R) {p q : Fin n → κ}
     (h : TauCeti.Sym.ofFn p = TauCeti.Sym.ofFn q) : ∏ i, c (p i) = ∏ i, c (q i) := by
   obtain ⟨σ, rfl⟩ := TauCeti.Sym.ofFn_eq_ofFn_iff.1 h
   exact (Equiv.prod_comp σ fun i => c (p i)).symm
@@ -138,7 +138,7 @@ end CommSemiring
 
 section Domain
 
-variable [CommSemiring R] [IsDomain R] [CharZero R] [AddCommMonoid M] [Module R M]
+variable [CommSemiring R] [NoZeroDivisors R] [CharZero R] [AddCommMonoid M] [Module R M]
 variable (b : Basis κ R M)
 
 /-- **A pure power has no vanishing coordinate.**  When all the factors are the same vector `u`,

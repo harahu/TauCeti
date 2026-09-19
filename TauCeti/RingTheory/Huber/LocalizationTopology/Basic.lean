@@ -817,7 +817,7 @@ private theorem locIdealImage_mul_algebraMap_subset (P : PairOfDefinition A)
 /-- Multiplying `algebraMap a` by an element of a suitable `locIdealImage j` lands in
 `locIdealImage i`. The single-element case of `locIdealImage_mul_algebraMap_subset`, with the
 index supplied by continuity of `· * a` rather than assumed. -/
-private theorem locIdealImage_algMap_step [IsTopologicalRing A] (P : PairOfDefinition A)
+private theorem locIdealImage_algMap_step [SeparatelyContinuousMul A] (P : PairOfDefinition A)
     (T : Finset A) (s : A)
     (S : Type*) [CommRing S] [Algebra A S] [IsLocalization.Away s S] (i : ℕ) (a : A) :
     ∃ j, ∀ y ∈ locIdealImage P T s S j,
@@ -833,7 +833,8 @@ private theorem locIdealImage_algMap_step [IsTopologicalRing A] (P : PairOfDefin
 
 /-- **Left multiplication is continuous** for the localization topology: multiplication by a
 fixed `x` pulls some neighbourhood `locIdealImage j` back inside `locIdealImage i`. -/
-theorem locIdealImage_leftMul [IsTopologicalRing A] (P : PairOfDefinition A) (T : Finset A) (s : A)
+theorem locIdealImage_leftMul [SeparatelyContinuousMul A] (P : PairOfDefinition A)
+    (T : Finset A) (s : A)
     (S : Type*) [CommRing S] [Algebra A S] [IsLocalization.Away s S]
     (hden : HasDenominatorPower P T s S)
     (x : S) (i : ℕ) :
@@ -877,7 +878,8 @@ theorem locIdealImage_leftMul [IsTopologicalRing A] (P : PairOfDefinition A) (T 
 
 /-- The `RingSubgroupsBasis` underlying the localization topology on `Aₛ`: the images of the
 powers `Jⁿ` are a basis of neighbourhoods of zero compatible with the ring structure. -/
-private theorem locBasis [IsTopologicalRing A] (P : PairOfDefinition A) (T : Finset A) (s : A)
+private theorem locBasis [SeparatelyContinuousMul A] (P : PairOfDefinition A) (T : Finset A)
+    (s : A)
     (S : Type*) [CommRing S] [Algebra A S] [IsLocalization.Away s S]
     (hden : HasDenominatorPower P T s S) :
     RingSubgroupsBasis (locIdealImage P T s S) :=

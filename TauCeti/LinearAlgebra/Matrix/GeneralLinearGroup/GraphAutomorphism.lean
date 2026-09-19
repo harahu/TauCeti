@@ -138,14 +138,14 @@ theorem inverseTranspose_diagGL {ι : Type*} [Fintype ι] [DecidableEq ι] (d : 
     simp [Matrix.transpose_apply, hij, hji]
 
 /-- The alternating diagonal signs used to pin the type-`A_r` graph automorphism. -/
-private def typeAGraphSign (i : Fin (r + 1)) : Aˣ := (-1 : Aˣ) ^ (i : ℕ)
+private def typeAGraphSign {A : Type u} [Ring A] (i : Fin (r + 1)) : Aˣ := (-1 : Aˣ) ^ (i : ℕ)
 
-private theorem typeAGraphSign_mul_self (i : Fin (r + 1)) :
+private theorem typeAGraphSign_mul_self {A : Type u} [Ring A] (i : Fin (r + 1)) :
     typeAGraphSign (A := A) i * typeAGraphSign (A := A) i = 1 := by
   simp only [typeAGraphSign, ← pow_add, ← two_mul (i : ℕ), pow_mul]
   simp
 
-private theorem typeAGraphSign_inv (i : Fin (r + 1)) :
+private theorem typeAGraphSign_inv {A : Type u} [Ring A] (i : Fin (r + 1)) :
     (typeAGraphSign (A := A) i)⁻¹ = typeAGraphSign (A := A) i :=
   inv_eq_iff_mul_eq_one.mpr (typeAGraphSign_mul_self (A := A) i)
 
@@ -174,7 +174,7 @@ private theorem inverseTranspose_diagGL_typeAGraphSign (r : ℕ) :
   rw [inverseTranspose_diagGL]
   congr 1
 
-private theorem permutationGL_rev_inv (r : ℕ) :
+private theorem permutationGL_rev_inv {A : Type u} [Semiring A] (r : ℕ) :
     (permutationGL (k := A) (Fin.revPerm : Equiv.Perm (Fin (r + 1))))⁻¹ =
       permutationGL (k := A) Fin.revPerm := by
   rw [← map_inv]
@@ -371,7 +371,7 @@ private theorem typeAGraphAutomorphism_transvectionUnit_aux (r : ℕ)
       rw [permutationGL_conj_transvectionUnit]
     _ = _ := by rw [diagGL_mul_transvectionUnit_mul_inv]
 
-private theorem coe_typeAGraphSign (i : Fin (r + 1)) :
+private theorem coe_typeAGraphSign {A : Type u} [Ring A] (i : Fin (r + 1)) :
     ((typeAGraphSign (A := A) i : Aˣ) : A) = (-1 : A) ^ (i : ℕ) := by
   simp [typeAGraphSign]
 

@@ -81,8 +81,10 @@ namespace AffineGroup.Product
 
 open _root_.TauCeti.Bialgebra.TensorProduct
 
+section Restrict
+
 variable {R H₁ H₂ A : Type*} [CommSemiring R]
-variable [CommSemiring H₁] [CommSemiring H₂] [_root_.Bialgebra R H₁] [_root_.Bialgebra R H₂]
+variable [Semiring H₁] [Semiring H₂] [_root_.Bialgebra R H₁] [Algebra R H₂]
 variable [CommSemiring A] [Algebra R A]
 
 /-- A point of `Spec (H₁ ⊗[R] H₂)` is recovered from its two restrictions by Mathlib's
@@ -97,6 +99,12 @@ theorem productMap_restrict (g : (H₁ ⊗[R] H₂) →ₐ[R] A) :
   rw [Algebra.TensorProduct.productMap_apply_tmul, AlgHom.comp_apply, AlgHom.comp_apply,
     Algebra.TensorProduct.includeLeft_apply, Algebra.TensorProduct.includeRight_apply, ← map_mul,
     Algebra.TensorProduct.tmul_mul_tmul, one_mul, mul_one]
+
+end Restrict
+
+variable {R H₁ H₂ A : Type*} [CommSemiring R]
+variable [CommSemiring H₁] [CommSemiring H₂] [_root_.Bialgebra R H₁] [_root_.Bialgebra R H₂]
+variable [CommSemiring A] [Algebra R A]
 
 /-- Restriction of a point of `Spec (H₁ ⊗[R] H₂)` to its two factors, as a monoid homomorphism
 of convolution monoids: it pre-composes with the two inclusions `includeLeft` and

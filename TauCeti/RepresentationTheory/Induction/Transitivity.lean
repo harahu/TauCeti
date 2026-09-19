@@ -160,11 +160,11 @@ end IndV
 
 section CoindV
 
-variable [CommRing k] [Monoid G] [Monoid H]
+variable [Semiring k] [Monoid G] [Monoid H]
 
 /-- The coinduced action translates the argument of a function: `(h • f) h₁ = f (h₁ * h)`. Used to
 retype the values of a coinduced representation along the group action. -/
-private lemma coind_ρ_apply_coe_apply {V : Type*} [AddCommGroup V] [Module k V] (φ : G →* H)
+private lemma coind_ρ_apply_coe_apply {V : Type*} [AddCommMonoid V] [Module k V] (φ : G →* H)
     (ρ : Representation k G V) (f : Representation.coindV φ ρ) (h h₁ : H) :
     ((Representation.coind φ ρ h) f).1 h₁ = f.1 (h₁ * h) :=
   rfl

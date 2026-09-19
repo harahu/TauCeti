@@ -107,7 +107,9 @@ variable {E : Type u} {F : Type v} [NormedAddCommGroup E] [NormedSpace ℝ E]
 -- because the `SMul` instance found there is `ContinuousLinearMap.instSMul` rather than the one
 -- coming from the module structure; the two are definitionally equal, and this restatement makes
 -- the instance available to `ContDiff.smul` and `Continuous.smul` below.
-private theorem isBoundedSMul_clm : IsBoundedSMul ℝ (E →L[ℝ] E →L[ℝ] F) :=
+private theorem isBoundedSMul_clm {E : Type u} [SeminormedAddCommGroup E] [NormedSpace ℝ E]
+    {F : Type v} [SeminormedAddCommGroup F] [NormedSpace ℝ F] :
+    IsBoundedSMul ℝ (E →L[ℝ] E →L[ℝ] F) :=
   @NormedSpace.toIsBoundedSMul ℝ (E →L[ℝ] E →L[ℝ] F) _ _ _
 
 section HessianAverage

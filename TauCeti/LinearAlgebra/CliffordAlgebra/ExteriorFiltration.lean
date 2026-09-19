@@ -43,16 +43,11 @@ namespace CliffordAlgebra
 
 open TauCeti.Algebra.wordFiltration
 
-variable {R : Type u} {M : Type v} [CommRing R] [AddCommGroup M] [Module R M]
+variable {R : Type u} {M : Type v}
 
-/-- The degree `k + 1` exterior power is disjoint from the lower zero-form filtration. -/
-theorem exteriorPower_succ_disjoint_zero_form_filtration (k : ℕ) :
-    Disjoint (⋀[R]^(k + 1) M) (filtration (0 : QuadraticForm R M) k) := by
-  rw [filtration_eq_iSup_pow (0 : QuadraticForm R M) k]
-  rw [iSup_subtype]
-  have hind : iSupIndep (fun i : ℕ => ⋀[R]^i M) :=
-    (DirectSum.Decomposition.isInternal (fun i : ℕ => ⋀[R]^i M)).submodule_iSupIndep
-  simpa only [Set.mem_Iic] using hind.disjoint_biSup (by simp : k + 1 ∉ Set.Iic k)
+section Ring
+
+variable [Ring R]
 
 private noncomputable def quotientSupEquiv {X : Type*} [AddCommGroup X] [Module R X]
     (p p' : Submodule R X) (h : Disjoint p p') :
@@ -85,6 +80,19 @@ private theorem quotientEquivOfEqSup_symm_apply {X : Type*} [AddCommGroup X] [Mo
         exact Submodule.mem_sup_left x.property⟩ := by
   subst F
   exact quotientSupEquiv_symm_apply p p' h x
+
+end Ring
+
+variable [CommRing R] [AddCommGroup M] [Module R M]
+
+/-- The degree `k + 1` exterior power is disjoint from the lower zero-form filtration. -/
+theorem exteriorPower_succ_disjoint_zero_form_filtration (k : ℕ) :
+    Disjoint (⋀[R]^(k + 1) M) (filtration (0 : QuadraticForm R M) k) := by
+  rw [filtration_eq_iSup_pow (0 : QuadraticForm R M) k]
+  rw [iSup_subtype]
+  have hind : iSupIndep (fun i : ℕ => ⋀[R]^i M) :=
+    (DirectSum.Decomposition.isInternal (fun i : ℕ => ⋀[R]^i M)).submodule_iSupIndep
+  simpa only [Set.mem_Iic] using hind.disjoint_biSup (by simp : k + 1 ∉ Set.Iic k)
 
 private theorem zero_form_filtration_succ_eq_exteriorPower_sup (k : ℕ) :
     filtration (0 : QuadraticForm R M) (k + 1) =

@@ -74,13 +74,12 @@ namespace TauCeti
 
 universe u v w x
 
-variable {A : Type u} [Ring A]
-
 /-! ### Transporting a decomposition along a linear equivalence -/
 
 section Transport
 
-variable {M : Type v} {M' : Type*} [AddCommGroup M] [Module A M] [AddCommGroup M'] [Module A M']
+variable {A : Type u} [Semiring A]
+variable {M : Type v} {M' : Type*} [AddCommMonoid M] [Module A M] [AddCommMonoid M'] [Module A M']
 variable {ι : Type w} {P : ι → Submodule A M}
 
 /-- A family of submodules spanning the whole module still spans it after taking images along a
@@ -91,6 +90,8 @@ private theorem iSup_map_of_linearEquiv_eq_top (e : M ≃ₗ[A] M') (h : ⨆ i, 
   exact LinearMap.range_eq_top.mpr e.surjective
 
 end Transport
+
+variable {A : Type u} [Ring A]
 
 /-! ### The exchange induction -/
 

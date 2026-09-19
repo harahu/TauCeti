@@ -84,11 +84,13 @@ variable [CommSemiring A] [Algebra R A] [CommSemiring B] [Algebra R B]
 
 /-! ### Auxiliary lemmas -/
 
-private theorem mapAlgHom_C {C : Type*} [CommSemiring C] [Algebra R C] (φ : A →ₐ[R] C) (a : A) :
+private theorem mapAlgHom_C {A : Type*} [Semiring A] [Algebra R A] {C : Type*} [Semiring C]
+    [Algebra R C] (φ : A →ₐ[R] C) (a : A) :
     (AddMonoidAlgebra.mapAlgHom ℤ φ) (LaurentPolynomial.C a) = LaurentPolynomial.C (φ a) :=
   AddMonoidAlgebra.mapAlgHom_single φ (0 : ℤ) a
 
-private theorem mapAlgHom_T {C : Type*} [CommSemiring C] [Algebra R C] (φ : A →ₐ[R] C) (n : ℤ) :
+private theorem mapAlgHom_T {A : Type*} [Semiring A] [Algebra R A] {C : Type*} [Semiring C]
+    [Algebra R C] (φ : A →ₐ[R] C) (n : ℤ) :
     (AddMonoidAlgebra.mapAlgHom ℤ φ) (LaurentPolynomial.T n) = LaurentPolynomial.T n :=
   (AddMonoidAlgebra.mapAlgHom_single φ n 1).trans (by rw [map_one]; rfl)
 
@@ -231,7 +233,9 @@ section Naturality
 variable (φ : A →ₐ[R] B) (l : H →ₐc[R] LaurentPolynomial R)
 
 /-- Change of value algebra commutes with change of source Hopf algebra on points. -/
-theorem mapValue_mapDomain (x : WithConv (LaurentPolynomial R →ₐ[R] A)) :
+theorem mapValue_mapDomain {H : Type*} [Semiring H] [Bialgebra R H]
+    (l : H →ₐc[R] LaurentPolynomial R)
+    (x : WithConv (LaurentPolynomial R →ₐ[R] A)) :
     AlgHom.mapValue φ (AlgHom.mapDomain l x) = AlgHom.mapDomain l (AlgHom.mapValue φ x) := by
   simp only [AlgHom.mapValue_apply, AlgHom.mapDomain_apply, AlgHom.comp_assoc]
 

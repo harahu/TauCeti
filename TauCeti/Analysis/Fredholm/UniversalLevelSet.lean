@@ -56,14 +56,20 @@ variable {D₁ : E →L[𝕜] F} {D₂ : Λ →L[𝕜] F}
 
 /-- The projection onto the finite-dimensional cokernel direction in a Fredholm package,
 restricted to the effect of changing the parameter. -/
-private noncomputable def parameterObstruction
+private noncomputable def parameterObstruction {F : Type*} [SeminormedAddCommGroup F]
+    [NormedSpace 𝕜 F]
+    {E : Type*} [SeminormedAddCommGroup E] [NormedSpace 𝕜 E] {D₁ : E →L[𝕜] F}
+    {Λ : Type*} [SeminormedAddCommGroup Λ] [Module 𝕜 Λ] {D₂ : Λ →L[𝕜] F}
     (pkg : ContinuousLinearMap.FredholmPackage D₁) :
     Λ →L[𝕜] pkg.decCodom.X₀ :=
   (pkg.decCodom.X₀.projectionOntoL pkg.decCodom.X₁ pkg.decCodom.isTopCompl.symm).comp D₂
 
 /-- Surjectivity of the total linearization says that parameter directions cover the obstruction
 space of a Fredholm package. -/
-private theorem parameterObstruction_surjective
+private theorem parameterObstruction_surjective {F : Type*} [SeminormedAddCommGroup F]
+    [NormedSpace 𝕜 F]
+    {E : Type*} [SeminormedAddCommGroup E] [NormedSpace 𝕜 E] {D₁ : E →L[𝕜] F}
+    {Λ : Type*} [SeminormedAddCommGroup Λ] [Module 𝕜 Λ] {D₂ : Λ →L[𝕜] F}
     (pkg : ContinuousLinearMap.FredholmPackage D₁)
     (hD : Function.Surjective (D₁.coprod D₂)) :
     Function.Surjective (parameterObstruction (D₂ := D₂) pkg) := by
@@ -82,7 +88,10 @@ Fredholm.**
 If `D₁ : E →L[𝕜] F` is Fredholm and `D₁.coprod D₂ : E × Λ →L[𝕜] F` is surjective, then the latter
 has a continuous linear right inverse. Parameter directions first solve the finite-dimensional
 cokernel component of `D₁`; a Fredholm quasi-inverse then solves the remaining range component. -/
-theorem hasRightInverse_coprod (hD₁ : ContinuousLinearMap.IsFredholm D₁)
+theorem hasRightInverse_coprod {E : Type*} [SeminormedAddCommGroup E] [NormedSpace 𝕜 E]
+    {D₁ : E →L[𝕜] F}
+    {Λ : Type*} [SeminormedAddCommGroup Λ] [NormedSpace 𝕜 Λ] {D₂ : Λ →L[𝕜] F}
+    (hD₁ : ContinuousLinearMap.IsFredholm D₁)
     (hD : Function.Surjective (D₁.coprod D₂)) :
     (D₁.coprod D₂).HasRightInverse := by
   let pkg := hD₁.nonempty_fredholmPackage.some
@@ -125,7 +134,10 @@ theorem hasRightInverse_coprod (hD₁ : ContinuousLinearMap.IsFredholm D₁)
 /-- The kernel of a surjective total linearization is topologically complemented when its
 fixed-parameter part is Fredholm. This is the complemented-kernel hypothesis required by the
 Banach-space implicit function theorem for the universal zero set. -/
-theorem closedComplemented_ker_coprod (hD₁ : ContinuousLinearMap.IsFredholm D₁)
+theorem closedComplemented_ker_coprod {E : Type*} [SeminormedAddCommGroup E] [NormedSpace 𝕜 E]
+    {D₁ : E →L[𝕜] F}
+    {Λ : Type*} [SeminormedAddCommGroup Λ] [NormedSpace 𝕜 Λ] {D₂ : Λ →L[𝕜] F}
+    (hD₁ : ContinuousLinearMap.IsFredholm D₁)
     (hD : Function.Surjective (D₁.coprod D₂)) :
     (D₁.coprod D₂).ker.ClosedComplemented :=
   let hright := hD₁.hasRightInverse_coprod hD

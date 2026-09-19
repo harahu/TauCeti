@@ -107,7 +107,8 @@ variable {J : AlmostComplexStructure V}
 
 /-- A real-linear map out of `ℝ × ℝ` is determined by its values on the real and imaginary
 coordinate vectors. -/
-lemma LinearMap.apply_stdComplexLine (F : (ℝ × ℝ) →ₗ[ℝ] V) (z : ℝ × ℝ) :
+lemma LinearMap.apply_stdComplexLine {V : Type*} [AddCommMonoid V] [Module ℝ V]
+    (F : (ℝ × ℝ) →ₗ[ℝ] V) (z : ℝ × ℝ) :
     F z = z.1 • F stdComplexLineReal + z.2 • F stdComplexLineImag := by
   calc
     F z = F (z.1 • stdComplexLineReal + z.2 • stdComplexLineImag) := by

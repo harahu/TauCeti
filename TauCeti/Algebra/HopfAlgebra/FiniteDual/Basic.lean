@@ -70,10 +70,9 @@ noncomputable instance instProjective (k : Type u) (H : Type v) [CommSemiring k]
     Module.Projective k (ConvolutionDual k H) := by
   exact Module.Projective.of_equiv (WithConv.linearEquiv k (Module.Dual k H)).symm
 
-section LinearAlgebra
+section ProjectiveDualDistrib
 
-variable (k : Type u) (H : Type v) [CommRing k] [AddCommMonoid H] [Module k H]
-  [Module.Finite k H] [Module.Projective k H]
+variable (k : Type u) [CommSemiring k]
 
 /-- Tensor products of duals commute with dualization for finite projective modules. -/
 private noncomputable def projectiveDualDistribEquiv
@@ -104,6 +103,13 @@ private theorem projectiveDualDistribEquiv_apply
     (projectiveDualDistribEquiv_toLinearMap k M N)
   exact DFunLike.congr_fun hw z
 
+end ProjectiveDualDistrib
+
+section LinearAlgebra
+
+variable (k : Type u) (H : Type v) [CommRing k] [AddCommMonoid H] [Module k H]
+  [Module.Finite k H] [Module.Projective k H]
+
 /-- Forget the convolution wrappers on both factors of a tensor of finite-dual elements. -/
 private noncomputable def tensorUnwrap :
     ConvolutionDual k H ⊗[k] ConvolutionDual k H ≃ₗ[k]
@@ -123,6 +129,17 @@ private theorem dualDistribEquiv_apply
   by
     let _ : AddCommGroup H := Module.addCommMonoidToAddCommGroup k
     rw [dualDistribEquiv, LinearEquiv.trans_apply, projectiveDualDistribEquiv_apply]
+
+/-- `dualDistribEquiv` packaged in the convolution algebra on functionals on the tensor square. -/
+private noncomputable def evalTensorConv :
+    ConvolutionDual k H ⊗[k] ConvolutionDual k H →ₗ[k]
+      WithConv (Module.Dual k (H ⊗[k] H)) :=
+  (WithConv.linearEquiv k _).symm.toLinearMap ∘ₗ (dualDistribEquiv k H).toLinearMap
+
+@[simp]
+private theorem evalTensorConv_ofConv (w : ConvolutionDual k H ⊗[k] ConvolutionDual k H) :
+    (evalTensorConv k H w).ofConv = dualDistribEquiv k H w :=
+  rfl
 
 end LinearAlgebra
 
@@ -316,25 +333,25 @@ theorem counit_apply (phi : ConvolutionDual k H) :
     Coalgebra.counit (R := k) phi = phi.ofConv 1 :=
   counit_apply' k H phi
 
-end Coalgebra
-
-section Bialgebra
-
-variable (k : Type u) (H : Type v) [CommRing k] [Semiring H] [Bialgebra k H]
-  [Module.Finite k H] [Module.Projective k H]
-
-/-- `dualDistribEquiv` packaged in the convolution algebra on functionals on the tensor square. -/
-private noncomputable def evalTensorConv :
-    ConvolutionDual k H ⊗[k] ConvolutionDual k H →ₗ[k]
-      WithConv (Module.Dual k (H ⊗[k] H)) :=
-  (WithConv.linearEquiv k _).symm.toLinearMap ∘ₗ (dualDistribEquiv k H).toLinearMap
-
 private theorem evalTensorConv_tmul (phi psi : ConvolutionDual k H) :
     evalTensorConv k H (phi ⊗ₜ[k] psi) = LinearMap.mulTensor phi psi := by
   apply WithConv.ofConv_injective
   apply TensorProduct.ext'
   intro x y
   simp [evalTensorConv]
+
+private theorem evalTensorConv_comul (phi : ConvolutionDual k H) :
+    evalTensorConv k H (Coalgebra.comul phi) =
+      WithConv.toConv (phi.ofConv.comp (LinearMap.mul' k H)) := by
+  apply WithConv.ofConv_injective
+  exact dualDistribEquiv_comul k H phi
+
+end Coalgebra
+
+section AlgebraCoalgebra
+
+variable (k : Type u) (H : Type v) [CommRing k] [Semiring H] [Algebra k H] [Coalgebra k H]
+  [Module.Finite k H] [Module.Projective k H]
 
 private theorem evalTensorConv_mul
     (w z : ConvolutionDual k H ⊗[k] ConvolutionDual k H) :
@@ -344,16 +361,12 @@ private theorem evalTensorConv_mul
   rw [evalTensorConv_tmul, evalTensorConv_tmul, evalTensorConv_tmul,
     LinearMap.mulTensor_convMul]
 
-private theorem evalTensorConv_comul (phi : ConvolutionDual k H) :
-    evalTensorConv k H (Coalgebra.comul phi) =
-      WithConv.toConv (phi.ofConv.comp (LinearMap.mul' k H)) := by
-  apply WithConv.ofConv_injective
-  exact dualDistribEquiv_comul k H phi
+end AlgebraCoalgebra
 
-@[simp]
-private theorem evalTensorConv_ofConv (w : ConvolutionDual k H ⊗[k] ConvolutionDual k H) :
-    (evalTensorConv k H w).ofConv = dualDistribEquiv k H w :=
-  rfl
+section Bialgebra
+
+variable (k : Type u) (H : Type v) [CommRing k] [Semiring H] [Bialgebra k H]
+  [Module.Finite k H] [Module.Projective k H]
 
 /-- The bialgebra structure on the finite dual. Multiplication is convolution and the coalgebra
 operations are transposes of multiplication and unit on the original bialgebra. -/
@@ -394,7 +407,9 @@ end ConvolutionDual
 
 namespace ConvolutionDual
 
-variable (k : Type u) (H : Type v) [CommRing k] [CommSemiring H] [Algebra k H]
+section DualDistribEquivComm
+
+variable (k : Type u) (H : Type v) [CommRing k] [Semiring H] [Algebra k H]
   [Module.Finite k H] [Module.Projective k H]
 
 private theorem dualDistribEquiv_comm_apply
@@ -409,6 +424,11 @@ private theorem dualDistribEquiv_comm_apply
     | tmul phi psi => simp [tensorUnwrap]
   rw [dualDistribEquiv_apply, dualDistribEquiv_apply, hcomm]
   exact (TensorProduct.dualDistrib_apply_comm ((tensorUnwrap k H) w) (x ⊗ₜ[k] y)).symm
+
+end DualDistribEquivComm
+
+variable (k : Type u) (H : Type v) [CommRing k] [CommSemiring H] [Algebra k H]
+  [Module.Finite k H] [Module.Projective k H]
 
 /-- The coalgebra underlying the finite dual is cocommutative. -/
 noncomputable instance instIsCocomm : Coalgebra.IsCocomm k (ConvolutionDual k H) where
@@ -431,23 +451,10 @@ end ConvolutionDual
 
 namespace ConvolutionDual
 
-section HopfAlgebra
+section OfConvMulApply
 
-variable (k : Type u) (H : Type v) [CommRing k] [Semiring H] [HopfAlgebra k H]
+variable (k : Type u) (H : Type v) [CommRing k] [Semiring H] [Algebra k H] [Coalgebra k H]
   [Module.Finite k H] [Module.Projective k H]
-
-/-- The antipode operation on the finite dual, obtained by transposing the antipode of the
-original Hopf algebra. -/
-noncomputable instance instHopfAlgebraStruct :
-    HopfAlgebraStruct k (ConvolutionDual k H) where
-  antipode := (WithConv.linearEquiv k _).symm.toLinearMap ∘ₗ
-      (HopfAlgebra.antipode k (A := H)).dualMap ∘ₗ
-        (WithConv.linearEquiv k _).toLinearMap
-
-private theorem antipode_apply' (phi : ConvolutionDual k H) (x : H) :
-    (HopfAlgebra.antipode k (A := ConvolutionDual k H) phi).ofConv x =
-      phi.ofConv (HopfAlgebra.antipode k x) := by
-  simp [HopfAlgebraStruct.antipode]
 
 private theorem ofConv_mul_apply
     (w : ConvolutionDual k H ⊗[k] ConvolutionDual k H) (x : H) :
@@ -466,6 +473,26 @@ private theorem ofConv_mul_apply
           simpa only [map_add, LinearMap.add_apply] using congrArg₂ (· + ·) hz₁ hz₂
       | tmul y z =>
           rw [TensorProduct.map_tmul, LinearMap.mul'_apply, dualDistribEquiv_tmul_apply]
+
+end OfConvMulApply
+
+section HopfAlgebra
+
+variable (k : Type u) (H : Type v) [CommRing k] [Semiring H] [HopfAlgebra k H]
+  [Module.Finite k H] [Module.Projective k H]
+
+/-- The antipode operation on the finite dual, obtained by transposing the antipode of the
+original Hopf algebra. -/
+noncomputable instance instHopfAlgebraStruct :
+    HopfAlgebraStruct k (ConvolutionDual k H) where
+  antipode := (WithConv.linearEquiv k _).symm.toLinearMap ∘ₗ
+      (HopfAlgebra.antipode k (A := H)).dualMap ∘ₗ
+        (WithConv.linearEquiv k _).toLinearMap
+
+private theorem antipode_apply' (phi : ConvolutionDual k H) (x : H) :
+    (HopfAlgebra.antipode k (A := ConvolutionDual k H) phi).ofConv x =
+      phi.ofConv (HopfAlgebra.antipode k x) := by
+  simp [HopfAlgebraStruct.antipode]
 
 private theorem dualDistribEquiv_map_antipode_left_apply
     (w : ConvolutionDual k H ⊗[k] ConvolutionDual k H) (z : H ⊗[k] H) :

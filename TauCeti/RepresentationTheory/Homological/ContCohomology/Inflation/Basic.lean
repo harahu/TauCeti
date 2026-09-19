@@ -109,7 +109,7 @@ end Cosets
 section CompatiblePair
 
 variable (G : Type u) [Group G]
-  (M : Type v) [AddCommGroup M] [DistribMulAction G M]
+  (M : Type v) [AddGroup M] [DistribMulAction G M]
   (N : Subgroup G) [N.Normal]
 
 /-- The inclusion `M ^ N ↪ M` is equivariant along the quotient homomorphism `G → G ⧸ N`: the

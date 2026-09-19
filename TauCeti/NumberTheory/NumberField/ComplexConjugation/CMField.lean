@@ -55,9 +55,12 @@ variable (K : Type*) [Field K] [NumberField K] [NumberField.IsCMField K]
 
 local notation3 "K⁺" => NumberField.maximalRealSubfield K
 
-/-- **On a CM field every infinite place is ramified over the maximal real subfield**, so the
-ramification hypothesis of `complexConjugationAt` is automatic there. -/
-theorem isRamified_maximalRealSubfield (w : InfinitePlace K) : w.IsRamified K⁺ := by
+omit [NumberField.IsCMField K] in
+/-- **On a totally complex field, such as a CM field, every infinite place is ramified over the
+maximal real subfield**, so the ramification hypothesis of `complexConjugationAt` is automatic
+there. -/
+theorem isRamified_maximalRealSubfield [IsTotallyComplex K] (w : InfinitePlace K) :
+    w.IsRamified K⁺ := by
   rw [isRamified_iff]
   exact ⟨IsTotallyComplex.isComplex w, IsTotallyReal.isReal _⟩
 

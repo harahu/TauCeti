@@ -35,7 +35,7 @@ with any reduced algebra is reduced. Only the first factor needs to be of finite
 instance instIsReducedTensorProductOfIsAlgClosed
     (k : Type u) [Field k] [IsAlgClosed k]
     (A : Type v) [CommRing A] [Algebra k A] [Algebra.FiniteType k A] [IsReduced A]
-    (B : Type w) [CommRing B] [Algebra k B] [IsReduced B] :
+    (B : Type w) [Ring B] [Algebra k B] [IsReduced B] :
     IsReduced (A ⊗[k] B) := by
   refine ⟨fun x hx ↦ ?_⟩
   apply tensor_eq_zero_of_forall_lid_rTensor_eq_zero (fun f : A →ₐ[k] k ↦ f.toLinearMap)

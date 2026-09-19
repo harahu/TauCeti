@@ -269,7 +269,7 @@ theorem le_of_forall_apply_eq_smul_inner (hB : IsCoercive B) {J : V →L[ℝ] H}
   exact le_of_mul_le_mul_right (by linarith [hlower u]) hsq
 
 variable {V H : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
-  [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+  [SeminormedAddCommGroup H] [InnerProductSpace ℝ H]
   {B : V →L[ℝ] V →L[ℝ] ℝ}
 
 /-- **A variational eigenfunction has nonzero image in `H`.**  If `J u` vanished, the

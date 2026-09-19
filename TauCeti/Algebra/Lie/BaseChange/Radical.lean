@@ -41,11 +41,13 @@ Neither containment is forced to be an equality by the transfer principles, beca
 `A ⊗[R] L` need not be extended from `L` at all, and nothing above bounds the ideals that are
 not.  The case where both sides are `⊥` is the separate statement
 `LieAlgebra.hasTrivialRadical_baseChange_iff`: over a field of characteristic zero a
-finite-dimensional Lie algebra has trivial radical exactly when some field extension of it does,
+finite-dimensional Lie algebra has trivial radical exactly when some extension of scalars of it to a
+field extension, or more generally to a principal ideal domain, does,
 so extending scalars can neither destroy nor *create* a solvable ideal of a semisimple algebra.
 
 For a finite-dimensional Lie algebra over a field of characteristic zero the containment is an
-equality: `LieAlgebra.radical_baseChange` says the radical commutes with a field extension, and
+equality: `LieAlgebra.radical_baseChange` says the radical commutes with extension of scalars to a
+field extension, or any principal ideal domain, and
 `LieAlgebra.one_tmul_mem_radical_baseChange_iff` reads that as a criterion, so membership in the
 radical may be tested after extending scalars.  The corresponding statement for the nilradical is
 *not* proved here and does not follow, since `L ⧸ nilradical K L` need not have trivial
@@ -60,9 +62,11 @@ nilradical.
   the radical, respectively of the nilradical, lands in the radical, respectively the nilradical,
   of the extended algebra.
 * `LieAlgebra.hasTrivialRadical_baseChange_iff`: **in characteristic zero a finite-dimensional Lie
-  algebra has trivial radical exactly when its extension to a field extension does.**
+  algebra has trivial radical exactly when its extension to a field extension, or any principal
+  ideal domain, does.**
 * `LieAlgebra.radical_baseChange`: **in characteristic zero the solvable radical of a
-  finite-dimensional Lie algebra commutes with a field extension**, with
+  finite-dimensional Lie algebra commutes with extension of scalars to a field extension, or any
+  principal ideal domain**, with
   `LieAlgebra.one_tmul_mem_radical_baseChange_iff` reading it as a membership criterion that may
   be checked after extending scalars.
 
@@ -163,14 +167,14 @@ theorem baseChange_nilradical_le [IsNoetherian R L] :
 
 end Noetherian
 
-section CharZero
+section PrincipalIdealDomain
 
 variable (K L A : Type*) [Field K] [CharZero K] [LieRing L] [LieAlgebra K L]
-  [FiniteDimensional K L] [Field A] [Algebra K A]
+  [FiniteDimensional K L] [CommRing A] [IsDomain A] [IsPrincipalIdealRing A] [Algebra K A]
 
-/-- **Triviality of the radical is insensitive to a field extension.**  In characteristic zero a
-finite-dimensional Lie algebra has trivial radical exactly when its extension of scalars to a
-field extension does.
+/-- **Triviality of the radical is insensitive to extension of scalars to a principal ideal
+domain**, such as a field extension.  In characteristic zero a finite-dimensional Lie algebra has
+trivial radical exactly when its extension of scalars to such a domain does.
 
 The `←` direction is the substantive one: it says that extending scalars cannot *create* a
 solvable ideal.  Neither direction follows from `LieIdeal.isSolvable_baseChange_iff`, which only
@@ -183,9 +187,10 @@ theorem hasTrivialRadical_baseChange_iff :
   rw [hasTrivialRadical_iff_isKilling, hasTrivialRadical_iff_isKilling]
   exact TauCeti.isKilling_baseChange_iff K A L
 
-/-- **In characteristic zero the solvable radical commutes with a field extension.**  For a
-finite-dimensional Lie algebra `L` over a field `K` of characteristic zero and a field extension
-`A` of `K`, the radical of `A ⊗[K] L` is the extension of scalars of the radical of `L`.
+/-- **In characteristic zero the solvable radical commutes with extension of scalars to a
+principal ideal domain**, such as a field extension.  For a finite-dimensional Lie algebra `L`
+over a field `K` of characteristic zero and a `K`-algebra `A` that is a principal ideal domain,
+the radical of `A ⊗[K] L` is the extension of scalars of the radical of `L`.
 
 Characteristic zero is a genuine hypothesis, not a convenience.  The equality determines the
 radical of `A ⊗[K] L` completely, although it says nothing about individual solvable ideals of
@@ -206,13 +211,14 @@ theorem radical_baseChange :
   -- radical is the only ideal of that kind.
   exact ((hasTrivialRadical_quotient_iff _).mp htriv).symm
 
-/-- **Membership in the radical may be checked after a field extension.**  In characteristic zero
-a vector of a finite-dimensional Lie algebra lies in the solvable radical exactly when its
-canonical image in an extension of scalars does. -/
+/-- **Membership in the radical may be checked after extending scalars to a principal ideal
+domain**, such as a field extension.  In characteristic zero a vector of a finite-dimensional Lie
+algebra lies in the solvable radical exactly when its canonical image in such an extension of
+scalars does. -/
 theorem one_tmul_mem_radical_baseChange_iff (x : L) :
     (1 : A) ⊗ₜ[K] x ∈ radical A (A ⊗[K] L) ↔ x ∈ radical K L := by
   rw [radical_baseChange, LieSubmodule.one_tmul_mem_baseChange_iff]
 
-end CharZero
+end PrincipalIdealDomain
 
 end LieAlgebra

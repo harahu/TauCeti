@@ -131,7 +131,7 @@ theorem proPFrattini_le {U : OpenNormalSubgroup G} (hU : U.toSubgroup.index = p)
   fun _ hx ↦ mem_proPFrattini_iff.mp hx U hU
 
 /-- The pro-`p` Frattini subgroup is closed, being an intersection of open subgroups. -/
-instance isClosed_proPFrattini [IsTopologicalGroup G] :
+instance isClosed_proPFrattini [SeparatelyContinuousMul G] :
     IsClosed ((proPFrattini p G : Subgroup G) : Set G) := by
   rw [proPFrattini_def, Subgroup.coe_iInf]
   exact isClosed_iInter fun U ↦ U.1.toOpenSubgroup.isClosed

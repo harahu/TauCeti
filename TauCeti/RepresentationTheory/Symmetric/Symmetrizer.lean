@@ -313,7 +313,7 @@ theorem single_mul_youngSymmetrizer_of_colSubgroup_eq_top (t : YoungTableau μ)
 
 /-- The column antisymmetrizer of `t` acts on any representation as the signed sum of the
 permutations in the column group of `t`. -/
-theorem asAlgebraHom_columnAntisymmetrizer_apply {V : Type*} [AddCommGroup V] [Module ℚ V]
+theorem asAlgebraHom_columnAntisymmetrizer_apply {V : Type*} [AddCommMonoid V] [Module ℚ V]
     (ρ : Representation ℚ (Equiv.Perm (Fin μ.card)) V) (t : YoungTableau μ) (v : V) :
     ρ.asAlgebraHom (columnAntisymmetrizer t) v =
       ∑ q : colSubgroup t,
@@ -465,7 +465,7 @@ sum of the actions of the permutations fixing everything outside that set.
 
 The decidability of the summation range is an instance argument rather than a synthesized one, so
 that the equation rewrites a sum however its own filter was built. -/
-theorem asAlgebraHom_antisymmetrizerOn_apply {M : Type*} [AddCommGroup M] [Module ℚ M]
+theorem asAlgebraHom_antisymmetrizerOn_apply {M : Type*} [AddCommMonoid M] [Module ℚ M]
     (V : Representation ℚ (Equiv.Perm α) M) (X : Finset α)
     [DecidablePred fun σ : Equiv.Perm α => ∀ k ∉ X, σ k = k] (v : M) :
     V.asAlgebraHom (antisymmetrizerOn X) v =

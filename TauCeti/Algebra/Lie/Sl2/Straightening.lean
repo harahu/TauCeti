@@ -68,7 +68,8 @@ private theorem straighteningSummand_zero_left (H E F : A) (n : ℕ) :
     straighteningSummand H E F 0 n 0 = dividedPower n F := by
   simp [straighteningSummand]
 
-private theorem weighted_straightening_coefficient (r : A) (m j : ℕ) (hj : j ≤ m + 1)
+private theorem weighted_straightening_coefficient {A : Type u} [Ring A] [Module ℚ≥0 A]
+    (r : A) (m j : ℕ) (hj : j ≤ m + 1)
     (hj0 : 0 < j) :
     (m + 1 - j) • Ring.choose (r - 1) j +
         (r + (m + 1 - j : ℕ)) * Ring.choose (r - 1) (j - 1) =

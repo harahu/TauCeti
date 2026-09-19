@@ -395,7 +395,7 @@ the expansion factors as `t ^ 3 * u(t)` with `u(t)` a unit, and both factors hav
 the cube because there are no zero divisors, the unit because units map to units. Unlike
 `formalWEval_ne_zero` this needs no hypothesis on `t ^ 3`, because the cube is checked in the
 codomain. -/
-theorem algebraMap_formalWEval_ne_zero {S : Type*} [CommRing S] [Nontrivial S] [NoZeroDivisors S]
+theorem algebraMap_formalWEval_ne_zero {S : Type*} [Semiring S] [Nontrivial S] [NoZeroDivisors S]
     [Algebra O S] {I : Ideal O} (hI : IsAdic I) {t : O} (ht : t ∈ I)
     (ht0 : algebraMap O S t ≠ 0) : algebraMap O S (W.formalWEval t) ≠ 0 := by
   rw [W.formalWEval_eq_pow_mul_formalUEval (hI.isTopologicallyNilpotent_of_mem ht), map_mul,

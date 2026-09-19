@@ -78,7 +78,8 @@ namespace TauCeti.Multiquadratic
 variable {K L : Type*} [Field K] [Field L] [Algebra K L]
 
 /-- A product of chosen square roots is one of the two square roots of the radicand product. -/
-private theorem prod_root_eq_or_eq_neg_of_prod_eq_mul_self {ι : Type*} {d : ι → K} {root : ι → L}
+private theorem prod_root_eq_or_eq_neg_of_prod_eq_mul_self {K L : Type*} [CommSemiring K]
+    [CommRing L] [NoZeroDivisors L] [Algebra K L] {ι : Type*} {d : ι → K} {root : ι → L}
     (hroot : ∀ i, root i ^ 2 = algebraMap K L (d i)) (S : Finset ι) {c : K}
     (hc : ∏ i ∈ S, d i = c * c) :
     (∏ i ∈ S, root i) = algebraMap K L c ∨ (∏ i ∈ S, root i) = -algebraMap K L c := by

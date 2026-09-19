@@ -130,9 +130,9 @@ variable {C : Type u} [Category.{v} C] [Preadditive C]
 
 /-! ### The quotient `rad / rad²` -/
 
-section Defs
+section RadicalSubmodule
 
-variable (k : Type*) [Ring k] [Linear k C] (X Y : C)
+variable (k : Type*) [Semiring k] [Linear k C] (X Y : C)
 
 /-- **The square of the radical, as a submodule of the radical.**  `TauCeti.jacobsonRadicalSq` is a
 subgroup of the whole morphism space `X ⟶ Y`; this is its preimage in the submodule
@@ -142,6 +142,21 @@ constructor, eliminator and equality API below is stated in terms of the underly
 consumer needs the subtype-quotient representation. -/
 private def jacobsonRadicalSqSubmoduleIn : Submodule k (jacobsonRadicalSubmodule k X Y) :=
   (jacobsonRadicalSqSubmodule k X Y).submoduleOf (jacobsonRadicalSubmodule k X Y)
+
+variable {k X Y}
+
+/-- Membership in `jacobsonRadicalSqSubmoduleIn` is membership of the underlying morphism in the
+square of the radical. -/
+@[simp]
+private theorem mem_jacobsonRadicalSqSubmoduleIn {f : jacobsonRadicalSubmodule k X Y} :
+    f ∈ jacobsonRadicalSqSubmoduleIn k X Y ↔ (f : X ⟶ Y) ∈ jacobsonRadicalSq X Y :=
+  mem_jacobsonRadicalSqSubmodule
+
+end RadicalSubmodule
+
+section Defs
+
+variable (k : Type*) [Ring k] [Linear k C] (X Y : C)
 
 /-- **The space of irreducible morphisms** `X ⟶ Y`, the quotient `rad(X, Y) / rad²(X, Y)`.
 
@@ -168,13 +183,6 @@ def irreducibleMorphismMk :
   (jacobsonRadicalSqSubmoduleIn k X Y).mkQ
 
 variable {k X Y}
-
-/-- Membership in `jacobsonRadicalSqSubmoduleIn` is membership of the underlying morphism in the
-square of the radical. -/
-@[simp]
-private theorem mem_jacobsonRadicalSqSubmoduleIn {f : jacobsonRadicalSubmodule k X Y} :
-    f ∈ jacobsonRadicalSqSubmoduleIn k X Y ↔ (f : X ⟶ Y) ∈ jacobsonRadicalSq X Y :=
-  mem_jacobsonRadicalSqSubmodule
 
 /-- Every element of the space of irreducible morphisms is the class of a radical morphism.  This
 is the induction principle for the space: `obtain ⟨f, rfl⟩ := irreducibleMorphismMk_surjective x`
@@ -225,7 +233,7 @@ classes of radical morphisms.**  This is the uniqueness half of the universal pr
 `TauCeti.irreducibleMorphismLift` is the *only* map with the values
 `TauCeti.irreducibleMorphismLift_irreducibleMorphismMk` gives it. -/
 @[ext high]
-theorem irreducibleMorphismSpace_linearMap_ext {M : Type*} [AddCommGroup M] [Module k M]
+theorem irreducibleMorphismSpace_linearMap_ext {M : Type*} [AddCommMonoid M] [Module k M]
     ⦃g₁ g₂ : irreducibleMorphismSpace k X Y →ₗ[k] M⦄
     (h : ∀ f : jacobsonRadicalSubmodule k X Y,
       g₁ (irreducibleMorphismMk k X Y f) = g₂ (irreducibleMorphismMk k X Y f)) :

@@ -387,8 +387,8 @@ section Seminormed
 
 variable {𝕜 : Type*} [NontriviallyNormedField 𝕜]
 variable {E Λ F : Type*}
-variable [SeminormedAddCommGroup E] [Module 𝕜 E]
-variable [SeminormedAddCommGroup Λ] [Module 𝕜 Λ]
+variable [TopologicalSpace E] [AddCommGroup E] [Module 𝕜 E]
+variable [TopologicalSpace Λ] [AddCommGroup Λ] [Module 𝕜 Λ]
 variable [SeminormedAddCommGroup F] [Module 𝕜 F]
 variable (D₁ : E →L[𝕜] F) (D₂ : Λ →L[𝕜] F)
 

@@ -106,6 +106,24 @@ normality, along a morphism of commutative Hopf algebras. -/
 
 end TensorIdeals
 
+section CounitMap
+
+variable {H : Type v} {K : Type w} [Semiring H] [CommSemiring K]
+variable [HopfAlgebra R H] [Bialgebra R K]
+
+private theorem counit_eq_zero_map (I : HopfIdeal R H) (f : H →ₐc[R] K) ⦃x : K⦄
+    (hx : x ∈ Ideal.map (f : H →+* K) I.toIdeal) : Coalgebra.counit (R := R) x = 0 := by
+  have h : Ideal.map (f : H →+* K) I.toIdeal ≤
+      Ideal.comap (Bialgebra.counitAlgHom R K).toRingHom ⊥ := by
+    rw [Ideal.map_le_iff_le_comap]
+    intro i hi
+    simp only [Ideal.mem_comap, AlgHom.toRingHom_eq_coe, RingHom.coe_coe,
+      Bialgebra.counitAlgHom_apply, Ideal.mem_bot, CoalgHomClass.counit_comp_apply]
+    exact I.counit_eq_zero hi
+  simpa using Ideal.mem_comap.mp (h hx)
+
+end CounitMap
+
 variable {H : Type v} {K : Type w} [Semiring H] [CommSemiring K]
 variable [HopfAlgebra R H] [HopfAlgebra R K]
 
@@ -136,17 +154,6 @@ private theorem comul_mem_map (I : HopfIdeal R H) (f : H →ₐc[R] K) ⦃x : K�
       ← hmap, ← map_tensor_leftTensorIdeal f.toAlgHom,
       ← map_tensor_rightTensorIdeal f.toAlgHom, ← Ideal.map_sup]
     exact Ideal.mem_map_of_mem _ (I.comul_mem hi)
-  simpa using Ideal.mem_comap.mp (h hx)
-
-private theorem counit_eq_zero_map (I : HopfIdeal R H) (f : H →ₐc[R] K) ⦃x : K⦄
-    (hx : x ∈ Ideal.map (f : H →+* K) I.toIdeal) : Coalgebra.counit (R := R) x = 0 := by
-  have h : Ideal.map (f : H →+* K) I.toIdeal ≤
-      Ideal.comap (Bialgebra.counitAlgHom R K).toRingHom ⊥ := by
-    rw [Ideal.map_le_iff_le_comap]
-    intro i hi
-    simp only [Ideal.mem_comap, AlgHom.toRingHom_eq_coe, RingHom.coe_coe,
-      Bialgebra.counitAlgHom_apply, Ideal.mem_bot, CoalgHomClass.counit_comp_apply]
-    exact I.counit_eq_zero hi
   simpa using Ideal.mem_comap.mp (h hx)
 
 private theorem antipode_mem_map (I : HopfIdeal R H) (f : H →ₐc[R] K) ⦃x : K⦄

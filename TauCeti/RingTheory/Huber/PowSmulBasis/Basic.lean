@@ -110,9 +110,10 @@ open scoped Topology Pointwise
 
 namespace TauCeti.Huber.PairOfDefinition
 
-variable {A : Type*} [CommRing A] [TopologicalSpace A] [IsTopologicalRing A]
-  {M : Type*} [AddCommGroup M] [Module A M]
+section ExistsPowSmulMem
 
+variable {A : Type*} [CommRing A] [TopologicalSpace A] [SeparatelyContinuousMul A]
+  {M : Type*} [AddCommMonoid M] [Module A M]
 
 /-- **A power of `s` carries any element of `M = A · M₀` into `M₀`.** This is where the
 hypothesis `A · M₀ = M` is spent, and it is what makes the `smul` condition of
@@ -145,12 +146,19 @@ theorem exists_pow_smul_mem (P : PairOfDefinition A) {s : A} (hs : IsTopological
         rw [pow_add]; ring
       rw [he]; exact M₀.smul_mem _ hk
 
+end ExistsPowSmulMem
+
+variable {A : Type*} [CommRing A] [TopologicalSpace A] [IsTopologicalRing A]
+  {M : Type*} [AddCommGroup M] [Module A M]
+
+omit [AddCommGroup M] in
 /-- **The `smul` half of `SubmodulesBasis`**: every scalar close enough to `0` in `A₀` carries a
 given `m` into `ϖⁿ • M₀`.
 
 `m` is carried into `M₀` by `ϖᵏ` for some `k` (`exists_pow_smul_mem`), and `ϖⁿ⁺ᵏ A₀` is a
 neighbourhood of `0`; the two combine by arithmetic inside `A₀`. -/
-theorem eventually_smul_mem_pow_smul (P : PairOfDefinition A) {s : A} (hs : IsPseudoUniformizer s)
+theorem eventually_smul_mem_pow_smul [AddCommMonoid M] [Module A M]
+    (P : PairOfDefinition A) {s : A} (hs : IsPseudoUniformizer s)
     (hs0 : s ∈ P.ringOfDefinition) (M₀ : Submodule P.ringOfDefinition M) {m : M}
     (hm : m ∈ Submodule.span A (M₀ : Set M)) (n : ℕ) :
     ∀ᶠ a in 𝓝 (0 : P.ringOfDefinition), a • m ∈ (⟨s, hs0⟩ : P.ringOfDefinition) ^ n • M₀ := by
@@ -278,6 +286,7 @@ theorem isCountablyGenerated_nhds_zero (P : PairOfDefinition A) {s : A}
     (@nhds M (P.submodulesBasis_pow_smul hs hs0 M₀ hspan).topology 0).IsCountablyGenerated :=
   (P.hasBasis_nhds_zero_pow_smul hs hs0 M₀ hspan).isCountablyGenerated
 
+omit [IsTopologicalRing A] [AddCommGroup M] in
 /-- **A power of `ϖ` carries a finitely generated `A₀`-submodule into `M₀` wholesale.**
 
 A *single* exponent serves all of `M₁` at once. That uniformity is exactly what finite generation
@@ -285,7 +294,8 @@ buys: without it `exists_pow_smul_mem` still gives an exponent for each element 
 those exponents need not be bounded, and no power of `ϖ` need carry the whole submodule.
 
 `M₀` is not required to span `M`; only `M₁` need lie in its span. -/
-theorem exists_pow_smul_le (P : PairOfDefinition A) {s : A} (hs : IsTopologicallyNilpotent s)
+theorem exists_pow_smul_le [SeparatelyContinuousMul A] [AddCommMonoid M] [Module A M]
+    (P : PairOfDefinition A) {s : A} (hs : IsTopologicallyNilpotent s)
     (hs0 : s ∈ P.ringOfDefinition) (M₀ M₁ : Submodule P.ringOfDefinition M)
     (hspan : (M₁ : Set M) ⊆ Submodule.span A (M₀ : Set M)) (hfg : M₁.FG) :
     ∃ k : ℕ, (⟨s, hs0⟩ : P.ringOfDefinition) ^ k • M₁ ≤ M₀ := by
@@ -315,6 +325,7 @@ theorem exists_pow_smul_le (P : PairOfDefinition A) {s : A} (hs : IsTopologicall
     rw [SubmonoidClass.coe_pow]
   exact hcast ▸ key x hx
 
+omit [IsTopologicalRing A] [AddCommGroup M] in
 /-- **One-sided cofinality of the two `ϖ`-adic filtrations.** Every member of the family built
 from `M₀` contains a member of the family built from a finitely generated `M₁`.
 
@@ -328,7 +339,8 @@ filtrations defined by two pseudouniformisers.
 
 `submodulesBasis_pow_smul` proves the basis half of Remark 6.19 without finite generation; this is
 where `M₁.FG` does its work. -/
-theorem exists_pow_smul_le_pow_smul (P : PairOfDefinition A) {s : A}
+theorem exists_pow_smul_le_pow_smul [SeparatelyContinuousMul A] [AddCommMonoid M] [Module A M]
+    (P : PairOfDefinition A) {s : A}
     (hs : IsTopologicallyNilpotent s) (hs0 : s ∈ P.ringOfDefinition)
     (M₀ M₁ : Submodule P.ringOfDefinition M) (hspan : (M₁ : Set M) ⊆ Submodule.span A (M₀ : Set M))
     (hfg : M₁.FG) (n : ℕ) : ∃ k : ℕ, (⟨s, hs0⟩ : P.ringOfDefinition) ^ k • M₁

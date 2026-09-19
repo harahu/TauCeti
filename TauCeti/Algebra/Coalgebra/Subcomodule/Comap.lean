@@ -55,8 +55,8 @@ variable [AddCommMonoid N] [Module R N] [Comodule R C N]
 
 namespace Subcomodule
 
-private theorem ker_rangeRestrict_mkQ_comp {M₁ : Type w} {N₁ : Type x}
-    [AddCommGroup M₁] [Module R M₁] [AddCommGroup N₁] [Module R N₁]
+private theorem ker_rangeRestrict_mkQ_comp {R : Type u} [Ring R] {M₁ : Type w} {N₁ : Type x}
+    [AddCommMonoid M₁] [Module R M₁] [AddCommGroup N₁] [Module R N₁]
     (B : Submodule R N₁) (f : M₁ →ₗ[R] N₁) :
     LinearMap.ker (B.mkQ.comp f).rangeRestrict = B.comap f := by
   ext m

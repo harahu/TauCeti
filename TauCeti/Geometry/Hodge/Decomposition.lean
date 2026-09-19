@@ -204,7 +204,7 @@ theorem piece_induction_on (hs : HodgeStructureOn W ω n) {motive : W → Prop} 
 
 /-- Two complex-linear maps out of the ambient space that agree on every Hodge component are
 equal. -/
-theorem linearMap_ext_of_piece {N : Type*} [AddCommGroup N] [Module ℂ N]
+theorem linearMap_ext_of_piece {N : Type*} [AddCommMonoid N] [Module ℂ N]
     (hs : HodgeStructureOn W ω n) {f g : W →ₗ[ℂ] N}
     (h : ∀ p, ∀ x ∈ hs.piece p, f x = g x) : f = g := by
   ext x

@@ -81,7 +81,7 @@ open _root_.MonoidAlgebra
 
 section Swap
 
-variable {k : Type*} [CommRing k] {α : Type*} [DecidableEq α]
+variable {k : Type*} [Ring k] {α : Type*} [DecidableEq α]
 
 /-- Subtracting from `v` the effect of the transposition `(x y)` leaves the difference of the two
 coefficients times the difference of the two standard basis vectors: a transposition changes only
@@ -182,7 +182,7 @@ variable {k : Type*} {α : Type*}
 
 section SemiringNoZeroDivisors
 
-variable [CommSemiring k] [NoZeroDivisors k] [Fintype α]
+variable [Semiring k] [NoZeroDivisors k] [Fintype α]
 
 /-- A nonzero vector in the kernel of `sumCoords` has two different coefficients, provided
 `(Fintype.card α : k) ≠ 0`.
@@ -243,7 +243,8 @@ variable {k : Type*} [Field k] {α : Type*} [Fintype α]
 
 /-- The standard subrepresentation is an atom when `Fintype.card α = 2`, with no hypothesis on the
 characteristic of `k`. -/
-private theorem isAtom_augmentationSubrepresentation_of_card_eq_two (hcard : Fintype.card α = 2) :
+private theorem isAtom_augmentationSubrepresentation_of_card_eq_two {k : Type*} [DivisionRing k]
+    (hcard : Fintype.card α = 2) :
     IsAtom (augmentationSubrepresentation k (Equiv.Perm α) α) := by
   -- For two elements the subrepresentation is a line, and a line is an atom of the lattice of
   -- subspaces; the lattice of subrepresentations embeds in it by `toSubmodule`.

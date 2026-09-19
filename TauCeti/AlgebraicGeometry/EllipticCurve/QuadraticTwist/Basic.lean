@@ -426,7 +426,8 @@ variable [Algebra.IsQuadraticExtension K L]
 of `θ` only up to isomorphism over `K`: all generators give isomorphic twists. This is what
 makes the twist by the extension itself well posed. Separability is not needed — only the trace
 and norm of `b + aθ`, which any quadratic extension supplies. -/
-theorem exists_smul_quadraticTwistOf_trace_norm_eq {θ θ' : L}
+theorem exists_smul_quadraticTwistOf_trace_norm_eq {L : Type*} [CommRing L] [Algebra K L]
+    [Algebra.IsQuadraticExtension K L] {θ θ' : L}
     (hθ : θ ∉ Set.range (algebraMap K L)) (hθ' : θ' ∉ Set.range (algebraMap K L)) :
     ∃ C : VariableChange K,
       C • E.quadraticTwistOf (Algebra.trace K L θ) (Algebra.norm K θ)

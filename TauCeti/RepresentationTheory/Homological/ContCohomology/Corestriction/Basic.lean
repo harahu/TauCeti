@@ -396,15 +396,10 @@ theorem cochainsCor1_res {c : G → M} (hc : groupCohomology.IsCocycle₁ c) :
 
 end DegreeOneCochain
 
-section DegreeOne
-
-/-! ### Corestriction on `H¹`
-
-Openness of `U` makes every corestriction cochain continuous, so the cochain layer above descends
-to `H¹ = Z¹/B¹`. -/
+section DegreeOneContinuity
 
 variable [TopologicalSpace G] [SeparatelyContinuousMul G]
-  [TopologicalSpace M] [IsTopologicalAddGroup M] [ContinuousSMul G M]
+  [TopologicalSpace M] [ContinuousAdd M] [ContinuousConstSMul G M]
   (t : G ⧸ U → G) (ht : ∀ u : G ⧸ U, (QuotientGroup.mk (t u) : G ⧸ U) = u)
   (hU : IsOpen (U : Set G))
 
@@ -419,8 +414,25 @@ theorem continuous_cochainsCor1 {f : U → M} (hf : Continuous f) :
   exact continuous_finsetSum _ fun u _ =>
     ((hf.comp ((continuous_lWord U t hU u).subtype_mk _)).const_smul (t u))
 
+end DegreeOneContinuity
+
+section DegreeOne
+
+/-! ### Corestriction on `H¹`
+
+Openness of `U` makes every corestriction cochain continuous, so the cochain layer above descends
+to `H¹ = Z¹/B¹`. -/
+
+variable [TopologicalSpace G] [SeparatelyContinuousMul G]
+  [TopologicalSpace M] [IsTopologicalAddGroup M] [ContinuousSMul G M]
+  (t : G ⧸ U → G) (ht : ∀ u : G ⧸ U, (QuotientGroup.mk (t u) : G ⧸ U) = u)
+  (hU : IsOpen (U : Set G))
+
+include hU
+
+omit [ContinuousSMul G M] in
 /-- The degree-one corestriction cochain preserves continuous `1`-cocycles. -/
-theorem cochainsCor1_mem_Z1 {f : U → M} (hf : f ∈ Z1 U M) :
+theorem cochainsCor1_mem_Z1 [ContinuousConstSMul G M] {f : U → M} (hf : f ∈ Z1 U M) :
     cochainsCor1 G M U t ht f ∈ Z1 G M :=
   mem_Z1_iff.2 ⟨continuous_cochainsCor1 G M U t ht hU (mem_Z1_iff.1 hf).1,
     cochainsCor1_isCocycle₁ G M U t ht (mem_Z1_iff.1 hf).2⟩
@@ -762,8 +774,10 @@ Degree one needs separately continuous multiplication on `G`. This section uses 
 `IsTopologicalGroup G` to obtain `IsTopologicalGroup ↥U`, which `Z²(U, M)` needs: `B²` is the
 image of the *continuous* `1`-cochains on `U`. -/
 
+section DegreeTwoContinuity
+
 variable [TopologicalSpace G] [IsTopologicalGroup G]
-  [TopologicalSpace M] [IsTopologicalAddGroup M] [ContinuousSMul G M]
+  [TopologicalSpace M] [ContinuousAdd M] [ContinuousConstSMul G M]
   (t : G ⧸ U → G) (ht : ∀ u : G ⧸ U, (QuotientGroup.mk (t u) : G ⧸ U) = u)
   (hU : IsOpen (U : Set G))
 
@@ -783,16 +797,27 @@ theorem continuous_cochainsCor2 {f : U × U → M} (hf : Continuous f) :
   exact hf.comp ((((continuous_lWord U t hU u).comp continuous_fst).subtype_mk _).prodMk
     ((continuous_lWord_inv_smul U t hU u).subtype_mk _))
 
+end DegreeTwoContinuity
+
+variable [TopologicalSpace G] [IsTopologicalGroup G]
+  [TopologicalSpace M] [IsTopologicalAddGroup M] [ContinuousSMul G M]
+  (t : G ⧸ U → G) (ht : ∀ u : G ⧸ U, (QuotientGroup.mk (t u) : G ⧸ U) = u)
+  (hU : IsOpen (U : Set G))
+
+include hU
+
+omit [ContinuousSMul G M] in
 /-- The degree-two corestriction cochain preserves continuous `2`-cocycles. -/
-theorem cochainsCor2_mem_Z2 {f : U × U → M} (hf : f ∈ Z2 U M) :
+theorem cochainsCor2_mem_Z2 [ContinuousConstSMul G M] {f : U × U → M} (hf : f ∈ Z2 U M) :
     cochainsCor2 G M U t ht f ∈ Z2 G M :=
   mem_Z2_iff.2 ⟨continuous_cochainsCor2 G M U t ht hU (mem_Z2_iff.1 hf).1,
     cochainsCor2_isCocycle₂ G M U t ht (mem_Z2_iff.1 hf).2⟩
 
+omit [ContinuousSMul G M] in
 /-- The degree-two corestriction cochain preserves `2`-coboundaries: by
 `TauCeti.ContCohomology.cochainsCor2_d1` it sends `d¹ c` to `d¹` of the degree-one corestriction of
 `c`, which is continuous because `U` is open. -/
-theorem cochainsCor2_mem_B2 {f : U × U → M} (hf : f ∈ B2 U M) :
+theorem cochainsCor2_mem_B2 [ContinuousConstSMul G M] {f : U × U → M} (hf : f ∈ B2 U M) :
     cochainsCor2 G M U t ht f ∈ B2 G M := by
   obtain ⟨c, hc, rfl⟩ := mem_B2_iff.1 hf
   rw [cochainsCor2_d1]

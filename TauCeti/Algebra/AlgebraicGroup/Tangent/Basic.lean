@@ -229,7 +229,7 @@ end BialgebraPointScalar
 section DerivationCoefficients
 
 variable {R A B : Type*} [CommSemiring R] [CommSemiring A] [Bialgebra R A]
-  [CommSemiring B] [Algebra R B]
+  [Semiring B] [Algebra R B]
 
 /-- Counit-valued derivations carry their pointwise `B`-module structure through the
 coefficient type synonym. -/
@@ -264,7 +264,7 @@ end TauCeti
 section DerivationSpan
 
 variable {R H B : Type*} [CommSemiring R] [CommSemiring H] [Bialgebra R H]
-  [CommSemiring B] [Algebra R B]
+  [Semiring B] [Algebra R B]
 
 namespace Derivation
 

@@ -74,7 +74,7 @@ theorem inverseConjugationHomotopy2_apply {K : Type uK} [Group K] {A : Type uA} 
 
 /-- The degree-one algebraic cochain-homotopy identity for inverse conjugation. -/
 theorem inverseConjugationCochainHomotopy1 {K : Type uK} [Group K]
-    {A : Type uA} [AddCommGroup A] [DistribMulAction K A] (g : K) (c : K → A) :
+    {A : Type uA} [AddCommGroup A] [DistribSMul K A] (g : K) (c : K → A) :
     cochainsMap1 (MulAut.conj g⁻¹ : K →* K) (DistribSMul.toAddMonoidHom A g) c - c =
       d0 K A (inverseConjugationHomotopy1 g c) +
         inverseConjugationHomotopy2 g (d1 K A c) := by
@@ -94,7 +94,7 @@ theorem inverseConjugationCochainHomotopy1 {K : Type uK} [Group K]
 /-- The degree-two component of the bar homotopy for an algebraic inverse conjugation, for a
 degree-two cocycle. -/
 theorem inverseConjugationCochainHomotopy2_of_isCocycle {K : Type uK} [Group K]
-    {A : Type uA} [AddCommGroup A] [DistribMulAction K A] (g : K) (c : K × K → A)
+    {A : Type uA} [AddCommGroup A] [DistribSMul K A] (g : K) (c : K × K → A)
     (hc : groupCohomology.IsCocycle₂ c) :
     cochainsMap2 (MulAut.conj g⁻¹ : K →* K) (DistribSMul.toAddMonoidHom A g) c - c =
       d1 K A (inverseConjugationHomotopy2 g c) := by
@@ -162,8 +162,10 @@ theorem smul_mk (N : Subgroup G) [N.Normal] (g : G) (c : Z1 N M) :
     change explicitConj1 N g (c : H1 N M) = _
     exact explicitMap1_mk N M N M _ _ _ _ c
 
+omit [ContinuousSMul G M] in
 /-- The degree-one bar-homotopy identity for inverse conjugation on continuous cocycles. -/
-theorem inverseConjugationHomotopy1_spec (N : Subgroup G) [N.Normal] (g : N) (c : Z1 N M) :
+theorem inverseConjugationHomotopy1_spec [ContinuousConstSMul G M] (N : Subgroup G) [N.Normal]
+    (g : N) (c : Z1 N M) :
     d0 N M (inverseConjugationHomotopy1 g c) =
       (cocyclesMap1 N M N M (inverseConjugationHom N (g : G))
         (DistribSMul.toAddMonoidHom M (g : G))

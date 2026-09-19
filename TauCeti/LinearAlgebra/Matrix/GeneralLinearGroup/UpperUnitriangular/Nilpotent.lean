@@ -288,8 +288,8 @@ private instance finIsNilpotent : Group.IsNilpotent (upperUnitriangularGroup (Fi
   rw [superdiagonalSubgroup_eq_bot_of_le (R := R) (n := n) (Nat.le_add_right n 1)]
 
 private theorem isUpperUnitriangular_reindexOrderIso
-    {m m' : Type*} [Fintype m] [Fintype m'] [LinearOrder m] [LinearOrder m']
-    (e : m ≃o m') (g : Matrix.GeneralLinearGroup m R)
+    {R : Type u} [Semiring R] {m m' : Type*} [Fintype m] [Fintype m'] [LinearOrder m]
+    [LinearOrder m'] (e : m ≃o m') (g : Matrix.GeneralLinearGroup m R)
     (hg : ((g : Matrix.GeneralLinearGroup m R) : Matrix m m R).IsUpperUnitriangular) :
     (((Units.mapEquiv (Matrix.reindexRingEquiv R e.toEquiv).toMulEquiv g :
       Matrix.GeneralLinearGroup m' R)) : Matrix m' m' R).IsUpperUnitriangular := by

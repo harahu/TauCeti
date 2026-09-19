@@ -91,6 +91,15 @@ theorem isHomogeneous_subtype :
     LinearMap.IsHomogeneous U.subtype (G.submodule U hU).piece G.piece 0 :=
   LinearMap.isHomogeneous_def.2 fun _ _ hx ↦ by simpa using hx
 
+include hU in
+/-- A homogeneous submodule is the sum of its intersections with the homogeneous pieces. -/
+private theorem le_iSup_inf_piece : U ≤ ⨆ p, U ⊓ G.piece p := by
+  classical
+  intro x hx
+  rw [← DirectSum.sum_support_decompose G.piece x]
+  exact Submodule.sum_mem _ fun p _ ↦
+    Submodule.mem_iSup_of_mem p ⟨hU p hx, SetLike.coe_mem _⟩
+
 end Submodule
 
 section Ker
@@ -130,15 +139,6 @@ section Quotient
 
 variable [Ring R] [AddCommGroup M] [Module R M] (G : InternalGrading R M)
   (U : Submodule R M) (hU : SetLike.IsHomogeneous G.piece U)
-
-include hU in
-/-- A homogeneous submodule is the sum of its intersections with the homogeneous pieces. -/
-private theorem le_iSup_inf_piece : U ≤ ⨆ p, U ⊓ G.piece p := by
-  classical
-  intro x hx
-  rw [← DirectSum.sum_support_decompose G.piece x]
-  exact Submodule.sum_mem _ fun p _ ↦
-    Submodule.mem_iSup_of_mem p ⟨hU p hx, SetLike.coe_mem _⟩
 
 include hU in
 /-- The internal grading of the quotient by a homogeneous submodule: its degree-`p` piece is the

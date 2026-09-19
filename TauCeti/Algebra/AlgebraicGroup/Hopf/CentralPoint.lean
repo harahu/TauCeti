@@ -254,13 +254,19 @@ theorem isCentralPoint_iff_commute_includeRight (g : WithConv (H →ₐ[R] A)) :
 
 end Universal
 
-section Cocommutative
+section TensorComm
 
-variable {R : Type u} {H : Type v}
-variable [CommRing R] [CommRing H] [_root_.Bialgebra R H]
+variable {R : Type u} {H : Type v} [CommSemiring R] [Semiring H] [Algebra R H]
 
 private theorem coe_algebraTensorProductComm (y : H ⊗[R] H) :
     (Algebra.TensorProduct.comm R H H) y = _root_.TensorProduct.comm R H H y := rfl
+
+end TensorComm
+
+section TensorIncludes
+
+variable {R : Type u} {H : Type v}
+variable [CommSemiring R] [Semiring H] [_root_.Bialgebra R H]
 
 private theorem comm_toAlgHom_comp_includeLeft :
     (Algebra.TensorProduct.comm R H H).toAlgHom.comp
@@ -275,6 +281,13 @@ private theorem comm_toAlgHom_comp_includeRight :
       Algebra.TensorProduct.includeLeft := by
   ext x
   simp
+
+end TensorIncludes
+
+section Cocommutative
+
+variable {R : Type u} {H : Type v}
+variable [CommSemiring R] [CommSemiring H] [_root_.Bialgebra R H]
 
 /-- The convolution product of the two tensor-factor points, taken in the other order, is the
 comultiplication followed by the flip of the tensor factors. -/

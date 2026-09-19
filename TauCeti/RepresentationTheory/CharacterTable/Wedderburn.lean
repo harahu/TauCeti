@@ -64,7 +64,8 @@ variable {k G : Type*} [Field k] {ι : Type*} {d : ι → ℕ}
 
 /-- **The sum of the squares of the matrix sizes is the order of the group**: both sides compute
 the dimension of `k[G]`. -/
-theorem sum_sq_eq_card_of_algEquiv_pi_matrix [Monoid G] [Finite G] [Fintype ι]
+theorem sum_sq_eq_card_of_algEquiv_pi_matrix {k : Type*} [CommRing k] [Nontrivial k] [Monoid G]
+    [Finite G] [Fintype ι]
     (e : MonoidAlgebra k G ≃ₐ[k] Π i, Matrix (Fin (d i)) (Fin (d i)) k) :
     ∑ i, d i ^ 2 = Nat.card G :=
   calc ∑ i, d i ^ 2

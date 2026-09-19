@@ -241,6 +241,42 @@ theorem integralExpZSMul_eq_sum (x : A) (M : S)
 -- over `ℤ` is unique, category objects need not store the canonical instance definitionally.
 attribute [local instance high] Algebra.toModule
 
+section BaseChangeMultiplication
+
+variable {R : Type v} [Semiring R] [Algebra ℤ R]
+
+private theorem baseChange_mul_integralDividedPower
+    (x : A) (M : S)
+    (hM : ∀ n, ∀ v ∈ M, Associative.dividedPower n x • v ∈ M) (m n : ℕ) :
+    (integralDividedPower x M m (hM m)).baseChange R *
+        (integralDividedPower x M n (hM n)).baseChange R =
+      Nat.choose (m + n) m • (integralDividedPower x M (m + n) (hM (m + n))).baseChange R := by
+  rw [← LinearMap.baseChange_mul, mul_integralDividedPower]
+  exact map_nsmul (Module.End.baseChangeHom ℤ R M) _ _
+
+end BaseChangeMultiplication
+
+section IntegerTensorScalar
+
+variable {R : Type v} [Ring R] [Algebra ℤ R]
+
+-- Moving an integer scalar across `⊗[ℤ]` by hand. The `ℤ`-module structure on `R` here is the one
+-- carried by its explicit `ℤ`-algebra, so it is not the `AddCommGroup.toIntModule` structure that
+-- `TensorProduct.CompatibleSMul.int` is stated for, and `TensorProduct.smul_tmul` does not apply.
+private theorem intCast_mul_tmul (M : S) (z : ℤ) (r : R) (w : M) :
+    (((z : R) * r) ⊗ₜ[ℤ] w : R ⊗[ℤ] M) = r ⊗ₜ[ℤ] (z • w) := by
+  induction z using Int.induction_on with
+  | zero =>
+      rw [Int.cast_zero, zero_mul, TensorProduct.zero_tmul, zero_smul, TensorProduct.tmul_zero]
+  | succ i ih =>
+      rw [Int.cast_add, Int.cast_one, add_mul, one_mul, TensorProduct.add_tmul, ih,
+        add_smul, one_smul, TensorProduct.tmul_add]
+  | pred i ih =>
+      rw [Int.cast_sub, Int.cast_one, sub_mul, one_mul, TensorProduct.sub_tmul, ih,
+        sub_smul, one_smul, TensorProduct.tmul_sub]
+
+end IntegerTensorScalar
+
 section ExplicitAlgebra
 
 variable {R : Type v} [CommRing R] [Algebra ℤ R]
@@ -283,15 +319,6 @@ theorem map_baseChangeExp_algHom {T : Type*} [CommRing T] [Algebra ℤ T] (φ : 
       simp only [map_sum, TensorProduct.map_tmul, LinearMap.id_apply,
         AlgHom.toLinearMap_apply, map_pow, map_mul]
   | add y z hy hz => simp [hy, hz]
-
-private theorem baseChange_mul_integralDividedPower
-    (x : A) (M : S)
-    (hM : ∀ n, ∀ v ∈ M, Associative.dividedPower n x • v ∈ M) (m n : ℕ) :
-    (integralDividedPower x M m (hM m)).baseChange R *
-        (integralDividedPower x M n (hM n)).baseChange R =
-      Nat.choose (m + n) m • (integralDividedPower x M (m + n) (hM (m + n))).baseChange R := by
-  rw [← LinearMap.baseChange_mul, mul_integralDividedPower]
-  exact map_nsmul (Module.End.baseChangeHom ℤ R M) _ _
 
 /-- **A restricted divided power vanishes on base change above the nilpotency index.** If
 `x ^ k = 0` and `k ≤ n`, the base change of `integralDividedPower x M n` is the zero map.
@@ -564,21 +591,6 @@ theorem baseChangeExp_neg (x : A) (M : S)
   | add a b ha hb => rw [map_add, map_add, ha, hb]
 
 /-! ## Conjugating the exponential by an integral unit -/
-
--- Moving an integer scalar across `⊗[ℤ]` by hand. The `ℤ`-module structure on `R` here is the one
--- carried by its explicit `ℤ`-algebra, so it is not the `AddCommGroup.toIntModule` structure that
--- `TensorProduct.CompatibleSMul.int` is stated for, and `TensorProduct.smul_tmul` does not apply.
-private theorem intCast_mul_tmul (M : S) (z : ℤ) (r : R) (w : M) :
-    (((z : R) * r) ⊗ₜ[ℤ] w : R ⊗[ℤ] M) = r ⊗ₜ[ℤ] (z • w) := by
-  induction z using Int.induction_on with
-  | zero =>
-      rw [Int.cast_zero, zero_mul, TensorProduct.zero_tmul, zero_smul, TensorProduct.tmul_zero]
-  | succ i ih =>
-      rw [Int.cast_add, Int.cast_one, add_mul, one_mul, TensorProduct.add_tmul, ih,
-        add_smul, one_smul, TensorProduct.tmul_add]
-  | pred i ih =>
-      rw [Int.cast_sub, Int.cast_one, sub_mul, one_mul, TensorProduct.sub_tmul, ih,
-        sub_smul, one_smul, TensorProduct.tmul_sub]
 
 /-- At an integer parameter the base-changed exponential is the base change of a single integral
 automorphism of `M`, namely the restriction of `exp (t • x)`.

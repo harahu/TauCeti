@@ -354,7 +354,7 @@ attribute [local instance] TopRep.distribMulAction TopRep.smulCommClass
 section LocallyConstant
 
 variable (R : Type u) [Semiring R]
-  (G : Type v) [Group G] [TopologicalSpace G] [ContinuousMul G]
+  (G : Type v) [Group G] [TopologicalSpace G] [SeparatelyContinuousMul G]
 
 /-- An algebraically coinduced function from an open subgroup is locally constant when the
 coefficient action is continuous and the coefficient space is discrete. -/

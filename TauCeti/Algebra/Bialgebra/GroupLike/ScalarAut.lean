@@ -38,7 +38,10 @@ namespace ScalarAut
 
 variable {K : Type u} {L : Type v} {A : Type w}
 variable [CommSemiring K] [CommSemiring L] [Algebra K L]
-variable [Semiring A] [Bialgebra K A]
+
+section Coalgebra
+
+variable [AddCommMonoid A] [Module K A] [Coalgebra K A]
 
 /-- The counit is equivariant for the semilinear scalar action. -/
 theorem counit_smul (σ : L ≃ₐ[K] L) (x : L ⊗[K] A) :
@@ -46,6 +49,10 @@ theorem counit_smul (σ : L ≃ₐ[K] L) (x : L ⊗[K] A) :
   induction x with
   | add x y hx hy => rw [smul_add, map_add, map_add, hx, hy, map_add]
   | tmul a x => simp
+
+end Coalgebra
+
+variable [Semiring A] [Bialgebra K A]
 
 /-- Comultiplication is equivariant for the semilinear scalar action. -/
 theorem comul_smul (σ : L ≃ₐ[K] L) (x : L ⊗[K] A) :

@@ -168,7 +168,8 @@ theorem actionRes_obj_ofLinearCharacter [CommRing k] [Monoid G] {S : Type*} [Mon
 
 /-- A linear character is carried by a line. -/
 @[simp]
-theorem finrank_ofLinearCharacter [Field k] [Monoid G] (χ : G →* kˣ) :
+theorem finrank_ofLinearCharacter {k : Type u} [CommRing k] [Nontrivial k] [Monoid G]
+    (χ : G →* kˣ) :
     Module.finrank k (ofLinearCharacter (k := k) χ) = 1 :=
   Module.finrank_self k
 

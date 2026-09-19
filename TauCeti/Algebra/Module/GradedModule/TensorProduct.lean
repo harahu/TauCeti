@@ -112,11 +112,11 @@ private theorem tensorProductPiece_eq_iSup (G : InternalGrading R M)
 
 end Pieces
 
-section Internal
+section InternalFiber
 
-variable {R : Type u} [CommSemiring R]
-variable {M : Type v} {N : Type w}
-variable [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N]
+variable {R : Type u} [Semiring R]
+variable {M : Type v}
+variable [AddCommMonoid M] [Module R M]
 
 /-- Regrouping a family by the fibers of a degree map does not alter its supremum. -/
 private theorem iSup_fiber_eq_iSup {I J : Type*} (P : I → Submodule R M) (degree : I → J) :
@@ -188,6 +188,14 @@ private theorem isInternal_iSup_fiber {I J : Type*} [DecidableEq I] [DecidableEq
   rw [← LinearMap.range_eq_top, DirectSum.range_coeLinearMap]
   rw [iSup_fiber_eq_iSup P degree]
   exact hP.submodule_iSup_eq_top
+
+end InternalFiber
+
+section Internal
+
+variable {R : Type u} [CommSemiring R]
+variable {M : Type v} {N : Type w}
+variable [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N]
 
 /-- The tensor product of internally graded modules, graded by total degree. -/
 noncomputable def tensorProduct (G : InternalGrading R M) (H : InternalGrading R N) :

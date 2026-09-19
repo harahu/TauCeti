@@ -443,7 +443,7 @@ variable (K : Type*) [Field K]
 /-- The lower-left entry of `σ ∈ Γ₀(N)`, read in `K`, is `N` times the quotient `c / N`. The
 `K`-valued form of `natCast_mul_lowerLeft_ediv`, which is what the entrywise computations below
 consume. -/
-private theorem lowerLeft_ediv_spec_field (σ : ↥(Gamma0 N)) :
+private theorem lowerLeft_ediv_spec_field (K : Type*) [NonAssocRing K] (σ : ↥(Gamma0 N)) :
     ((σ : Matrix (Fin 2) (Fin 2) ℤ) 1 0 : K) =
       (N : K) * (((σ : Matrix (Fin 2) (Fin 2) ℤ) 1 0 / (N : ℤ) : ℤ) : K) := by
   exact_mod_cast congrArg (Int.cast : ℤ → K) (natCast_mul_lowerLeft_ediv σ).symm

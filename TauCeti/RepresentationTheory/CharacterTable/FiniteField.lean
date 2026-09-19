@@ -75,7 +75,8 @@ variable {K G : Type*} [Field K] [Fintype K] [Group G] [Finite G]
 
 This is the trace identity `tr (M ^ |K|) = (tr M) ^ |K|` for the left regular matrix `M` of `u`,
 combined with `a ^ |K| = a` in `K`. -/
-theorem coeff_one_pow_card (hG : (Nat.card G : K) ≠ 0) (u : MonoidAlgebra K G) :
+theorem coeff_one_pow_card {G : Type*} [RightCancelMonoid G] [Finite G]
+    (hG : (Nat.card G : K) ≠ 0) (u : MonoidAlgebra K G) :
     (u ^ Fintype.card K).coeff 1 = u.coeff 1 := by
   classical
   let _ := Fintype.ofFinite G
@@ -118,7 +119,8 @@ variable (K G : Type*) [CommRing K] [Finite K] [Group G] [Finite G]
 
 /-- The centre of a finite group algebra over a finite coefficient ring is finite: it is a finitely
 generated module over a finite ring, by its class-sum basis. -/
-instance instFiniteCenterMonoidAlgebra : Finite (Subalgebra.center K (MonoidAlgebra K G)) :=
+instance instFiniteCenterMonoidAlgebra (K G : Type*) [CommSemiring K] [Finite K] [Group G]
+    [Finite G] : Finite (Subalgebra.center K (MonoidAlgebra K G)) :=
   Module.finite_of_finite K
 
 /-- The centre of a finite group algebra over a finite Artinian commutative ring is Artinian. -/

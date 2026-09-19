@@ -465,13 +465,22 @@ theorem conjFDRep_ρ_cast (s : G) {H : Subgroup G} (A : FDRep k H)
   -- The cast only moves along the carrier equality, so this is `conjFDRep_ρ` read as an equality.
   eq_of_heq ((cast_heq _ _).trans (conjFDRep_ρ s A x))
 
+end FDRepAction
+
+section FDRepFinrank
+
+variable [Ring k]
+
+-- The carrier is written `.V` rather than through the `FDRep` coercion because Mathlib's
+-- `FDRep.instCoeSortType` is stated over `CommRing`, while `FGModuleCat`'s own coercion —
+-- which `.V` routes through, and which this is definitionally equal to — needs only `Ring`.
 /-- Conjugation preserves the dimension (finrank) of a finite-dimensional representation. -/
 @[simp]
 theorem finrank_conjFDRep (s : G) {H : Subgroup G} (A : FDRep k H) :
-    Module.finrank k (conjFDRep s A) = Module.finrank k A := by
+    Module.finrank k (conjFDRep s A).V = Module.finrank k A.V := by
   exact congrArg (fun V : FGModuleCat k => Module.finrank k V) (conjFDRep_V s A)
 
-end FDRepAction
+end FDRepFinrank
 
 section FDRepIrreducible
 
@@ -879,13 +888,20 @@ theorem conjNormalFDRep_ρ_mk (g : G) (A : FDRep k N) (x : N) :
   congr 1
   exact Subtype.ext (by simp)
 
+end NormalFDRepAction
+
+section NormalFDRepFinrank
+
+variable [Ring k] {N : Subgroup G} [hN : N.Normal]
+
+-- `.V` for the same reason as `finrank_conjFDRep` above.
 /-- Conjugation on a normal subgroup preserves the dimension. -/
 @[simp]
 theorem finrank_conjNormalFDRep (g : G) (A : FDRep k N) :
-    Module.finrank k (conjNormalFDRep g A) = Module.finrank k A :=
+    Module.finrank k (conjNormalFDRep g A).V = Module.finrank k A.V :=
   rfl
 
-end NormalFDRepAction
+end NormalFDRepFinrank
 
 section NormalCharacter
 

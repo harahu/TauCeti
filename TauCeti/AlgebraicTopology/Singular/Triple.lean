@@ -115,6 +115,13 @@ private noncomputable def singularChainComplexShortComplexMap {T T' : TopTriple.
   comm₂₃ := (Functor.whiskerRight totalToOuter
     (TopPair.toSSetPair ⋙ (SSetPair.chainComplexFunctor C).obj R)).naturality φ
 
+@[reassoc (attr := simp)]
+lemma singularHomologyMap_innerToTotal_comp_totalToOuter [CategoryWithHomology C] (n : ℕ) :
+    TopPair.singularHomologyMap (innerToTotal.app T) R n ≫
+      TopPair.singularHomologyMap (totalToOuter.app T) R n = 0 := by
+  simp [← HomologicalComplex.homologyMap_comp,
+    T.singularChainComplexMap_innerToTotal_comp_totalToOuter R]
+
 end
 
 section
@@ -155,13 +162,6 @@ lemma singularHomologyδ_comp (n m : ℕ) (h : m + 1 = n := by lia) :
 lemma comp_singularHomologyδ (n m : ℕ) (h : m + 1 = n := by lia) :
     TopPair.singularHomologyMap (totalToOuter.app T) R n ≫ T.singularHomologyδ R n m h = 0 :=
   (T.shortExact_singularChainComplexShortComplex R).comp_δ n m (by simpa)
-
-@[reassoc (attr := simp)]
-lemma singularHomologyMap_innerToTotal_comp_totalToOuter (n : ℕ) :
-    TopPair.singularHomologyMap (innerToTotal.app T) R n ≫
-      TopPair.singularHomologyMap (totalToOuter.app T) R n = 0 := by
-  simp [← HomologicalComplex.homologyMap_comp,
-    T.singularChainComplexMap_innerToTotal_comp_totalToOuter R]
 
 /-- Exactness at `Hₘ(A, B)` in the long exact sequence of a triple. -/
 lemma singularHomology_exact_inner (n m : ℕ) (h : m + 1 = n := by lia) :

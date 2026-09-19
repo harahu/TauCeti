@@ -128,6 +128,42 @@ namespace TauCeti.ContCohomology
 
 universe uG uM uN uP
 
+section EquivariantFlip
+
+variable {G : Type uG}
+  {M : Type uM} [AddZeroClass M] [SMul G M]
+  {N : Type uN} [AddZeroClass N] [SMul G N]
+  {P : Type uP} [AddCommGroup P] [SMul G P]
+  (μ : M →+ N →+ P)
+  (hequiv : ∀ (g : G) (m : M) (x : N), μ (g • m) (g • x) = g • μ m x)
+
+include hequiv in
+/-- **The opposite pairing `μᵒᵖ n m = μ m n` is equivariant.** Mathlib's `AddMonoidHom.flip` is
+the `μᵒᵖ` of the graded-commutativity statements below, and this is the hypothesis it has to be
+fed to be cupped against. -/
+theorem equivariant_flip (g : G) (x : N) (m : M) :
+    μ.flip (g • x) (g • m) = g • μ.flip x m := by
+  simp only [AddMonoidHom.flip_apply]
+  exact hequiv g m x
+
+end EquivariantFlip
+
+section ContinuousFlip
+
+variable {M : Type uM} [AddZeroClass M] [TopologicalSpace M]
+  {N : Type uN} [AddZeroClass N] [TopologicalSpace N]
+  {P : Type uP} [AddCommGroup P] [TopologicalSpace P]
+  (μ : M →+ N →+ P) (hμ : Continuous fun p : M × N => μ p.1 p.2)
+
+include hμ
+
+/-- **The opposite pairing of a jointly continuous pairing is jointly continuous**, being its
+composite with the swap homeomorphism. -/
+theorem continuous_flip : Continuous fun p : N × M => μ.flip p.1 p.2 :=
+  hμ.comp continuous_swap
+
+end ContinuousFlip
+
 section Pairing
 
 variable {G : Type uG} [Monoid G]
@@ -189,15 +225,6 @@ theorem pairingRight_smul (n : H0 G N) (g : G) (m : M) :
     μ (g • m) (n : N) = g • μ m (n : N) :=
   (pairingRight μ hequiv n).map_smul g m
 
-include hequiv in
-/-- **The opposite pairing `μᵒᵖ n m = μ m n` is equivariant.** Mathlib's `AddMonoidHom.flip` is
-the `μᵒᵖ` of the graded-commutativity statements below, and this is the hypothesis it has to be
-fed to be cupped against. -/
-theorem equivariant_flip (g : G) (x : N) (m : M) :
-    μ.flip (g • x) (g • m) = g • μ.flip x m := by
-  simp only [AddMonoidHom.flip_apply]
-  exact hequiv g m x
-
 variable [TopologicalSpace M] [TopologicalSpace N] [TopologicalSpace P]
   (hμ : Continuous fun p : M × N => μ p.1 p.2)
 
@@ -210,11 +237,6 @@ theorem continuous_pairingLeft (m : H0 G M) : Continuous (pairingLeft μ hequiv 
 /-- A jointly continuous pairing is continuous in the first variable. -/
 theorem continuous_pairingRight (n : H0 G N) : Continuous (pairingRight μ hequiv n) :=
   hμ.comp (continuous_id.prodMk continuous_const)
-
-/-- **The opposite pairing of a jointly continuous pairing is jointly continuous**, being its
-composite with the swap homeomorphism. -/
-theorem continuous_flip : Continuous fun p : N × M => μ.flip p.1 p.2 :=
-  hμ.comp continuous_swap
 
 end Pairing
 
@@ -633,9 +655,9 @@ section CommCochain
 /-! The three shapes with a degree-`0` factor commute already on cochains, because a degree-`0`
 class is invariant. Neither statement mentions a topology or an action on the second factor. -/
 
-variable (G : Type uG) [Group G]
+variable (G : Type uG) [Monoid G]
   (M : Type uM) [AddCommGroup M] [DistribMulAction G M]
-  (N : Type uN) [AddCommMonoid N]
+  (N : Type uN) [AddZeroClass N]
   (P : Type uP) [AddCommMonoid P]
   (μ : M →+ N →+ P)
 

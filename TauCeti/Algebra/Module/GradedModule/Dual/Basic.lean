@@ -72,6 +72,22 @@ namespace InternalGrading
 
 variable {R : Type u} {M : Type v}
 
+section Projection
+
+variable [Semiring R] [AddCommMonoid M] [Module R M]
+
+/-- The homogeneous component of degree `p`, as a linear map to that piece. -/
+private noncomputable def projection (G : InternalGrading R M) (p : ℤ) : M →ₗ[R] G.piece p :=
+  DirectSum.component R ℤ (fun q ↦ G.piece q) p ∘ₗ
+    (DirectSum.decomposeLinearEquiv G.piece).toLinearMap
+
+@[simp]
+private theorem projection_apply (G : InternalGrading R M) (p : ℤ) (x : M) :
+    projection G p x = DirectSum.decompose G.piece x p :=
+  rfl
+
+end Projection
+
 section DualPiece
 
 variable [CommSemiring R] [AddCommMonoid M] [Module R M]
@@ -96,16 +112,6 @@ theorem dualPiece_apply_eq_zero_of_mem_piece_of_add_ne_zero (G : InternalGrading
     {φ : Module.Dual R M} {x : M} (hφ : φ ∈ G.dualPiece p) (hx : x ∈ G.piece q)
     (hpq : p + q ≠ 0) : φ x = 0 :=
   (mem_dualPiece_iff G p φ).mp hφ q x hx (by omega)
-
-/-- The homogeneous component of degree `p`, as a linear map to that piece. -/
-private noncomputable def projection (G : InternalGrading R M) (p : ℤ) : M →ₗ[R] G.piece p :=
-  DirectSum.component R ℤ (fun q ↦ G.piece q) p ∘ₗ
-    (DirectSum.decomposeLinearEquiv G.piece).toLinearMap
-
-@[simp]
-private theorem projection_apply (G : InternalGrading R M) (p : ℤ) (x : M) :
-    projection G p x = DirectSum.decompose G.piece x p :=
-  rfl
 
 /-- A functional of dual degree `p` sees only the degree-`-p` homogeneous component of its
 argument: it annihilates every other component of the decomposition. -/

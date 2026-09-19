@@ -347,7 +347,8 @@ section Lift
 variable {B : Type*} [Ring B] [Algebra k B]
 
 /-- An algebra map killing every uniform relator kills the whole relation ideal. -/
-theorem zigzagIdeal_le_ker (f : pathAlgebra k (DoubledQuiver G) →ₐ[k] B)
+theorem zigzagIdeal_le_ker {B : Type*} [Semiring B] [Algebra k B]
+    (f : pathAlgebra k (DoubledQuiver G) →ₐ[k] B)
     (hf : ∀ x, IsZigzagRelator k G x → f x = 0) : zigzagIdeal k G ≤ TwoSidedIdeal.ker f := by
   rw [zigzagIdeal, TwoSidedIdeal.span_le]
   exact fun x hx => (TwoSidedIdeal.mem_ker f).mpr (hf x hx)
@@ -376,7 +377,8 @@ theorem zigzagLift_unique (f : pathAlgebra k (DoubledQuiver G) →ₐ[k] B)
 
 /-- On a connected graph with at least three vertices an algebra map killing the quadratic
 relators already kills the whole relation ideal. -/
-theorem zigzagIdeal_le_ker_of_quadratic (hconn : G.Connected)
+theorem zigzagIdeal_le_ker_of_quadratic {B : Type*} [Semiring B] [Algebra k B]
+    (hconn : G.Connected)
     (hcard : 3 ≤ Nat.card V) (f : pathAlgebra k (DoubledQuiver G) →ₐ[k] B)
     (hf : ∀ x, IsQuadraticZigzagRelator k G x → f x = 0) :
     zigzagIdeal k G ≤ TwoSidedIdeal.ker f := by

@@ -61,7 +61,9 @@ private lemma finiteDimensional_codomain_of_isFredholm_zero [Module 𝕜 E]
 
 end Seminormed
 
-variable [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+section
+
+variable [SeminormedAddCommGroup E] [NormedSpace 𝕜 E]
 variable [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
 /-- The zero continuous linear map is Fredholm exactly when its domain and codomain are both
@@ -91,6 +93,11 @@ lemma isFredholm_zero_iff :
           rw [ContinuousLinearMap.toLinearMap_zero, LinearMap.ker_zero]
           exact Submodule.closedComplemented_top }
 
+
+end
+
+variable [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+variable [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
 /-- The index of the zero continuous linear map is the dimension of its domain minus the
 dimension of its codomain. -/

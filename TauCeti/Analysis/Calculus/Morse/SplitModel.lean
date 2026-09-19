@@ -230,11 +230,13 @@ variable [NormedSpace ℝ Eₛ] [NormedSpace ℝ Eᵤ]
 
 namespace TauCeti
 
-private theorem tendsto_exp_neg_smul_atTop (x : Eₛ) :
+private theorem tendsto_exp_neg_smul_atTop {Eₛ : Type*} [SeminormedAddCommGroup Eₛ]
+    [NormedSpace ℝ Eₛ] (x : Eₛ) :
     Tendsto (fun t : ℝ ↦ Real.exp (-t) • x) atTop (𝓝 0) :=
   by simpa using Real.tendsto_exp_neg_atTop_nhds_zero.smul_const x
 
-private theorem tendsto_exp_smul_atBot (y : Eᵤ) :
+private theorem tendsto_exp_smul_atBot {Eᵤ : Type*} [SeminormedAddCommGroup Eᵤ]
+    [NormedSpace ℝ Eᵤ] (y : Eᵤ) :
     Tendsto (fun t : ℝ ↦ Real.exp t • y) atBot (𝓝 0) :=
   by simpa using Real.tendsto_exp_atBot.smul_const y
 

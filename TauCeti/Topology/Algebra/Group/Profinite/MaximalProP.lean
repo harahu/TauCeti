@@ -138,7 +138,7 @@ theorem proPKernel_le {U : OpenNormalSubgroup G} (hU : IsPGroup p (G ⧸ U.toSub
   fun _ hx ↦ mem_proPKernel_iff.mp hx U hU
 
 /-- The pro-`p` kernel is closed, so its quotient is profinite when `G` is profinite. -/
-instance isClosed_proPKernel [IsTopologicalGroup G] :
+instance isClosed_proPKernel [SeparatelyContinuousMul G] :
     IsClosed ((proPKernel p G : Subgroup G) : Set G) := by
   rw [proPKernel, Subgroup.coe_iInf]
   exact isClosed_iInter fun U ↦ U.1.toOpenSubgroup.isClosed
@@ -249,9 +249,11 @@ section Compact
 
 variable [IsTopologicalGroup G] [CompactSpace G]
 
+omit [IsTopologicalGroup G] in
 /-- An open subgroup containing the pro-`p` kernel contains an open normal subgroup with
 `p`-group quotient. -/
-theorem exists_openNormalSubgroup_isPGroup_le {M : Subgroup G} (hM : IsOpen (M : Set G))
+theorem exists_openNormalSubgroup_isPGroup_le [SeparatelyContinuousMul G] {M : Subgroup G}
+    (hM : IsOpen (M : Set G))
     (hKM : proPKernel p G ≤ M) :
     ∃ U : OpenNormalSubgroup G, IsPGroup p (G ⧸ U.toSubgroup) ∧ U.toSubgroup ≤ M := by
   -- The defining family, and the closed sets it cuts out outside `M`.
@@ -283,8 +285,9 @@ theorem exists_openNormalSubgroup_isPGroup_le {M : Subgroup G} (hM : IsOpen (M :
   rw [Set.mem_iInter] at hx
   exact (hx htop).2 (hKM (mem_proPKernel_iff.mpr fun U hU ↦ (hx ⟨U, hU⟩).1))
 
+omit [IsTopologicalGroup G] in
 /-- An open normal subgroup containing the pro-`p` kernel has `p`-group quotient. -/
-theorem isPGroup_quotient_of_proPKernel_le {U : OpenNormalSubgroup G}
+theorem isPGroup_quotient_of_proPKernel_le [SeparatelyContinuousMul G] {U : OpenNormalSubgroup G}
     (hU : proPKernel p G ≤ U.toSubgroup) : IsPGroup p (G ⧸ U.toSubgroup) := by
   obtain ⟨V, hV, hVU⟩ := exists_openNormalSubgroup_isPGroup_le U.toOpenSubgroup.isOpen hU
   have hle : V.toSubgroup ≤ (U.toSubgroup).comap (MonoidHom.id G) := by
@@ -293,14 +296,18 @@ theorem isPGroup_quotient_of_proPKernel_le {U : OpenNormalSubgroup G}
   exact QuotientGroup.map_surjective_of_surjective V.toSubgroup U.toSubgroup (MonoidHom.id G)
     (QuotientGroup.mk'_surjective U.toSubgroup) hle
 
+omit [IsTopologicalGroup G] in
 /-- For an open normal subgroup of a compact group, containing the pro-`p` kernel is the same
 as having a `p`-group quotient. -/
-theorem proPKernel_le_iff_isPGroup_quotient {U : OpenNormalSubgroup G} :
+theorem proPKernel_le_iff_isPGroup_quotient [SeparatelyContinuousMul G]
+    {U : OpenNormalSubgroup G} :
     proPKernel p G ≤ U.toSubgroup ↔ IsPGroup p (G ⧸ U.toSubgroup) :=
   ⟨isPGroup_quotient_of_proPKernel_le, proPKernel_le⟩
 
+omit [IsTopologicalGroup G] in
 /-- **The maximal pro-`p` quotient is pro-`p`.** -/
-theorem isProP_maximalProPQuotient : IsProP p (maximalProPQuotient p G) := by
+theorem isProP_maximalProPQuotient [SeparatelyContinuousMul G] :
+    IsProP p (maximalProPQuotient p G) := by
   refine isProP_iff.mpr fun M ↦ ?_
   let π : G →* maximalProPQuotient p G := maximalProPQuotient.mk p G
   let M' : OpenNormalSubgroup G :=

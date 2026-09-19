@@ -74,6 +74,27 @@ theorem mem_normalizer_diagonalTorus_of_toGL_mem {g : SpecialLinearGroup (Fin n)
   simp only [mem_diagonalTorus_iff_toGL_mem, map_mul, map_inv]
   exact Subgroup.mem_normalizer_iff.mp hg (toGL h)
 
+/-- A permutation matrix corrected by a sign in one diagonal position has determinant one. -/
+private theorem exists_toGL_eq_diagGL_mul_permutationGL (σ : Equiv.Perm (Fin n)) :
+    ∃ (g : SpecialLinearGroup (Fin n) k) (d : Fin n → kˣ),
+      toGL g = diagGL d * permutationGL (k := k) σ := by
+  rcases n with _ | n
+  · refine ⟨1, 1, ?_⟩
+    rw [Subsingleton.elim σ 1, map_one, map_one, map_one, one_mul]
+  · let s : kˣ := Units.map (Int.castRingHom k).toMonoidHom (Equiv.Perm.sign σ)
+    let d : Fin (n + 1) → kˣ := Pi.mulSingle 0 s
+    have hdet : ((diagGL d * permutationGL (k := k) σ : GL (Fin (n + 1)) k) :
+        Matrix (Fin (n + 1)) (Fin (n + 1)) k).det = 1 := by
+      have hprod : ∏ i, (d i : k) = s := by
+        rw [Fintype.prod_eq_single 0 fun i hi ↦ by simp [d, Pi.mulSingle_eq_of_ne hi]]
+        simp [d]
+      rw [Units.val_mul, det_mul, diagGL_coe, det_diagonal, hprod, permutationGL_coe,
+        det_permutation, Equiv.Perm.sign_inv]
+      simp only [s, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe,
+        eq_intCast]
+      rw [← Int.cast_mul, ← Units.val_mul, Int.units_mul_self, Units.val_one, Int.cast_one]
+    exact ⟨⟨_, hdet⟩, d, Units.ext (coe_GL_coe_matrix _)⟩
+
 end CommRing
 
 section Field
@@ -221,27 +242,6 @@ theorem diagonalNormalizerPerm_eq_one_iff (hsep : DiagonalTorusSeparatesCoordina
   · let _ := hsep.nontrivial_of_not_subsingleton hn
     rw [diagonalNormalizerPerm_apply hsep hn,
       TauCeti.diagonalNormalizerPerm_eq_one_iff, mem_diagonalTorus_iff_toGL_mem]
-
-/-- A permutation matrix corrected by a sign in one diagonal position has determinant one. -/
-private theorem exists_toGL_eq_diagGL_mul_permutationGL (σ : Equiv.Perm (Fin n)) :
-    ∃ (g : SpecialLinearGroup (Fin n) k) (d : Fin n → kˣ),
-      toGL g = diagGL d * permutationGL (k := k) σ := by
-  rcases n with _ | n
-  · refine ⟨1, 1, ?_⟩
-    rw [Subsingleton.elim σ 1, map_one, map_one, map_one, one_mul]
-  · let s : kˣ := Units.map (Int.castRingHom k).toMonoidHom (Equiv.Perm.sign σ)
-    let d : Fin (n + 1) → kˣ := Pi.mulSingle 0 s
-    have hdet : ((diagGL d * permutationGL (k := k) σ : GL (Fin (n + 1)) k) :
-        Matrix (Fin (n + 1)) (Fin (n + 1)) k).det = 1 := by
-      have hprod : ∏ i, (d i : k) = s := by
-        rw [Fintype.prod_eq_single 0 fun i hi ↦ by simp [d, Pi.mulSingle_eq_of_ne hi]]
-        simp [d]
-      rw [Units.val_mul, det_mul, diagGL_coe, det_diagonal, hprod, permutationGL_coe,
-        det_permutation, Equiv.Perm.sign_inv]
-      simp only [s, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe,
-        eq_intCast]
-      rw [← Int.cast_mul, ← Units.val_mul, Int.units_mul_self, Units.val_one, Int.cast_one]
-    exact ⟨⟨_, hdet⟩, d, Units.ext (coe_GL_coe_matrix _)⟩
 
 /-- Every permutation of the coordinate lines is induced by an element of `SL_n(k)` normalizing
 the diagonal torus: a permutation matrix with a sign correcting its determinant. -/

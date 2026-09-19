@@ -93,7 +93,7 @@ namespace Matrix.ProjectiveSpecialLinearGroup
 /-- The translation `upperRightHom x ∈ PSL(2, R)` depends continuously on `x`. -/
 @[fun_prop]
 theorem continuous_upperRightHom {R : Type*} [CommRing R] [TopologicalSpace R]
-    [IsTopologicalRing R] : Continuous (upperRightHom : R → PSL(2, R)) := by
+    [ContinuousAdd R] : Continuous (upperRightHom : R → PSL(2, R)) := by
   have : Continuous fun x : R ↦ SpecialLinearGroup.transvection (zero_ne_one' (Fin 2)) x :=
     Continuous.subtype_mk (continuous_const.add (continuous_matrix fun i j ↦ by
       simp only [single_apply]

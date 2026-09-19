@@ -120,8 +120,9 @@ private theorem interior_eq_empty_of_forall_interior_fiber_eq_empty {X Z : Type*
 subspace `w.1` ranges over, is decided by the partial map `z ↦ D (0, z)`: the first coordinate is
 free, so only the complementary direction can obstruct. This is the linear core of the
 Lyapunov--Schmidt reduction of surjectivity to a finite-dimensional condition. -/
-private theorem surjective_add_coe_iff {X₁ Y₀ : Submodule ℝ F} (h : Submodule.IsTopCompl X₁ Y₀)
-    {Z : Type*} [NormedAddCommGroup Z] [NormedSpace ℝ Z] (D : (X₁ × Z) →L[ℝ] Y₀) :
+private theorem surjective_add_coe_iff {F : Type*} [SeminormedAddCommGroup F] [Module ℝ F]
+    {X₁ Y₀ : Submodule ℝ F} (h : Submodule.IsTopCompl X₁ Y₀)
+    {Z : Type*} [SeminormedAddCommGroup Z] [Module ℝ Z] (D : (X₁ × Z) →L[ℝ] Y₀) :
     Surjective (fun w : X₁ × Z ↦ ((w.1 : F) + (D w : F))) ↔ Surjective fun z : Z ↦ D (0, z) := by
   have hu : ∀ (w₁ : X₁) (w₂ : Z), ((w₁ : F) + (D (w₁, w₂) : F)) =
       Submodule.prodEquivOfIsTopCompl X₁ Y₀ h (w₁, D (w₁, w₂)) :=

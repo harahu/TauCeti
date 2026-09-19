@@ -188,7 +188,7 @@ private theorem finFourArrowPairPair_apply (x : Fin 4 → Ω) :
     finFourArrowPairPair Ω x = ((x 0, x 2), (x 1, x 3)) := by
   rfl
 
-private theorem measurePreserving_middleSwap (μ : Measure Ω) [SigmaFinite μ] :
+private theorem measurePreserving_middleSwap (μ : Measure Ω) [SFinite μ] :
     MeasurePreserving (middleSwap Ω) (μ.prod (μ.prod μ)) (μ.prod (μ.prod μ)) := by
   have hAssoc : MeasurePreserving
       (MeasurableEquiv.prodAssoc : ((Ω × Ω) × Ω) ≃ᵐ Ω × Ω × Ω)

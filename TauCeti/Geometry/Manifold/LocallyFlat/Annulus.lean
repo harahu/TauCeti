@@ -109,6 +109,24 @@ def AnnulusConjecture (n : ℕ) : Prop :=
 
 /-! ### Concentric round spheres -/
 
+section Seminormed
+
+variable {E : Type*} [SeminormedAddCommGroup E] [NormedSpace ℝ E]
+
+/-- **A smaller concentric sphere lies inside a larger one:** for `0 < r < R`, the sphere of
+radius `r` lies in the open region bounded by the sphere of radius `R`. -/
+theorem range_smul_coe_sphere_subset_filledHull_sdiff {r R : ℝ} (hr : 0 < r) (hrR : r < R) :
+    range (fun u : sphere (0 : E) 1 => r • (u : E)) ⊆
+      filledHull (range fun u : sphere (0 : E) 1 => R • (u : E)) \
+        range fun u : sphere (0 : E) 1 => R • (u : E) := by
+  rw [range_smul_coe_sphere hr, range_smul_coe_sphere (hr.trans hrR),
+    filledHull_sphere _ (hr.trans hrR).le]
+  intro x hx
+  rw [mem_sphere_zero_iff_norm] at hx
+  simp [hx, hrR]
+
+end Seminormed
+
 section Round
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -128,18 +146,6 @@ theorem isLocallyFlat_smul_coe_sphere {F : Type*} [TopologicalSpace F]
   convert hflat using 1
   ext u
   simp [polar]
-
-/-- **A smaller concentric sphere lies inside a larger one:** for `0 < r < R`, the sphere of
-radius `r` lies in the open region bounded by the sphere of radius `R`. -/
-theorem range_smul_coe_sphere_subset_filledHull_sdiff {r R : ℝ} (hr : 0 < r) (hrR : r < R) :
-    range (fun u : sphere (0 : E) 1 => r • (u : E)) ⊆
-      filledHull (range fun u : sphere (0 : E) 1 => R • (u : E)) \
-        range fun u : sphere (0 : E) 1 => R • (u : E) := by
-  rw [range_smul_coe_sphere hr, range_smul_coe_sphere (hr.trans hrR),
-    filledHull_sphere _ (hr.trans hrR).le]
-  intro x hx
-  rw [mem_sphere_zero_iff_norm] at hx
-  simp [hx, hrR]
 
 /-- **Two concentric round spheres cobound an annulus:** for `0 < r < R`, the spheres of radii `R`
 and `r` cobound the closed annulus `{x | r ≤ ‖x‖ ≤ R}`, parametrized by

@@ -257,6 +257,75 @@ end IsMinimalProjectivePresentation
 
 end Projective
 
+section RangeLeJacobson
+
+variable {R : Type u} {M : Type v} {P₀ : Type w} {P₁ : Type w'}
+  [Ring R] [AddCommMonoid M] [Module R M] [AddCommGroup P₀] [Module R P₀]
+  [AddCommMonoid P₁] [Module R P₁]
+
+namespace IsMinimalProjectivePresentation
+
+variable {p₁ : P₁ →ₗ[R] P₀} {p₀ : P₀ →ₗ[R] M}
+
+/-- **Minimality, quantitatively, on the right**: the image of the left-hand map — equivalently the
+syzygy — lies in the radical of `P₀`. A presentation whose image escaped the radical could be
+shrunk. -/
+theorem range_le_jacobson (h : IsMinimalProjectivePresentation p₁ p₀) :
+    LinearMap.range p₁ ≤ Module.jacobson R P₀ :=
+  h.range_eq_ker ▸ h.isProjectiveCover.ker_le_jacobson
+
+end IsMinimalProjectivePresentation
+
+end RangeLeJacobson
+
+section KerLeJacobson
+
+variable {R : Type u} {M : Type v} {P₀ : Type w} {P₁ : Type w'}
+  [Ring R] [AddCommMonoid M] [Module R M] [AddCommMonoid P₀] [Module R P₀]
+  [AddCommGroup P₁] [Module R P₁]
+
+namespace IsMinimalProjectivePresentation
+
+variable {p₁ : P₁ →ₗ[R] P₀} {p₀ : P₀ →ₗ[R] M}
+
+/-- **Minimality, quantitatively, on the left**: the kernel of the left-hand map lies in the
+radical of `P₁`. -/
+theorem ker_le_jacobson (h : IsMinimalProjectivePresentation p₁ p₀) :
+    LinearMap.ker p₁ ≤ Module.jacobson R P₁ :=
+  h.isSuperfluous_ker.le_jacobson
+
+end IsMinimalProjectivePresentation
+
+end KerLeJacobson
+
+section FiniteMPP
+
+variable {R : Type u} {M : Type v} {P₀ : Type w} {P₁ : Type w'}
+  [Ring R] [AddCommMonoid M] [Module R M] [AddCommGroup P₀] [Module R P₀]
+  [AddCommGroup P₁] [Module R P₁]
+
+namespace IsMinimalProjectivePresentation
+
+variable {p₁ : P₁ →ₗ[R] P₀} {p₀ : P₀ →ₗ[R] M}
+
+/-- **A minimal projective presentation over a noetherian middle term is finitely generated on the
+left.** If `P₀` is a noetherian module then the left-hand source `P₁` of a minimal projective
+presentation with middle term `P₀` is finitely generated: noetherianity of `P₀` is exactly what
+makes the syzygy `ker p₀` finitely generated, and `P₁` covers that syzygy
+(`TauCeti.IsProjectiveCover.finite`).
+
+Nothing is assumed of the ring or of the presented module. A consumer over a noetherian ring
+presenting a finitely generated `M` supplies `IsNoetherian R P₀` from
+`have : Module.Finite R P₀ := h.isProjectiveCover.finite`, the middle term being finitely generated
+over any ring. -/
+theorem finite [IsNoetherian R P₀] (h : IsMinimalProjectivePresentation p₁ p₀) :
+    Module.Finite R P₁ :=
+  h.isProjectiveCover_codRestrict.finite
+
+end IsMinimalProjectivePresentation
+
+end FiniteMPP
+
 section Ring
 
 variable {R : Type u} {M : Type v} {P₀ : Type w} {P₁ : Type w'}
@@ -351,41 +420,6 @@ theorem exists_linearEquiv {q₁ : Q₁ →ₗ[R] Q₀} {q₀ : Q₀ →ₗ[R] M
   exact ⟨LinearEquiv.ofBijective f₀ hbij₀, LinearEquiv.ofBijective f₁ hbij₁, hcomp, hsquare⟩
 
 end Comparison
-
-section Radical
-
-/-- **Minimality, quantitatively, on the right**: the image of the left-hand map — equivalently the
-syzygy — lies in the radical of `P₀`. A presentation whose image escaped the radical could be
-shrunk. -/
-theorem range_le_jacobson (h : IsMinimalProjectivePresentation p₁ p₀) :
-    LinearMap.range p₁ ≤ Module.jacobson R P₀ :=
-  h.range_eq_ker ▸ h.isProjectiveCover.ker_le_jacobson
-
-/-- **Minimality, quantitatively, on the left**: the kernel of the left-hand map lies in the
-radical of `P₁`. -/
-theorem ker_le_jacobson (h : IsMinimalProjectivePresentation p₁ p₀) :
-    LinearMap.ker p₁ ≤ Module.jacobson R P₁ :=
-  h.isSuperfluous_ker.le_jacobson
-
-end Radical
-
-section Finite
-
-/-- **A minimal projective presentation over a noetherian middle term is finitely generated on the
-left.** If `P₀` is a noetherian module then the left-hand source `P₁` of a minimal projective
-presentation with middle term `P₀` is finitely generated: noetherianity of `P₀` is exactly what
-makes the syzygy `ker p₀` finitely generated, and `P₁` covers that syzygy
-(`TauCeti.IsProjectiveCover.finite`).
-
-Nothing is assumed of the ring or of the presented module. A consumer over a noetherian ring
-presenting a finitely generated `M` supplies `IsNoetherian R P₀` from
-`have : Module.Finite R P₀ := h.isProjectiveCover.finite`, the middle term being finitely generated
-over any ring. -/
-theorem finite [IsNoetherian R P₀] (h : IsMinimalProjectivePresentation p₁ p₀) :
-    Module.Finite R P₁ :=
-  h.isProjectiveCover_codRestrict.finite
-
-end Finite
 
 end IsMinimalProjectivePresentation
 

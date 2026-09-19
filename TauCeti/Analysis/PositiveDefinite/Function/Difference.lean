@@ -125,7 +125,8 @@ variable {M : Type*} [AddCommMonoid M] [StarAddMonoid M] {F : M → ℂ} {C : �
 
 /-- A positive-definite function bounded at the "norm points" `a + star a` is bounded at every
 point of the form `p + star q`, by Cauchy--Schwarz for its kernel. -/
-theorem norm_apply_add_star_le (hF : IsPositiveDefinite F)
+theorem norm_apply_add_star_le {M : Type*} [AddMonoid M] [StarAddMonoid M] {F : M → ℂ} {C : ℝ}
+    (hF : IsPositiveDefinite F)
     (hbdd : ∀ a, ‖F (a + star a)‖ ≤ C) (p q : M) : ‖F (p + star q)‖ ≤ C :=
   hF.posSemidef.norm_le_of_norm_apply_self_le hbdd p q
 

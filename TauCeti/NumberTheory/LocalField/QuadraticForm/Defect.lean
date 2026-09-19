@@ -88,7 +88,8 @@ variable {K : Type*} [Field K] [ValuativeRel K] [TopologicalSpace K]
 
 /-- The set of `ξ` whose square approximates `a` to within the valuation of `y`, restricted to
 `ξ` with `v(ξ²) ≤ v(a)`, is closed. -/
-private theorem isClosed_approx (a y : K) :
+private theorem isClosed_approx {K : Type*} [Ring K] [ValuativeRel K] [TopologicalSpace K]
+    [IsValuativeTopology K] (a y : K) :
     IsClosed {ξ : K | valuation K (ξ ^ 2) ≤ valuation K a ∧
       valuation K (a - ξ ^ 2) ≤ valuation K y} := by
   have hclosed : ∀ f : K → K, Continuous f → ∀ z : K,

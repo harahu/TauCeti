@@ -73,15 +73,16 @@ open CategoryTheory CategoryTheory.Limits ZeroObject HomologicalComplex
 
 universe w v u
 
-variable {C : Type u} [Category.{v} C] [Preadditive C] [HasBinaryBiproducts C]
+variable {C : Type u} [Category.{v} C]
 
 namespace SplitK0.AdditiveInvariant
 
-variable {G : Type*} [AddCommGroup G] (v : SplitK0.AdditiveInvariant C G)
+variable {G : Type*} [AddCommGroup G]
 
-section Range
+section ZeroMorphisms
 
-variable (K : CochainComplex C ℤ)
+variable [HasZeroMorphisms C] [HasBinaryBiproducts C] (v : SplitK0.AdditiveInvariant C G)
+  (K : CochainComplex C ℤ)
 
 /-- Two finite sets of degrees both containing the support of a complex give the same alternating
 sum of the values of an additive invariant on its terms. -/
@@ -98,6 +99,14 @@ theorem sum_negOnePow_obj_X_eq_of_isZero {s t : Finset ℤ} (hs : ∀ n, n ∉ s
     Finset.sum_subset Finset.subset_union_right fun n _ hn => by
       rw [v.obj_eq_zero_of_isZero (ht n hn), smul_zero]
   rw [h₁, h₂]
+
+end ZeroMorphisms
+
+variable [Preadditive C] [HasBinaryBiproducts C] (v : SplitK0.AdditiveInvariant C G)
+
+section Range
+
+variable (K : CochainComplex C ℤ)
 
 /-- The Euler characteristic of the shift `K⟦1⟧` over `s` is minus the Euler characteristic of `K`
 over the translate `s + 1`. -/
@@ -189,7 +198,7 @@ end SplitK0.AdditiveInvariant
 
 namespace SplitK0
 
-variable [EssentiallySmall.{w} C]
+variable [Preadditive C] [HasBinaryBiproducts C] [EssentiallySmall.{w} C]
 
 section CochainComplex
 

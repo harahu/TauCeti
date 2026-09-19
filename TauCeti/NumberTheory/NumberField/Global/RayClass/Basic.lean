@@ -219,7 +219,7 @@ theorem rayClassLift_unique {M : Type*} [Monoid M] {𝔪 : Modulus K} (φ : idea
 
 /-- The kernel of `rayClassLift φ h` is the image under `rayClassMk 𝔪` of `φ.ker`.  This exposes
 `QuotientGroup.ker_lift` through the module-opaque `RayClassGroup` representation. -/
-theorem ker_rayClassLift {M : Type*} [Group M] {𝔪 : Modulus K}
+theorem ker_rayClassLift {M : Type*} [Monoid M] {𝔪 : Modulus K}
     (φ : idealsPrimeTo 𝔪 →* M) (h : ray 𝔪 ≤ φ.ker) :
     (rayClassLift φ h).ker = Subgroup.map (rayClassMk 𝔪) φ.ker :=
   QuotientGroup.ker_lift (ray 𝔪) φ h

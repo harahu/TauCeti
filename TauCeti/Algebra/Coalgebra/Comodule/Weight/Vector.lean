@@ -84,6 +84,21 @@ theorem hasNonzeroWeightVector_iff :
 
 end Semiring
 
+section CoactMemSpan
+
+variable {k : Type u} {C : Type v} {M : Type w}
+variable [CommSemiring k] [AddCommMonoid C] [Module k C] [Coalgebra k C]
+variable [AddCommMonoid M] [Module k M] [Comodule k C M]
+
+/-- Every vector of a line spanned by a weight vector is a weight vector of the same weight. -/
+theorem coact_eq_tmul_of_mem_span {v : M} {c : C}
+    (h : coact (R := k) (C := C) (M := M) v = v ⊗ₜ[k] c) {x : M} (hx : x ∈ k ∙ v) :
+    coact (R := k) (C := C) (M := M) x = x ⊗ₜ[k] c := by
+  obtain ⟨a, rfl⟩ := Submodule.mem_span_singleton.mp hx
+  rw [map_smul, h, TensorProduct.smul_tmul']
+
+end CoactMemSpan
+
 variable {k : Type u} {C : Type v} {M : Type w}
 variable [Field k] [AddCommMonoid C] [Module k C] [Coalgebra k C]
 variable [AddCommGroup M] [Module k M] [Comodule k C M]
@@ -120,13 +135,6 @@ theorem eq_of_coact_eq_tmul {v : M} (hv : v ≠ 0) {c d : C}
     (fun z ↦ TensorProduct.lid k C
       (TensorProduct.map phi (LinearMap.id : C →ₗ[k] C) z)) h
   simpa [hphi] using hphi'
-
-/-- Every vector of a line spanned by a weight vector is a weight vector of the same weight. -/
-theorem coact_eq_tmul_of_mem_span {v : M} {c : C}
-    (h : coact (R := k) (C := C) (M := M) v = v ⊗ₜ[k] c) {x : M} (hx : x ∈ k ∙ v) :
-    coact (R := k) (C := C) (M := M) x = x ⊗ₜ[k] c := by
-  obtain ⟨a, rfl⟩ := Submodule.mem_span_singleton.mp hx
-  rw [map_smul, h, TensorProduct.smul_tmul']
 
 /-- A vector whose coaction lies in the tensor product of the line it spans with the coalgebra is
 a weight vector, and its weight is group-like. -/

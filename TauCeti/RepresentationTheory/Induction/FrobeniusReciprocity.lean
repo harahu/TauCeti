@@ -308,7 +308,8 @@ any particular pairing; `TauCeti.characterPairing_ind` is the same identity phra
 `TauCeti.ClassFunction.characterPairing`.  Specialized to two characters this is
 `TauCeti.frobenius_reciprocity`, but no representation is involved here: the identity is a
 double count over `G × G` and holds for arbitrary class functions. -/
-theorem frobenius_reciprocity_classFunction [Fintype G] (hG : IsUnit (Nat.card G : k))
+theorem frobenius_reciprocity_classFunction {k : Type u} [Semifield k] [Fintype G]
+    (hG : IsUnit (Nat.card G : k))
     (f : ClassFunction k S) (h : ClassFunction k G) :
     (Nat.card G : k)⁻¹ * ∑ g : G, indClassFun S f.1 g * h.1 g⁻¹ =
       (Nat.card S : k)⁻¹ * ∑ s : S, f.1 s * h.1 ((s : G)⁻¹) := by

@@ -24,7 +24,7 @@ namespace TauCeti
 
 /-- Products of separating families of rational points separate the tensor product. -/
 theorem tensor_eq_zero_of_forall_productMap_eq_zero
-    {k A B ι κ : Type*} [Field k] [Ring A] [Algebra k A]
+    {k A B ι κ : Type*} [Field k] [Semiring A] [Algebra k A]
     [Ring B] [Algebra k B]
     (f : ι → A →ₐ[k] k) (g : κ → B →ₐ[k] k)
     (hf : ∀ a, (∀ i, f i a = 0) → a = 0)

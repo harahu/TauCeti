@@ -85,7 +85,7 @@ open scoped ENNReal
 
 section ArzelaAscoli
 
-variable {X F ι : Type*} [PseudoMetricSpace X] [NormedAddCommGroup F] [NormedSpace ℝ F]
+variable {X F ι : Type*} [UniformSpace X] [NormedAddCommGroup F] [NormedSpace ℝ F]
   [FiniteDimensional ℝ F]
 
 /-- The finite uniform net on a compact set extracted from Arzelà--Ascoli. -/

@@ -482,18 +482,10 @@ end Stasheff
 
 section LowArity
 
-variable [CommRing R] [AddCommGroup A] [Module R A]
-variable (m : ∀ k : ℕ, MultilinearMap R (fun _ : Fin k ↦ A) A) (d : ℕ → ℤ) (x : ℕ → A)
+section LowArityBlocks
 
-/- Keep the implementation-level sign and tuple normalization in this private layer.  The
-displayed identities below then only choose the relevant terms and collect them additively. -/
-private theorem stasheffTerm_normalize (p s t : ℕ) :
-    stasheffTerm m d x p s t =
-      negOnePowCast R ((p : ℤ) + s * t) •
-        negOnePowCast R ((2 - s) * ∑ i ∈ Finset.range p, d i) •
-          evalNat (m (p + 1 + t))
-            (replaceBlock x p s (evalNat (m s) fun j ↦ x (p + j))) := by
-  rw [stasheffTerm_def, negOnePowCast_add, mul_smul]
+variable [Semiring R] [AddCommMonoid A] [Module R A]
+variable (m : ∀ k : ℕ, MultilinearMap R (fun _ : Fin k ↦ A) A) (d : ℕ → ℤ) (x : ℕ → A)
 
 private theorem evalNat_replaceBlock_one (s : ℕ) (v : A) :
     evalNat (m 1) (replaceBlock x 0 s v) = m 1 ![v] := by
@@ -535,6 +527,23 @@ private theorem evalNat_replaceBlock_four_three (s : ℕ) (v : A) :
     evalNat (m 4) (replaceBlock x 3 s v) = m 4 ![x 0, x 1, x 2, v] := by
   simp [evalNat_four]
 
+end LowArityBlocks
+
+section LowArityTerms
+
+variable [CommRing R] [AddCommMonoid A] [Module R A]
+variable (m : ∀ k : ℕ, MultilinearMap R (fun _ : Fin k ↦ A) A) (d : ℕ → ℤ) (x : ℕ → A)
+
+/- Keep the implementation-level sign and tuple normalization in this private layer.  The
+displayed identities below then only choose the relevant terms and collect them additively. -/
+private theorem stasheffTerm_normalize (p s t : ℕ) :
+    stasheffTerm m d x p s t =
+      negOnePowCast R ((p : ℤ) + s * t) •
+        negOnePowCast R ((2 - s) * ∑ i ∈ Finset.range p, d i) •
+          evalNat (m (p + 1 + t))
+            (replaceBlock x p s (evalNat (m s) fun j ↦ x (p + j))) := by
+  rw [stasheffTerm_def, negOnePowCast_add, mul_smul]
+
 /- These expansions isolate the finite indexing arithmetic from the element-level sign audit
 below.  Keeping them private avoids adding arity-specific combinatorics to the public API. -/
 private theorem stasheffSum_one_terms :
@@ -574,6 +583,12 @@ private theorem stasheffSum_four_terms :
     add_zero, zero_tsub]
   ac_rfl
 
+end LowArityTerms
+
+section LowArityNegOnePow
+
+variable [Ring R]
+
 private theorem negOnePowCast_two_normalize : negOnePowCast R 2 = 1 :=
   negOnePowCast_even (by norm_num)
 
@@ -582,6 +597,8 @@ private theorem negOnePowCast_three_normalize : negOnePowCast R 3 = -1 :=
 
 private theorem negOnePowCast_four_normalize : negOnePowCast R 4 = 1 :=
   negOnePowCast_even (by use 2; norm_num)
+
+end LowArityNegOnePow
 
 /- Centralize the implementation-level reduction used after selecting the terms of a low-arity
 Stasheff sum.  The public proofs below depend only on this local normalization interface. -/
@@ -602,10 +619,20 @@ local macro "normalize_stasheff" : tactic =>
       negOnePowCast_three_normalize, negOnePowCast_four_normalize, negOnePowCast_neg,
       one_smul, neg_smul])
 
+section LowArityOne
+
+variable [CommRing R] [AddCommMonoid A] [Module R A]
+variable (m : ∀ k : ℕ, MultilinearMap R (fun _ : Fin k ↦ A) A) (d : ℕ → ℤ) (x : ℕ → A)
+
 /-- The arity-one identity is `m₁ m₁ = 0`. -/
 theorem stasheffSum_one : stasheffSum m d x 1 = m 1 ![m 1 ![x 0]] := by
   rw [stasheffSum_one_terms]
   normalize_stasheff
+
+end LowArityOne
+
+variable [CommRing R] [AddCommGroup A] [Module R A]
+variable (m : ∀ k : ℕ, MultilinearMap R (fun _ : Fin k ↦ A) A) (d : ℕ → ℤ) (x : ℕ → A)
 
 /-- The arity-two identity, evaluated: `m₁ m₂ - m₂ (m₁ ⊗ 1) - m₂ (1 ⊗ m₁)`, where the Koszul rule
 turns the last term into `(-1) ^ (d 0)` times `m₂ (a, m₁ b)`. -/

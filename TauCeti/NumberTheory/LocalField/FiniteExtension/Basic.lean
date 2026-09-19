@@ -233,7 +233,7 @@ theorem finiteExtension_isNonarchimedeanLocalField :
 
 section Uniqueness
 
-variable {K M} {Γ : Type*} [LinearOrderedCommGroupWithZero Γ]
+variable {K M} {Γ : Type*}
 
 /-- The coefficients of the minimal polynomial over `K` of an element of `M` of spectral norm at
 most `1` lie in `𝒪[K]`. -/
@@ -249,7 +249,8 @@ private theorem coeff_minpoly_mem_integer_of_finiteExtensionNormedField_norm_le_
 /-- If a valuation `w` on `M` restricts to the valuation class of `K`, every element of `M` of
 spectral norm at most `1` has `w`-valuation at most `1`: the coefficients of its minimal
 polynomial over `K` are integral, so it is integral over the valuation ring of `w`. -/
-private theorem valuation_le_one_of_finiteExtensionNormedField_norm_le_one {w : Valuation M Γ}
+private theorem valuation_le_one_of_finiteExtensionNormedField_norm_le_one
+    [LinearOrderedCommMonoidWithZero Γ] {w : Valuation M Γ}
     (hw : (w.comap (algebraMap K M)).IsEquiv (valuation K)) {x : M}
     (hx : letI := finiteExtensionNormedField K M; ‖x‖ ≤ 1) : w x ≤ 1 := by
   have hmon : (minpoly K x).Monic := minpoly.monic (Algebra.IsIntegral.isIntegral x)
@@ -259,6 +260,8 @@ private theorem valuation_le_one_of_finiteExtensionNormedField_norm_le_one {w : 
   refine w.le_one_of_root_monic (hmon.map (algebraMap K M)) (fun n _ => ?_) ?_
   · simpa using hcoeff n
   · rw [Polynomial.eval_map_algebraMap, minpoly.aeval]
+
+variable [LinearOrderedCommGroupWithZero Γ]
 
 /-- If a valuation `w` on `M` restricts to the valuation class of `K`, every element of `M` of
 spectral norm less than `1` has `w`-valuation less than `1`. -/

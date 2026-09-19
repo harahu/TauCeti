@@ -37,7 +37,7 @@ open ContinuousLinearMap Filter MeasureTheory Set
 open scoped Convolution ENNReal Pointwise
 
 variable {E F : Type*} [MeasurableSpace E] [NormedAddCommGroup E] [NormedSpace ℝ E]
-  [BorelSpace E] [ProperSpace E] [NormedAddCommGroup F] [NormedSpace ℝ F]
+  [BorelSpace E] [WeaklyLocallyCompactSpace E] [NormedAddCommGroup F] [NormedSpace ℝ F]
   [CompleteSpace F] {mu : Measure E} [mu.IsAddHaarMeasure] {p : ENNReal} [Fact (1 ≤ p)]
 
 local instance : FiniteDimensional ℝ E := .of_locallyCompactSpace ℝ

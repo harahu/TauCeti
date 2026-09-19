@@ -202,7 +202,8 @@ variable {R : Type u} {A : Type v}
 
 /-- Right multiplication makes a graded algebra a graded right module over itself: the degrees of
 the two factors add, in the order fixed by the opposite grading. -/
-instance instGradedSMulOppositeSelf (𝒜 : ℤ → Submodule R A) [GradedAlgebra 𝒜] :
+instance instGradedSMulOppositeSelf (𝒜 : ℤ → Submodule R A) [DirectSum.Decomposition 𝒜]
+    [SetLike.GradedMul 𝒜] :
     SetLike.GradedSMul (InternalGrading.ofDecomposition 𝒜).opposite.piece 𝒜 where
   smul_mem := by
     intro i j a b ha hb
