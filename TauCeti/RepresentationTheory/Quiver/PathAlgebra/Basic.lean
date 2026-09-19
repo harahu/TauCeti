@@ -822,10 +822,11 @@ theorem liftLinear_one : liftLinear k F (1 : pathAlgebra k Q) = 1 := by
 
 end LiftLinearOne
 
-section Lift
+section LiftLinearMul
 
-variable (k : Type w) {Q : Type u} {B : Type*} [CommSemiring k] [Quiver.{v} Q]
-  [Semiring B] [Algebra k B] (F : Quiver.TotalPath Q → B)
+variable (k : Type w) {Q : Type u} {B : Type*} [Semiring k] [Quiver.{v} Q]
+  [NonUnitalNonAssocSemiring B] [Module k B] [IsScalarTower k B B] [SMulCommClass k B B]
+  (F : Quiver.TotalPath Q → B)
 
 variable (hcomp : ∀ {a b c : Q} (p : _root_.Quiver.Path a b) (q : _root_.Quiver.Path c a),
     F ⟨a, b, p⟩ * F ⟨c, a, q⟩ = F ⟨c, b, q.comp p⟩)
@@ -850,6 +851,17 @@ private theorem liftLinear_mul (f g : pathAlgebra k Q) :
           smul_mul_smul_comm, hcomp]
       · rw [single_mul_single_of_not_composable hy, map_zero, liftLinear_single, liftLinear_single,
           smul_mul_smul_comm, hzero hy, smul_zero]
+
+end LiftLinearMul
+
+section Lift
+
+variable (k : Type w) {Q : Type u} {B : Type*} [CommSemiring k] [Quiver.{v} Q]
+  [Semiring B] [Algebra k B] (F : Quiver.TotalPath Q → B)
+
+variable (hcomp : ∀ {a b c : Q} (p : _root_.Quiver.Path a b) (q : _root_.Quiver.Path c a),
+    F ⟨a, b, p⟩ * F ⟨c, a, q⟩ = F ⟨c, b, q.comp p⟩)
+  (hzero : ∀ {x y : Quiver.TotalPath Q}, y.2.1 ≠ x.1 → F x * F y = 0)
 
 variable [Finite Q]
   (hone : letI := Fintype.ofFinite Q; ∑ v : Q, F ⟨v, v, _root_.Quiver.Path.nil⟩ = 1)
