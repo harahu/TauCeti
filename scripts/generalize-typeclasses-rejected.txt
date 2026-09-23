@@ -1,0 +1,145 @@
+# Suggestions of the typeclass-generalization linter deliberately not taken; see
+# scripts/generalize_typeclasses.py. One per line as FILE DECLARATION HYPOTHESIS, copied from
+# the FINDING line, with a comment line above saying why.
+
+# Not a generalization: completeness is the content of the instance, and `HenselianRing R m` to
+# `HenselianLocalRing R` is already `TauCeti.HenselianRing.henselianLocalRing`, which it uses.
+TauCeti/RingTheory/Henselian/Basic.lean TauCeti.IsAdicComplete.henselianLocalRing [IsAdicComplete (maximalIdeal R) R]
+
+# Not implementable: the statement is about the private `picardCurve`, which is built from bounded
+# continuous functions with a real scalar action and so needs `NormedSpace ℝ E` itself.
+TauCeti/Analysis/ODE/GlobalSolution.lean ODE.picardCurve_sub_const [NormedSpace ℝ E]
+# Depends on the rejection above: `E` need only be a noncommutative group once `NormedSpace ℝ E`
+# is weakened, and `picardCurve` keeps `NormedSpace ℝ E`.
+TauCeti/Analysis/ODE/GlobalSolution.lean ODE.picardCurve_sub_const [SeminormedAddCommGroup E]
+
+# Not idiomatic: the split keeps only the operations the proof touches (`Mul + Pow ℤ`,
+# `One + CommMagma`, a `CoalgebraStruct` without its axioms,
+# `MulOne`, `NonAssocRing + NatPowAssoc + Pow`, `Mul + Inv`, an `SMul` or
+# `MulAction` without the distributive action), cut loose from their structure.
+TauCeti/Algebra/Bialgebra/GroupLike/ScalarAut.lean TauCeti.ScalarAut.counit_smul [Coalgebra K A]
+TauCeti/Algebra/Coalgebra/Comodule/Cofree.lean TauCeti.Comodule.Hom.counit_lTensor_rTensor [Coalgebra R C]
+TauCeti/Algebra/Coalgebra/Comodule/Cofree.lean TauCeti.Comodule.Hom.counit_rTensor_assoc_symm [Coalgebra R C]
+TauCeti/Algebra/Coalgebra/Comodule/Cofree.lean TauCeti.Comodule.comul_lTensor_comp_assoc_symm [Coalgebra R C]
+TauCeti/Algebra/Coalgebra/Comodule/Cofree.lean TauCeti.Comodule.counit_lTensor_comp_assoc_symm [Coalgebra R C]
+TauCeti/GroupTheory/SpecificGroups/Dihedral/Basic.lean TauCeti.dihedralFun_r [Group G]
+TauCeti/GroupTheory/SpecificGroups/Dihedral/Basic.lean TauCeti.dihedralFun_sr [Group G]
+TauCeti/RepresentationTheory/Compact/Integrated.lean TauCeti.ContRepresentation.conjMap_apply [Group G]
+TauCeti/RepresentationTheory/Homological/ContCohomology/ProjectionFormula.lean TauCeti.ContCohomology.cochainsCor2_cup11_res_eq_sum [AddCommGroup N]
+TauCeti/RepresentationTheory/Homological/ContCohomology/ProjectionFormula.lean TauCeti.ContCohomology.cochainsCor2_cup11_res_eq_sum [DistribMulAction G N]
+TauCeti/RepresentationTheory/Homological/ContCohomology/ProjectionFormula.lean TauCeti.ContCohomology.smul_cup11ProjectionHomotopy [DistribMulAction G M]
+TauCeti/RepresentationTheory/Homological/ContCohomology/ProjectionFormula.lean TauCeti.ContCohomology.smul_cup11ProjectionHomotopy [DistribMulAction G P]
+TauCeti/Topology/Algebra/Group/Profinite/Hopfian.lean TauCeti.IsTopologicallyFinitelyGenerated.bijective_of_surjective_of_surjective [Group H]
+TauCeti/Topology/Homotopy/Extension/Ball.lean TauCeti.ballRadialProjection_eq_self [NormedSpace ℝ E]
+
+# Not idiomatic: the replacement is an instance on a derived object (`𝓞 F` or the infinite places)
+# standing in for the hypothesis that provides it.
+TauCeti/NumberTheory/ArithmeticDirichletSeries/EulerProduct/Basic.lean TauCeti.IdealArithmeticFunction.exists_eq_pow_of_supportedPart_singleton_apply_ne_zero [NumberField K]
+TauCeti/NumberTheory/ArithmeticDirichletSeries/EulerProduct/Basic.lean TauCeti.IdealArithmeticFunction.localPowerSeries_delta [NumberField K]
+TauCeti/NumberTheory/ArithmeticDirichletSeries/EulerProduct/Basic.lean TauCeti.IdealArithmeticFunction.supportedPart_empty [NumberField K]
+TauCeti/NumberTheory/ArithmeticDirichletSeries/EulerProduct/Basic.lean TauCeti.IdealArithmeticFunction.supportedPart_one [NumberField K]
+TauCeti/NumberTheory/NumberField/CanonicalEmbedding/MulVolume.lean NumberField.mixedEmbedding.algebraNorm_apply [NumberField K]
+TauCeti/NumberTheory/NumberField/CanonicalEmbedding/NormLeOneLipschitz.lean NumberField.mixedEmbedding.fundamentalCone.contDiff_liftMap [NumberField K]
+
+# Not a generalization: the declaration is the Polish specialisation, named for its hypothesis, of
+# `TauCeti.isClosed_setOfPred_isCoupling`, which the file states in general; weakening it restates
+# that lemma.
+TauCeti/MeasureTheory/OptimalTransport/Compactness.lean TauCeti.isClosed_setOfPred_isCoupling_of_polishSpace [PolishSpace X]
+TauCeti/MeasureTheory/OptimalTransport/Compactness.lean TauCeti.isClosed_setOfPred_isCoupling_of_polishSpace [PolishSpace Y]
+
+# Not implementable: the statements take a bialgebra homomorphism `H →ₐc[k] K`, or unfold private
+# maps the file builds from bialgebra structure, so they need bialgebras.
+TauCeti/Algebra/HopfAlgebra/FiniteDual/Functoriality.lean TauCeti.ConvolutionDual.evalAlgHom_apply_apply [Bialgebra k H]
+TauCeti/Algebra/HopfAlgebra/FiniteDual/Functoriality.lean TauCeti.ConvolutionDual.evalLinearEquiv_apply_apply [Bialgebra k H]
+TauCeti/Algebra/HopfAlgebra/FiniteDual/Functoriality.lean TauCeti.ConvolutionDual.mapAlgHom_apply_apply [CommRing k]
+
+# Not implementable: the statement is about a private definition the section builds over a
+# topological group.
+TauCeti/Topology/Algebra/Group/Profinite/FiniteQuotients.lean TauCeti.instDirectedSystemOpenNormalSubgroupLevelSurjectionLevelSurjectionMap [IsTopologicalGroup H]
+TauCeti/Topology/Algebra/Group/Profinite/ProP/PadicPow.lean TauCeti.IsProP.padicPow_compat [IsTopologicalGroup A]
+
+# False positive of the linter: reported without a caveat, but the statement does not elaborate
+# (`haarAverage` is defined over `RCLike 𝕜`) or the proof fails (it synthesizes
+# `Fintype (W ⧸ V.subgroupOf W)` from the hypothesis).
+TauCeti/RepresentationTheory/Compact/Integrated.lean TauCeti.ContRepresentation.haarAverage_comp_conjMap [RCLike 𝕜]
+TauCeti/RepresentationTheory/Homological/ContCohomology/Corestriction/Transitivity.lean TauCeti.ContCohomology.finsum_smul_quotient_trans [(V.subgroupOf W).FiniteIndex]
+
+# Not taken: helpers about the private `glHeight` built over the section's commutative ring;
+# the weakening would need that definition restated, and for `glHeight_add` and `glHeight_sub`
+# it keeps only the operations the proof touches.
+TauCeti/Algebra/Lie/GeneralLinear/Existence.lean TauCeti.glHeight_add [CommRing K]
+TauCeti/Algebra/Lie/GeneralLinear/Existence.lean TauCeti.glHeight_single [CommRing K]
+TauCeti/Algebra/Lie/GeneralLinear/Existence.lean TauCeti.glHeight_sub [CommRing K]
+
+# Not idiomatic: valuation spectra are taken of commutative rings; a non-associative ring is not
+# a hypothesis anyone would state for them.
+TauCeti/AlgebraicGeometry/AdicSpace/ValuationSpectrum/OfDirected.lean TauCeti.ValuationSpectrum.exists_eq_eq_eq_of_directed [(i : ι) → CommRing (B i)]
+TauCeti/AlgebraicGeometry/AdicSpace/ValuationSpectrum/OfDirected.lean TauCeti.ValuationSpectrum.ofDirectedRel_iff [CommRing R]
+
+# Not idiomatic: the norm of a representation averages conjugates by group elements. A
+# `DivInvMonoid` retains the inverse notation without requiring it to invert those elements.
+TauCeti/RepresentationTheory/QuotSMulTop.lean Representation.quotSMulTop_forall_eq_sum [Group G]
+
+# Not idiomatic: the contragredient dual lift uses inversion in a group to read coefficients.
+# A `DivInvMonoid` retains inverse notation without the group laws that motivate this map.
+TauCeti/Algebra/MonoidAlgebra/Dual.lean TauCeti.MonoidAlgebra.dualLift_coeff [Group G]
+TauCeti/Algebra/MonoidAlgebra/Dual.lean TauCeti.MonoidAlgebra.dualLift_add [Group G]
+TauCeti/Algebra/MonoidAlgebra/Dual.lean TauCeti.MonoidAlgebra.dualLift_smul_base [Group G]
+
+# Not idiomatic: the lemma states continuity of translation on an additive group. Bare `Add`
+# retains a binary operation without the algebraic laws of translations.
+TauCeti/MeasureTheory/Function/Lp/Translation.lean MeasureTheory.Lp.continuous_compMeasurePreserving_add_right [AddGroup E]
+
+# Not idiomatic: the straightening coefficient uses ring binomial coefficients; splitting the
+# ring into a nonassociative ring with a separate power law obscures that standard setting.
+TauCeti/Algebra/Lie/Sl2/Straightening.lean TauCeti.Sl2.weighted_straightening_coefficient [Ring A]
+
+# Not idiomatic: pairing an integer-valued 0-chain uses additive-group coefficients. A
+# SubtractionCommMonoid keeps integer scalar notation without additive inverses.
+TauCeti/LowDimTopology/Heegaard/Generator.lean TauCeti.HeegaardIntersectionSystem.sum_generatorChain_smul [AddCommGroup M]
+
+# Not idiomatic: the uniqueness statement compares ring decompositions; replacing the ring
+# structure on the source of the RingEquiv by bare addition and multiplication obscures that API.
+TauCeti/RingTheory/Semisimple/Wedderburn/Uniqueness.lean RingEquiv.wedderburn_blocks_unique [Ring R]
+
+# Not a generalization: on an additive group, continuous subtraction is equivalent to being
+# a topological additive group (negation is 0 - x, and addition is x - (0 - y)).
+TauCeti/Topology/Algebra/Module/GroupAction.lean Submodule.isOpen_ker_quotientToModuleEnd [IsTopologicalAddGroup M]
+
+
+# Not a generalization: the type comes with an additive equivalence to an additive commutative
+# group, which makes the weaker structure the one underlying an additive commutative group with
+# the same addition (negation `-y := e.symm (-e y)`, by `Function.Injective.addCommGroup`).
+TauCeti/Algebra/Module/ZMod/Dual.lean TauCeti.exists_distribMulActionHom_apply_ne_zero [AddCommGroup N]
+TauCeti/Algebra/Module/ZMod/Dual.lean TauCeti.forall_eq_zero_and_exists_eq_of_bijective_flip_of_addEquiv [AddCommGroup X]
+TauCeti/Algebra/Module/ZMod/Dual.lean TauCeti.forall_eq_zero_and_exists_eq_of_bijective_flip_of_addEquiv [AddCommGroup Y]
+TauCeti/Algebra/Module/ZMod/Dual.lean AddEquiv.natCard_addMonoidHom_zmod [AddCommGroup N]
+
+# Not a generalization: with the compatibility hypothesis `ω v (J w) = ⟪v, w⟫`, a vector of norm 0
+# pairs to 0 with everything under `ω` (`abs_real_inner_le_norm`), so it is 0 by nondegeneracy;
+# the seminormed group is T0, hence normed (`NormedAddCommGroup.ofSeparation`).
+TauCeti/Geometry/Symplectic/CompatibleMetric.lean TauCeti.SymplecticForm.abs_apply_le_norm_mul_norm [NormedAddCommGroup V]
+
+# Not a generalization: the retraction `π ∘ₗ σ = id` through the additive group `F` already makes
+# `M` an additive group, with negation `x ↦ π (-σ x)`.
+TauCeti/LinearAlgebra/Determinant/Projective.lean LinearMap.splitEnd_apply [AddCommGroup M]
+
+# Not a generalization: with `ha : a ≠ 0` and `he : μ.map (toLp 2).symm = a • volume`, finiteness on
+# compacts forces `a ≠ ⊤`, so `μ = a • volume.map toLp` is an additive Haar measure
+# (`ContinuousLinearEquiv.isAddHaarMeasure_map`, `IsAddHaarMeasure.smul`).
+TauCeti/MeasureTheory/Integral/JohnNirenberg.lean TauCeti.setLAverage_preimage_closedBall_le [μ.IsAddHaarMeasure]
+TauCeti/MeasureTheory/Integral/JohnNirenberg.lean TauCeti.setLIntegral_exp_preimage_closedBall_le [μ.IsAddHaarMeasure]
+
+# Not idiomatic: `AddGroup + Norm` keeps a norm without its axioms; Mathlib pairs a group with a
+# bare `Norm` only in constructors of normed structures, and states `NormSMulClass` lemmas over a
+# `SeminormedAddGroup`.
+TauCeti/AlgebraicTopology/Sphere/Puncture.lean TauCeti.smul_sub_smul_ne_zero_of_ne [SeminormedAddGroup E]
+
+# Not a generalization: on a ring, a `ℚ`-module structure is a `ℚ`-algebra structure
+# (`Algebra.ofModule` with `IsScalarTower.rat` and `SMulCommClass.rat`), and both are unique.
+TauCeti/RingTheory/Polynomial/BinomialBasis.lean TauCeti.factorial_smul_ringChoose_X_eq_descPochhammer [Algebra ℚ K]
+
+# Not a generalization: the conclusion does not mention `R`, and the ring equivalences from `R`
+# compose to one between the two products, to which the `Ring R` statement applies with
+# `R := Π i, A i`; besides, such an `R` is a ring by `Equiv.ring`.
+TauCeti/RingTheory/SimpleRing/Pi.lean RingEquiv.card_eq_of_pi_of_isSimpleRing [Ring R]
