@@ -96,3 +96,9 @@ needs a human review. The
 review pipeline is sandboxed so it can run on untrusted PRs; see
 [`SECURITY.md`](https://github.com/TauCetiProject/TauCetiReview/blob/main/SECURITY.md) in
 TauCetiReview.
+
+## Generalizing typeclass hypotheses
+
+To weaken typeclass hypotheses that declarations do not need in full, use
+`scripts/generalize_typeclasses.py`, which runs the `GeneralizationLinter` one import level at a
+time. Its module docstring describes the level-by-level workflow; read it before starting.

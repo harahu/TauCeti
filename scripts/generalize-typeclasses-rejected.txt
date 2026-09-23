@@ -1,0 +1,256 @@
+# Suggestions of the typeclass-generalization linter deliberately not taken; see
+# scripts/generalize_typeclasses.py. One per line as FILE DECLARATION HYPOTHESIS, copied from
+# the FINDING line, with a comment line above saying why.
+
+# Not a generalization: completeness is the content of the instance, and `HenselianRing R m` to
+# `HenselianLocalRing R` is already `TauCeti.HenselianRing.henselianLocalRing`, which it uses.
+TauCeti/RingTheory/Henselian/Basic.lean TauCeti.IsAdicComplete.henselianLocalRing [IsAdicComplete (maximalIdeal R) R]
+
+# Not implementable: the statement is about the private `picardCurve`, which is built from bounded
+# continuous functions with a real scalar action and so needs `NormedSpace ℝ E` itself.
+TauCeti/Analysis/ODE/GlobalSolution.lean ODE.picardCurve_sub_const [NormedSpace ℝ E]
+# Depends on the rejection above: `E` need only be a noncommutative group once `NormedSpace ℝ E`
+# is weakened, and `picardCurve` keeps `NormedSpace ℝ E`.
+TauCeti/Analysis/ODE/GlobalSolution.lean ODE.picardCurve_sub_const [SeminormedAddCommGroup E]
+
+# Vacuous: the class is exactly the hypotheses it would be split into (its parent classes and
+# fields, or theirs in turn), so the split restates the hypothesis rather than weakening it.
+TauCeti/Algebra/Field/Subfield/Quadratic.lean TauCeti.mul_eq_zero_of_add_mul_sq_mem [SubfieldClass S L]
+TauCeti/AlgebraicGeometry/IrreducibleOfConnectedDomainStalk.lean TauCeti.AlgebraicGeometry.irreducibleSpace_of_connected_of_open_components [ConnectedSpace α]
+TauCeti/AlgebraicGeometry/IrreducibleOfConnectedDomainStalk.lean TauCeti.AlgebraicGeometry.irreducibleSpace_of_connected_of_unique_minimalPrime_stalk [ConnectedSpace ↥Z]
+TauCeti/Analysis/Normed/Algebra/OneSubExpNegDivSelf/Basic.lean map_oneSubExpNegDivSelf [RingHomClass F A B]
+TauCeti/Geometry/Lie/Interior.lean ContMDiffMul.isInteriorPoint [ContMDiffMul I n G]
+TauCeti/FieldTheory/Galois/Minpoly.lean TauCeti.minpoly_map_eq_prod_X_sub_C_of_adjoin_eq_top [IsGalois K L]
+TauCeti/LinearAlgebra/Matrix/LeibnizPart.lean Matrix.leibnizPart_map [RingHomClass F R S]
+TauCeti/LinearAlgebra/QuadraticForm/OfParallelogram.lean TauCeti.QuadraticMap.map_neg_of_parallelogram [AddLeftCancelMonoid N]
+TauCeti/LinearAlgebra/QuadraticForm/OfParallelogram.lean TauCeti.QuadraticMap.map_nsmul_of_parallelogram [AddRightCancelMonoid N]
+TauCeti/NumberTheory/EllipticDivisibilitySequence/Invariant/Basic.lean IsEllipticNet.map_invarNum [RingHomClass F R S]
+TauCeti/NumberTheory/NumberField/Cyclotomic/Compositum.lean IsCyclotomicExtension.isGalois_of_isGalois_of_isCyclotomicExtension [IsGalois K L]
+TauCeti/RepresentationTheory/CharacterTable/FiniteField.lean TauCeti.coeff_one_pow_card [RightCancelMonoid G]
+TauCeti/Topology/Algebra/CliffordAlgebra/Basic.lean CliffordAlgebra.instT2SpaceCliffordAlgebra [IsTopologicalSemiring R]
+TauCeti/Topology/Algebra/Module/Compact.lean TauCeti.IsCompactModule.self [IsTopologicalRing R]
+
+# Vacuous: a category with `IsGroupoid` is a groupoid with the same category
+# (`CategoryTheory.Groupoid.ofIsGroupoid`). Borderline: the split would still let the lemma apply to
+# a category not presented as a `Groupoid`, without that instance.
+TauCeti/CategoryTheory/Groupoid/ConnectedFunctor.lean TauCeti.Groupoid.natTrans_ext [Groupoid C]
+
+# Vacuous: a domain that is finite-dimensional over a field is a division ring.
+TauCeti/RingTheory/Semisimple/Schur.lean TauCeti.nonempty_algEquiv_self_of_finiteDimensional_divisionRing [DivisionRing D]
+
+# Vacuous: in a commutative monoid, left cancellation is two-sided, so the split is
+# `AddCancelCommMonoid M` again.
+TauCeti/Algebra/BigOperators/Finset/Erase.lean TauCeti.eq_of_sum_eq_of_forall_ne [AddCancelCommMonoid M]
+TauCeti/LinearAlgebra/RootSystem/SimplyConnectedRootDatum/A.lean TauCeti.DynkinType.eq_nsmul_of_second_difference_zero [AddCancelCommMonoid M]
+
+# Vacuous: a group whose multiplication is commutative is a commutative group, so the split is
+# `CommGroup A` again.
+TauCeti/Topology/Algebra/Group/TopologicalAbelianization/Lift.lean TopologicalAbelianization.topologicalClosure_commutator_le_ker [CommGroup A]
+
+# Not idiomatic: the split keeps only the operations the proof touches, cutting them loose from the
+# structure that relates them (`Sub + Norm`, `Zero + Monoid`).
+TauCeti/Analysis/Contour/ExitTime.lean TauCeti.Contour.right_endpoint_mem [SeminormedAddGroup F]
+TauCeti/Analysis/Contour/ExitTime.lean TauCeti.Contour.left_endpoint_mem [SeminormedAddGroup F]
+TauCeti/Topology/Algebra/ZeroSequenceOfUnits.lean TauCeti.exists_smul_mem_of_tendsto_zero [MonoidWithZero A]
+
+# Not idiomatic: the split lists the properties the proof happens to use (a fragment of
+# `SpectralSpace`), which is not a hypothesis anyone would state.
+TauCeti/Topology/Spectral/ProConstructible.lean TauCeti.IsProConstructible.isCompact [SpectralSpace X]
+
+# Not idiomatic: the split keeps only the operations the proof touches (`Mul + Pow ℤ`,
+# `One + CommMagma`, a `CoalgebraStruct` without its axioms, `Distrib` without distributivity,
+# `MulOne`, `NonAssocRing + NatPowAssoc + Pow`, `Zero`, `Add`, `Neg`, `Mul + Inv`, an `SMul` or
+# `MulAction` without the distributive action), cut loose from their structure.
+TauCeti/Algebra/Bialgebra/GroupLike/ScalarAut.lean TauCeti.ScalarAut.counit_smul [Coalgebra K A]
+TauCeti/Algebra/Coalgebra/Comodule/Cofree.lean TauCeti.Comodule.Hom.counit_lTensor_rTensor [Coalgebra R C]
+TauCeti/Algebra/Coalgebra/Comodule/Cofree.lean TauCeti.Comodule.Hom.counit_rTensor_assoc_symm [Coalgebra R C]
+TauCeti/Algebra/Coalgebra/Comodule/Cofree.lean TauCeti.Comodule.comul_lTensor_comp_assoc_symm [Coalgebra R C]
+TauCeti/Algebra/Coalgebra/Comodule/Cofree.lean TauCeti.Comodule.counit_lTensor_comp_assoc_symm [Coalgebra R C]
+TauCeti/Algebra/HopfAlgebra/FiniteDual/Functoriality.lean TauCeti.ConvolutionDual.mapLinear_apply_apply [Bialgebra k H]
+TauCeti/Algebra/HopfAlgebra/FiniteDual/Functoriality.lean TauCeti.ConvolutionDual.mapLinear_apply_apply [Bialgebra k K]
+TauCeti/Algebra/Lie/Sl2/Straightening.lean TauCeti.Sl2.weighted_straightening_coefficient [Ring A]
+TauCeti/Analysis/PositiveDefinite/SemigroupGroup/Basic.lean TauCeti.BCRPoint.add_point [AddCommGroup V]
+TauCeti/Analysis/PositiveDefinite/SemigroupGroup/Basic.lean TauCeti.BCRPoint.add_time [AddCommGroup V]
+TauCeti/Analysis/PositiveDefinite/SemigroupGroup/Basic.lean TauCeti.BCRPoint.star_point [AddCommGroup V]
+TauCeti/Analysis/PositiveDefinite/SemigroupGroup/Basic.lean TauCeti.BCRPoint.star_time [AddCommGroup V]
+TauCeti/Analysis/PositiveDefinite/SemigroupGroup/Basic.lean TauCeti.BCRPoint.zero_point [AddCommGroup V]
+TauCeti/Analysis/PositiveDefinite/SemigroupGroup/Basic.lean TauCeti.BCRPoint.zero_time [AddCommGroup V]
+TauCeti/Data/Nat/Factorization/PrimePowerProd/DivisorTable.lean TauCeti.Nat.primePowerProd_prime_pow_mul_min_max [CommMonoid R]
+TauCeti/GroupTheory/SpecificGroups/Dihedral/Basic.lean TauCeti.dihedralFun_r [Group G]
+TauCeti/GroupTheory/SpecificGroups/Dihedral/Basic.lean TauCeti.dihedralFun_sr [Group G]
+TauCeti/LinearAlgebra/LinearMap/QuadraticPolynomial.lean TauCeti.quadraticPolynomial_congr [AddCommMonoid M]
+TauCeti/LinearAlgebra/LinearMap/QuadraticPolynomial.lean TauCeti.quadraticPolynomial_congr [Module A M]
+TauCeti/LinearAlgebra/LinearMap/QuadraticPolynomial.lean TauCeti.quadraticPolynomial_congr [Semiring A]
+TauCeti/LinearAlgebra/QuadraticForm/Binary.lean TauCeti.apply_mul_eq_of_equivalent_binary [CommMonoid M]
+TauCeti/RepresentationTheory/Compact/Integrated.lean TauCeti.ContRepresentation.conjMap_apply [Group G]
+TauCeti/RepresentationTheory/Homological/ContCohomology/ProjectionFormula.lean TauCeti.ContCohomology.cochainsCor2_cup11_res_eq_sum [AddCommGroup N]
+TauCeti/RepresentationTheory/Homological/ContCohomology/ProjectionFormula.lean TauCeti.ContCohomology.cochainsCor2_cup11_res_eq_sum [DistribMulAction G N]
+TauCeti/RepresentationTheory/Homological/ContCohomology/ProjectionFormula.lean TauCeti.ContCohomology.smul_cup11ProjectionHomotopy [DistribMulAction G M]
+TauCeti/RepresentationTheory/Homological/ContCohomology/ProjectionFormula.lean TauCeti.ContCohomology.smul_cup11ProjectionHomotopy [DistribMulAction G P]
+TauCeti/RingTheory/Nilpotent/ChevalleyCommutator.lean TauCeti.sum_smul_mul_sum_smul_of_normalOrder [DistribMulAction R B]
+TauCeti/RingTheory/Nilpotent/RootString/Basic.lean TauCeti.sum_smul_mul_sum_smul_of_chainLeTwoOrder [DistribMulAction R B]
+TauCeti/RingTheory/Nilpotent/RootString/G2/Basic.lean TauCeti.sum_smul_mul_sum_smul_of_chainG2Order [DistribMulAction R B]
+TauCeti/RingTheory/Semisimple/Wedderburn/Uniqueness.lean TauCeti.wedderburn_blocks_unique [Distrib R]
+TauCeti/Topology/Algebra/Group/Profinite/Hopfian.lean TauCeti.IsTopologicallyFinitelyGenerated.bijective_of_surjective_of_surjective [Group H]
+TauCeti/Topology/Homotopy/Extension/Ball.lean TauCeti.ballRadialProjection_eq_self [NormedSpace ℝ E]
+# Vacuous: the class is exactly the hypotheses it would be split into (its parent classes and
+# fields, `Unique` being `Inhabited` and `Subsingleton`), so the split restates it.
+TauCeti/Analysis/Normed/Algebra/LogOneAdd/Naturality.lean NormedSpace.map_logOneAddSeries_apply [RingHomClass F A B]
+TauCeti/GroupTheory/Coxeter/Poincare.lean TauCeti.poincarePolynomial_of_unique_index [Unique B]
+
+# Vacuous: a domain algebraic over a field is a field, so `E` could not be weakened to one.
+TauCeti/FieldTheory/FunctionField/Basic.lean TauCeti.IsFunctionField.trdeg_eq_one_of_isAlgebraic [Field E]
+
+# Not idiomatic: the replacement is an instance on a derived object (`𝓞 F`, the infinite places,
+# the opposite group) standing in for the hypothesis that provides it.
+TauCeti/NumberTheory/ArithmeticDirichletSeries/EulerProduct/Basic.lean TauCeti.IdealArithmeticFunction.exists_eq_pow_of_supportedPart_singleton_apply_ne_zero [NumberField K]
+TauCeti/NumberTheory/ArithmeticDirichletSeries/EulerProduct/Basic.lean TauCeti.IdealArithmeticFunction.localPowerSeries_delta [NumberField K]
+TauCeti/NumberTheory/ArithmeticDirichletSeries/EulerProduct/Basic.lean TauCeti.IdealArithmeticFunction.supportedPart_empty [NumberField K]
+TauCeti/NumberTheory/ArithmeticDirichletSeries/EulerProduct/Basic.lean TauCeti.IdealArithmeticFunction.supportedPart_one [NumberField K]
+TauCeti/NumberTheory/EffectiveBounds/IdealCount/Basic.lean NumberField.eq_of_absNormUnder_eq_of_primeCoord_eq [NumberField F]
+TauCeti/NumberTheory/EffectiveBounds/IdealCount/Basic.lean NumberField.mem_primesOverFinset_under [NumberField F]
+TauCeti/NumberTheory/NumberField/CanonicalEmbedding/MulVolume.lean NumberField.mixedEmbedding.algebraNorm_apply [NumberField K]
+TauCeti/NumberTheory/NumberField/CanonicalEmbedding/NormLeOneLipschitz.lean NumberField.mixedEmbedding.fundamentalCone.contDiff_liftMap [NumberField K]
+TauCeti/NumberTheory/NumberField/ResidueDegree.lean TauCeti.finite_primesDividing [NumberField K]
+TauCeti/RepresentationTheory/Homological/ContCohomology/Coinduced/Functor.lean TauCeti.isLocallyConstant_representationCoindV [SeparatelyContinuousMul G]
+
+# Not idiomatic: the split lists the properties the proof happens to use (a topological ring as
+# `ContinuousAdd + RegularSpace + ContinuousMul`, `RCLike` as `NormedDivisionRing + Star +
+# ContinuousStar`, an abelian category as a balanced preadditive one with finite limits and
+# colimits, a strict ordered ring as four of its order axioms), which is not a hypothesis anyone
+# would state.
+TauCeti/Algebra/Homology/LinearYoneda.lean TauCeti.ChainComplex.shortExact_map_linearYonedaFunctor [Abelian C]
+TauCeti/Algebra/Polynomial/Rolle.lean TauCeti.PolynomialRolle.antitoneOn [IsStrictOrderedRing R]
+TauCeti/Algebra/Polynomial/Rolle.lean TauCeti.PolynomialRolle.monotoneOn [IsStrictOrderedRing R]
+TauCeti/Algebra/Polynomial/Rolle.lean TauCeti.PolynomialRolle.strictAntiOn [IsStrictOrderedRing R]
+TauCeti/Algebra/Polynomial/Rolle.lean TauCeti.PolynomialRolle.strictMonoOn [IsStrictOrderedRing R]
+TauCeti/Combinatorics/SimpleGraph/AdditiveFunction.lean SimpleGraph.dotProduct_graphCartanMatrix_mulVec_eq_zero_iff_forall_adj [IsStrictOrderedRing R]
+TauCeti/LinearAlgebra/QuadraticForm/Signature.lean QuadraticForm.add_sigNeg_le_sigNeg_prod [IsStrictOrderedRing K]
+TauCeti/LinearAlgebra/QuadraticForm/Signature.lean QuadraticForm.add_sigPos_le_sigPos_prod [IsStrictOrderedRing K]
+TauCeti/RepresentationTheory/Compact/Convolution.lean TauCeti.integrable_weightedSectionsCM [RCLike 𝕜]
+TauCeti/Topology/Algebra/OrthogonalGroup.lean Matrix.isClosed_orthogonalGroup [IsTopologicalRing R]
+
+# Not implementable: a local instance on section variables that the file's other declarations need
+# at the original strength.
+TauCeti/RepresentationTheory/Continuous/Unitary/Equivalence.lean TauCeti.ContRepresentation.instCompleteSpaceUnitaryEquivalenceCodomain [InnerProductSpace 𝕜 W]
+TauCeti/RepresentationTheory/Continuous/Unitary/Equivalence.lean TauCeti.ContRepresentation.instCompleteSpaceUnitaryEquivalenceDomain [InnerProductSpace 𝕜 V]
+TauCeti/RepresentationTheory/Homological/ContCohomology/Coinduced/Functor.lean TauCeti.instSMulCommClassDiscreteCoindVSubtypeMemSubgroupObjTopRepIsSmoothDiscrete [IsTopologicalGroup G]
+TauCeti/RepresentationTheory/Lie/Abelian.lean TauCeti.isCentralScalar [LieAlgebra R L]
+TauCeti/Topology/Algebra/OrthogonalGroup.lean Matrix.instContinuousStar [CommRing R]
+
+# Not taken: the helpers feed `liftAlgHom`, and weakening them makes the later
+# `rw [reverseOpAlgHom, liftAlgHom_ofPath]` leave a goal it no longer closes.
+TauCeti/RepresentationTheory/Quiver/PathAlgebra/Opposite.lean TauCeti.PathAlgebra.reverseOp_hzero [CommSemiring k]
+TauCeti/RepresentationTheory/Quiver/PathAlgebra/Opposite.lean TauCeti.PathAlgebra.reverseOp_hzero [HasInvolutiveReverse Q]
+TauCeti/RepresentationTheory/Quiver/PathAlgebra/Opposite.lean TauCeti.PathAlgebra.reverseOp_hone [CommSemiring k]
+TauCeti/RepresentationTheory/Quiver/PathAlgebra/Opposite.lean TauCeti.PathAlgebra.reverseOp_hone [HasInvolutiveReverse Q]
+
+# Not a generalization: pro-`p` is only meaningful for a prime `p`.
+TauCeti/Topology/Algebra/Group/Profinite/ProP/Basic.lean TauCeti.isProP_multiplicative_zmod_pow [Fact (Nat.Prime p)]
+
+# Not taken: stated for `SeminormedRing`, the two lemmas make their uses in
+# `TauCeti/RingTheory/PowerSeries/Weierstrass/Division.lean` exceed the heartbeat budget.
+TauCeti/RingTheory/PowerSeries/GaussNorm.lean TauCeti.PowerSeries.hasGaussNorm_add [NormedRing R]
+TauCeti/RingTheory/PowerSeries/GaussNorm.lean TauCeti.PowerSeries.hasGaussNorm_mul [NormedRing R]
+
+# Not a generalization: the declaration is the Polish specialisation, named for its hypothesis, of
+# `TauCeti.isClosed_setOfPred_isCoupling`, which the file states in general; weakening it restates
+# that lemma.
+TauCeti/MeasureTheory/OptimalTransport/Compactness.lean TauCeti.isClosed_setOfPred_isCoupling_of_polishSpace [PolishSpace X]
+TauCeti/MeasureTheory/OptimalTransport/Compactness.lean TauCeti.isClosed_setOfPred_isCoupling_of_polishSpace [PolishSpace Y]
+
+# Not idiomatic: `EuclideanDomain K` stands in for the field only because it lies between them in
+# the class graph; the natural weakening, a nontrivial commutative ring, breaks the base-change
+# lemmas the proof uses, which are stated over a field.
+TauCeti/Algebra/Coalgebra/BaseChange.lean TauCeti.Coalgebra.IsCocomm.of_baseChange [Field K]
+
+# Vacuous: `IsCentralScalar R R` says that `R` is commutative, so the split is `CommRing R` again.
+TauCeti/KnotTheory/Burau/Basic.lean TauCeti.KnotTheory.burauMatrix_mulVec [CommRing R]
+
+# Not implementable: the statements take a bialgebra homomorphism `H →ₐc[k] K`, or unfold private
+# maps the file builds from bialgebra structure, so they need bialgebras.
+TauCeti/Algebra/HopfAlgebra/FiniteDual/Functoriality.lean TauCeti.ConvolutionDual.dualDistribEquiv_tensor_eval_apply [Bialgebra k H]
+TauCeti/Algebra/HopfAlgebra/FiniteDual/Functoriality.lean TauCeti.ConvolutionDual.dualDistribEquiv_tensor_map_apply [Bialgebra k H]
+TauCeti/Algebra/HopfAlgebra/FiniteDual/Functoriality.lean TauCeti.ConvolutionDual.evalAlgHom_apply_apply [Bialgebra k H]
+TauCeti/Algebra/HopfAlgebra/FiniteDual/Functoriality.lean TauCeti.ConvolutionDual.evalLinearEquiv_apply_apply [Bialgebra k H]
+TauCeti/Algebra/HopfAlgebra/FiniteDual/Functoriality.lean TauCeti.ConvolutionDual.mapAlgHom_apply_apply [Bialgebra k H]
+TauCeti/Algebra/HopfAlgebra/FiniteDual/Functoriality.lean TauCeti.ConvolutionDual.mapAlgHom_apply_apply [Bialgebra k K]
+TauCeti/Algebra/HopfAlgebra/FiniteDual/Functoriality.lean TauCeti.ConvolutionDual.mapAlgHom_apply_apply [CommRing k]
+
+# Not taken: the declaration shares the file's variable block with declarations that need it at
+# the original strength (the transpose is a quotient of duals over a ring; `M` is an additive
+# group throughout), and weakening it alone would take a second copy of that block.
+TauCeti/Algebra/Homology/HomotopyCofiber.lean HomologicalComplex.homotopyCofiber.quasiIso_mapArrowHom_id [Abelian C]
+TauCeti/Algebra/Module/AuslanderReiten/Transpose.lean TauCeti.AuslanderReitenTranspose.map_range_lcomp_eq [Ring A]
+TauCeti/Algebra/Module/GradedModule/Homology.lean TauCeti.InternalGrading.isHomogeneous_boundariesInKer [Ring R]
+TauCeti/RepresentationTheory/Homological/ContCohomology/Corestriction/Transitivity.lean TauCeti.ContCohomology.sum_compositeTransversal [AddCommGroup M]
+TauCeti/RingTheory/Nilpotent/Conjugation.lean TauCeti.apply_dividedPower_smul_of_intertwines [Ring A]
+TauCeti/Topology/Algebra/GroupAction/AdditiveInvariant.lean TauCeti.invariant_eq_zero_of_subsingleton [Group G]
+
+# Vacuous: a proper morphism of relative dimension zero is finite (Zariski's main theorem).
+TauCeti/AlgebraicGeometry/Curves/Family.lean TauCeti.AlgebraicGeometry.FamilyOfCurves.of_isFinite [IsFinite f]
+
+# Not idiomatic: the lemma is about the unique coordinate, which it names `default`; `Inhabited`
+# keeps that name without the uniqueness, where the natural statement would cover every coordinate.
+TauCeti/Probability/Distributions/Gaussian/LowDimension.lean EuclideanSpace.gaussianCondMean_apply_of_unique [Unique ι]
+TauCeti/Probability/Distributions/Gaussian/LowDimension.lean Matrix.gaussianCondCov_apply_of_unique [Unique ι]
+
+# Not taken: helpers of `linearIndependent_zigzagBasisFun`, interleaved with others that need the
+# zigzag quotient over a commutative ring; weakening them would take regrouping those helpers.
+TauCeti/RepresentationTheory/Quiver/Zigzag/Basis.lean TauCeti.shortProj_ofPath_eq_zero_of_ne [CommRing k]
+TauCeti/RepresentationTheory/Quiver/Zigzag/Basis.lean TauCeti.shortProj_ofPath_eq_zero_of_three_le [CommRing k]
+TauCeti/RepresentationTheory/Quiver/Zigzag/Basis.lean TauCeti.shortProj_ofPath_of_length_le_one [CommRing k]
+TauCeti/RepresentationTheory/Quiver/Zigzag/Basis.lean TauCeti.shortProj_ofPath_of_loop [CommRing k]
+TauCeti/RepresentationTheory/Quiver/Zigzag/Basis.lean TauCeti.shortProj_sandwich_of_length_zero [CommRing k]
+TauCeti/RepresentationTheory/Quiver/Zigzag/Basis.lean TauCeti.shortProj_sandwich_of_pos [CommRing k]
+
+# Not implementable: the statement is about a private definition the section builds over a
+# topological group.
+TauCeti/Topology/Algebra/Group/Profinite/FiniteQuotients.lean TauCeti.instDirectedSystemOpenNormalSubgroupLevelSurjectionLevelSurjectionMap [IsTopologicalGroup H]
+TauCeti/Topology/Algebra/Group/Profinite/ProP/PadicPow.lean TauCeti.IsProP.padicPow_compat [IsTopologicalGroup A]
+
+# False positive of the linter: reported without a caveat, but the statement does not elaborate
+# (`haarAverage` is defined over `RCLike 𝕜`) or the proof fails (it synthesizes
+# `Fintype (W ⧸ V.subgroupOf W)` from the hypothesis).
+TauCeti/RepresentationTheory/Compact/Integrated.lean TauCeti.ContRepresentation.haarAverage_comp_conjMap [RCLike 𝕜]
+TauCeti/RepresentationTheory/Homological/ContCohomology/Corestriction/Transitivity.lean TauCeti.ContCohomology.finsum_smul_quotient_trans [(V.subgroupOf W).FiniteIndex]
+
+# Not taken: helpers about a private definition (`glHeight`, `tangentScalarExtensionEquivBase`)
+# built over the section's commutative ring; the weakening would need that definition restated,
+# and for `glHeight_add` and `glHeight_sub` it keeps only the operations the proof touches.
+TauCeti/Algebra/AlgebraicGroup/Tangent/Cotangent.lean Derivation.tangentScalarExtensionEquivBase_apply [CommRing B]
+TauCeti/Algebra/Lie/GeneralLinear/Existence.lean TauCeti.glHeight_add [CommRing K]
+TauCeti/Algebra/Lie/GeneralLinear/Existence.lean TauCeti.glHeight_single [CommRing K]
+TauCeti/Algebra/Lie/GeneralLinear/Existence.lean TauCeti.glHeight_sub [CommRing K]
+
+# Not idiomatic: `IsDomain k` is the idiomatic hypothesis already taken; left cancellation and
+# nontriviality on their own are not a hypothesis anyone would state.
+TauCeti/RepresentationTheory/Induction/TrivialIntersection.lean TauCeti.indClassFun_apply_coe [IsDomain k]
+
+# Vacuous: a finite domain is a field.
+TauCeti/FieldTheory/Finite/Four.lean TauCeti.two_zsmul_eq_zero_of_natCard_eq_four [Field F]
+
+# Not idiomatic: `EuclideanDomain F` stands in for the field only because it lies between them in
+# the class graph; no natural weakening between the two fits the statement.
+TauCeti/FieldTheory/Finite/Four.lean TauCeti.zmodTwoHom_apply [Field F]
+
+# Not idiomatic: valuation spectra are taken of commutative rings; a non-associative ring is not
+# a hypothesis anyone would state for them.
+TauCeti/AlgebraicGeometry/AdicSpace/ValuationSpectrum/OfDirected.lean TauCeti.ValuationSpectrum.exists_eq_eq_eq_of_directed [(i : ι) → CommRing (B i)]
+TauCeti/AlgebraicGeometry/AdicSpace/ValuationSpectrum/OfDirected.lean TauCeti.ValuationSpectrum.ofDirectedRel_iff [CommRing R]
+
+# Not taken: the proofs use results about Dedekind domains for `B`, and do not elaborate over a
+# mere domain; the weakening would need new proofs, not a change of hypotheses.
+TauCeti/NumberTheory/RamificationInertia/HilbertTheory/Basic.lean TauCeti.IsInertiaField.ramificationIdxIn_eq [IsDedekindDomain B]
+TauCeti/NumberTheory/RamificationInertia/HilbertTheory/ResidueDegree.lean TauCeti.IsDecompositionField.inertiaDeg_eq [IsDedekindDomain B]
+TauCeti/NumberTheory/RamificationInertia/HilbertTheory/ResidueDegree.lean TauCeti.IsDecompositionField.ramificationIdx_eq [IsDedekindDomain B]
+TauCeti/NumberTheory/RamificationInertia/HilbertTheory/ResidueDegree.lean TauCeti.IsDecompositionField.ramificationIdx_eq_and_inertiaDeg_eq [IsDedekindDomain B]
+
+# Vacuous: `D` is also an algebra over the field `K`, so its addition is already a group
+# (`Module.addCommMonoidToAddCommGroup`), and the split restates `CommRing D`.
+TauCeti/RingTheory/TensorProduct/IsDomain.lean TauCeti.isDomain_fractionRing_mvPolynomial_tensorProduct [CommRing D]
+
+# Vacuous: `L` is a linearly ordered commutative ring, where `IsOrderedAddMonoid L` and
+# `PosMulMono L` already give the rest of `IsOrderedRing L`: `MulPosMono L` by commutativity, and
+# `0 ≤ 1` since `1 < 0` would give `0 < -1` and then `0 ≤ (-1) * (-1) = 1`.
+TauCeti/FieldTheory/RealClosure/OrderExtension.lean TauCeti.RealClosure.extensionCone.nonneg [IsOrderedRing L]
