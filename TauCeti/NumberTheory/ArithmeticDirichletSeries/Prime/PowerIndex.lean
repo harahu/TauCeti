@@ -134,7 +134,7 @@ theorem summable_comp_idealPrimePowerOf (hf : Summable f) :
 
 section Norm
 
-variable {β : Type*} [NormedAddCommGroup β] {g : (Ideal (𝓞 K))⁰ → β}
+variable {β : Type*} [Norm β] {g : (Ideal (𝓞 K))⁰ → β}
 
 /-- **The prime-power tails of an absolutely summable ideal-indexed family are summable over the
 primes.**  Restricting the norms to the pairs `(P, e)` and then summing out the exponent leaves a

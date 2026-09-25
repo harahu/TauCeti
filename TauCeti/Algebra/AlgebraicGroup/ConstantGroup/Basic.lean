@@ -44,68 +44,63 @@ namespace TauCeti.ConstantGroup
 
 universe u v w
 
-variable (R : Type u) [CommRing R] (G : Type v) [Group G] [Finite G]
+variable (R : Type u) [CommRing R] (G : Type v) [Finite G]
 
 /-- The coordinate ring of the constant group attached to a finite group `G` over `R`.
 
 It is defined as the finite Hopf dual of the group algebra. -/
 abbrev coordinateRing := ConvolutionDual R (MonoidAlgebra R G)
 
-omit [Group G] in
 /-- The underlying linear equivalence between the coordinate ring and the algebra of functions
 on `G`. -/
 noncomputable def functionLinearEquiv : coordinateRing R G ≃ₗ[R] (G → R) := by
   classical
   exact (WithConv.linearEquiv R _).trans (MonoidAlgebra.basis G R).dualBasis.equivFun
 
-omit [Group G] in
 @[simp]
 theorem functionLinearEquiv_apply (f : coordinateRing R G) (g : G) :
     functionLinearEquiv R G f g = f.ofConv (MonoidAlgebra.single g 1) := by
   classical
   exact (MonoidAlgebra.basis G R).dualBasis_equivFun f.ofConv g
 
-omit [Group G] in
 private theorem functionLinearEquiv_map_one :
     functionLinearEquiv R G (1 : coordinateRing R G) = 1 := by
   ext g
   simp [functionLinearEquiv_apply, LinearMap.convOne_apply]
 
-omit [Group G] in
 private theorem functionLinearEquiv_map_mul (f h : coordinateRing R G) :
     functionLinearEquiv R G (f * h) = functionLinearEquiv R G f * functionLinearEquiv R G h := by
   ext g
   rw [Pi.mul_apply]
   simp [functionLinearEquiv_apply, LinearMap.convMul_apply]
 
-omit [Group G] in
 /-- The coordinate ring of a finite constant group is canonically the function algebra `G → R`.
 -/
 noncomputable def functionAlgEquiv : coordinateRing R G ≃ₐ[R] (G → R) :=
   AlgEquiv.ofLinearEquiv (functionLinearEquiv R G) (functionLinearEquiv_map_one R G)
     (functionLinearEquiv_map_mul R G)
 
-omit [Group G] in
 @[simp]
 theorem functionAlgEquiv_apply (f : coordinateRing R G) (g : G) :
     functionAlgEquiv R G f g = f.ofConv (MonoidAlgebra.single g 1) := by
   simp [functionAlgEquiv, functionLinearEquiv_apply]
 
-omit [Group G] in
 /-- The coordinate ring of a finite constant group is finite étale over the base ring. -/
 noncomputable instance instEtale : Algebra.Etale R (coordinateRing R G) :=
   Algebra.Etale.of_equiv (functionAlgEquiv R G).symm
 
-omit [Group G] in
 /-- Evaluation at a group element, regarded as an algebra point of the constant group. -/
 noncomputable def eval (g : G) : coordinateRing R G →ₐ[R] R :=
   (Pi.evalAlgHom R (fun _ : G ↦ R) g).comp (functionAlgEquiv R G).toAlgHom
 
-omit [Group G] in
 @[simp]
 theorem eval_apply (g : G) (f : coordinateRing R G) :
     eval R G g f = functionAlgEquiv R G f g := by
   simp [eval]
+
+section Monoid
+
+variable [Monoid G]
 
 /-- Comultiplication on the coordinate ring is dual to multiplication in `G`. -/
 theorem comul_apply (f : coordinateRing R G) (g h : G) :
@@ -120,13 +115,6 @@ theorem counit_apply (f : coordinateRing R G) :
     Coalgebra.counit (R := R) f = functionAlgEquiv R G f 1 := by
   rw [ConvolutionDual.counit_apply, functionAlgEquiv_apply]
   rw [MonoidAlgebra.one_def]
-
-/-- The antipode of the coordinate ring sends a function `f` to `g ↦ f (g⁻¹)`. -/
-theorem antipode_apply (f : coordinateRing R G) (g : G) :
-    functionAlgEquiv R G (HopfAlgebra.antipode R f) g = functionAlgEquiv R G f g⁻¹ := by
-  rw [functionAlgEquiv_apply, ConvolutionDual.antipode_apply,
-    MonoidAlgebra.antipode_single, functionAlgEquiv_apply]
-  simp
 
 private theorem dualDistribEquiv_apply_single
     (w : coordinateRing R G ⊗[R] coordinateRing R G) (g h : G) :
@@ -177,6 +165,17 @@ theorem toPoints_injective [Nontrivial R] : Function.Injective (toPoints R G) :=
   ext f
   obtain ⟨x, rfl⟩ := (functionAlgEquiv R G).surjective f
   simpa only [eval_apply, Pi.evalAlgHom_apply] using DFunLike.congr_fun hmaps x
+
+end Monoid
+
+variable [Group G]
+
+/-- The antipode of the coordinate ring sends a function `f` to `g ↦ f (g⁻¹)`. -/
+theorem antipode_apply (f : coordinateRing R G) (g : G) :
+    functionAlgEquiv R G (HopfAlgebra.antipode R f) g = functionAlgEquiv R G f g⁻¹ := by
+  rw [functionAlgEquiv_apply, ConvolutionDual.antipode_apply,
+    MonoidAlgebra.antipode_single, functionAlgEquiv_apply]
+  simp
 
 section Functoriality
 

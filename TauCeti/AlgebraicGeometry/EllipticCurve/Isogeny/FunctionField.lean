@@ -177,7 +177,7 @@ theorem fieldPullback_algebraMap (φ : Isogeny W₁ W₂) (x : W₂.CoordinateRi
 /-- **A restricted valuation, evaluated on an affine function of the target**: it is the value of
 the pullback of that function. -/
 theorem comap_fieldPullback_apply_algebraMap (φ : Isogeny W₁ W₂) {Γ : Type*}
-    [LinearOrderedCommGroupWithZero Γ] (v : Valuation W₁.FunctionField Γ)
+    [LinearOrderedCommMonoidWithZero Γ] (v : Valuation W₁.FunctionField Γ)
     (c : W₂.CoordinateRing) :
     (v.comap φ.fieldPullback.toRingHom) (algebraMap W₂.CoordinateRing W₂.FunctionField c) =
       v (φ.pullback c) := by

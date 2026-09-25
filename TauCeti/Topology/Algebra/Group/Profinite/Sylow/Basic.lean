@@ -130,7 +130,7 @@ theorem map_continuousMulEquiv {H : Type v} [Group H] [TopologicalSpace H]
     exact hV ▸ hP.not_dvd_index V
 
 /-- A conjugate of a Sylow pro-`p` subgroup is a Sylow pro-`p` subgroup. -/
-theorem map_conj [IsTopologicalGroup G] (hP : IsProPSylow p P) (g : G) :
+theorem map_conj [SeparatelyContinuousMul G] (hP : IsProPSylow p P) (g : G) :
     IsProPSylow p (P.map (MulAut.conj g).toMonoidHom) :=
   hP.map_continuousMulEquiv
     { MulAut.conj g with

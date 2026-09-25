@@ -130,9 +130,11 @@ abbrev IsBrauerTrivial {K : Type u} [Field K] (A : CSA.{u, u} K) : Prop :=
 
 /-! ### The algebras split by the base field form one Brauer class -/
 
+omit [Field K] in
 /-- The size of a matrix presentation of a nontrivial algebra is nonzero, because a `0 × 0` matrix
 algebra is the zero ring. -/
-theorem ne_zero_of_algEquiv_matrix {A : Type v} [Ring A] [Algebra K A] [Nontrivial A] {p : ℕ}
+theorem ne_zero_of_algEquiv_matrix [CommSemiring K] {A : Type v} [Semiring A] [Algebra K A]
+    [Nontrivial A] {p : ℕ}
     (e : A ≃ₐ[K] Matrix (Fin p) (Fin p) K) : p ≠ 0 := by
   rintro rfl
   exact not_subsingleton A e.toEquiv.subsingleton

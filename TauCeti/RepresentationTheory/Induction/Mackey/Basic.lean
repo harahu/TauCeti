@@ -310,6 +310,7 @@ theorem mackeyClassFunction_coe (s : G) (H K : Subgroup G) (f : ClassFunction k 
     (mackeyClassFunction s H K f).1 = mackeyClassFun s H K f.1 :=
   (rfl)
 
+omit [Semiring k] in
 /-- **The Mackey subgroup sees the induced summand.**  The summand of the class function induced
 from `H` to `G`, taken at the representative `u s` and at an element of `K`, is the summand of the
 class function induced from the Mackey subgroup to `K`, taken at the representative `u`.
@@ -317,7 +318,8 @@ class function induced from the Mackey subgroup to `K`, taken at the representat
 This single identity is where the conjugation `s⁻¹ (·) s` enters the Mackey decomposition.  It is
 private: it speaks about the individual representatives that `TauCeti.indClassFun_mackey` sums
 over, and that sum is the interface. -/
-private theorem indTerm_mackeyClassFun (s : G) (H K : Subgroup G) (f : H → k) (x u : K) :
+private theorem indTerm_mackeyClassFun [AddCommMonoid k] (s : G) (H K : Subgroup G) (f : H → k)
+    (x u : K) :
     indTerm f (x : G) ((u : G) * s) = indTerm (mackeyClassFun s H K f) x u := by
   classical
   have hconj : ((u : G) * s)⁻¹ * (x : G) * ((u : G) * s)

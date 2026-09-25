@@ -164,8 +164,9 @@ private theorem sum_chainG2Index_diag_flip {B : Type*} [AddCommMonoid B]
 -- `u ^ a (t u) ^ b (t ^ 2 u) ^ c (t ^ 3 u) ^ d (t ^ 3 u ^ 2) ^ e t ^ q`.
 -- The proof is the six-factor analogue of the argument in
 -- `TauCeti.RingTheory.Nilpotent.RootString.Basic`, and follows it step for step.
-private theorem sum_smul_mul_sum_smul_of_chainG2Order {R : Type*} [CommRing R]
-    {B : Type*} [Ring B] [Algebra R B] (Dx Dy Dz Dw Dv Ds : ℕ → B) (N : ℕ)
+private theorem sum_smul_mul_sum_smul_of_chainG2Order {R : Type*} [CommSemiring R]
+    {B : Type*} [NonUnitalSemiring B] [DistribMulAction R B] [IsScalarTower R B B]
+    [SMulCommClass R B B] (Dx Dy Dz Dw Dv Ds : ℕ → B) (N : ℕ)
     (hno : ∀ m n, Dx m * Dy n =
       ∑ p ∈ Associative.chainG2Index m n,
         Dy (n - p.1 - p.2.1 - p.2.2.1 - 2 * p.2.2.2) * Dz p.1 * Dw p.2.1 * Dv p.2.2.1 *

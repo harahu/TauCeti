@@ -164,7 +164,7 @@ theorem zero : IsTransgressionLift (0 : N → M) (0 : G → M) where
   smul_conj_sub _ _ := by simp [d0_apply]
 
 /-- Transgression lifts add. -/
-theorem add [IsTopologicalAddGroup M] (hf : IsTransgressionLift c f)
+theorem add [ContinuousAdd M] (hf : IsTransgressionLift c f)
     (hf' : IsTransgressionLift c' f') :
     IsTransgressionLift (c + c') (f + f') where
   continuous := hf.continuous.add hf'.continuous
@@ -176,7 +176,7 @@ theorem add [IsTopologicalAddGroup M] (hf : IsTransgressionLift c f)
     abel
 
 /-- Transgression lifts subtract. -/
-theorem sub [IsTopologicalAddGroup M] (hf : IsTransgressionLift c f)
+theorem sub [ContinuousSub M] (hf : IsTransgressionLift c f)
     (hf' : IsTransgressionLift c' f') :
     IsTransgressionLift (c - c') (f - f') where
   continuous := hf.continuous.sub hf'.continuous
@@ -264,7 +264,7 @@ theorem mem_Z1 [IsTopologicalAddGroup M] (hf : IsTransgressionLift c f) : c ∈ 
 
 /-- Subtracting its value at `1` from a transgression lift gives a transgression lift of the same
 function that vanishes at `1`. -/
-theorem sub_apply_one [IsTopologicalAddGroup M] (hf : IsTransgressionLift c f) :
+theorem sub_apply_one [ContinuousSub M] (hf : IsTransgressionLift c f) :
     IsTransgressionLift c fun g => f g - f 1 where
   continuous := hf.continuous.sub continuous_const
   apply_mul g n := by

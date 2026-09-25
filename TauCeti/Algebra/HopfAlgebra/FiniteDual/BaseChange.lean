@@ -47,11 +47,11 @@ namespace TauCeti.ConvolutionDual
 
 universe u v w x
 
-variable {k : Type u} {K : Type v} {H : Type w}
-variable [CommRing k] [CommRing K] [Algebra k K]
-variable [Semiring H] [Bialgebra k H]
+section Linear
 
-variable [Module.Finite k H] [Module.Projective k H]
+variable {k : Type u} {K : Type v} {H : Type w}
+variable [CommSemiring k] [CommSemiring K] [Algebra k K] [AddCommMonoid H] [Module k H]
+  [Module.Finite k H] [Module.Projective k H]
 
 /-- The scalar-extended evaluation map as a linear equivalence. -/
 private noncomputable def baseChangeLinearEquiv :
@@ -74,15 +74,13 @@ private theorem ofConv_ext {φ ψ : ConvolutionDual K (K ⊗[k] H)}
   ext x
   exact h x
 
-private theorem dualDistribEquiv_ext
-    {w z : ConvolutionDual K (K ⊗[k] H) ⊗[K] ConvolutionDual K (K ⊗[k] H)}
-    (h : ∀ x y : H,
-      dualDistribEquiv K (K ⊗[k] H) w ((1 ⊗ₜ[k] x) ⊗ₜ[K] (1 ⊗ₜ[k] y)) =
-        dualDistribEquiv K (K ⊗[k] H) z ((1 ⊗ₜ[k] x) ⊗ₜ[K] (1 ⊗ₜ[k] y))) :
-    w = z := by
-  apply (dualDistribEquiv K (K ⊗[k] H)).injective
-  ext x y
-  exact h x y
+end Linear
+
+section Coalgebra
+
+variable {k : Type u} {K : Type v} {H : Type w}
+variable [CommSemiring k] [CommSemiring K] [Algebra k K] [AddCommMonoid H] [Module k H]
+  [Coalgebra k H] [Module.Finite k H] [Module.Projective k H]
 
 private theorem baseChangeLinearEquiv_one :
     baseChangeLinearEquiv (k := k) (K := K) (H := H)
@@ -92,6 +90,16 @@ private theorem baseChangeLinearEquiv_one :
   rw [baseChangeLinearEquiv_tmul_apply_tmul]
   simp only [LinearMap.convOne_apply, TensorProduct.counit_tmul,
     Bialgebra.counit_one, Algebra.algebraMap_self_apply, Algebra.smul_def, mul_one, one_mul]
+
+end Coalgebra
+
+section Bialgebra
+
+variable {k : Type u} {K : Type v} {H : Type w}
+variable [CommSemiring k] [CommSemiring K] [Algebra k K]
+variable [Semiring H] [Bialgebra k H]
+
+variable [Module.Finite k H] [Module.Projective k H]
 
 private theorem baseChangeLinearEquiv_mul (a b : K) (φ ψ : ConvolutionDual k H) :
     baseChangeLinearEquiv (k := k) (K := K) (H := H)
@@ -133,6 +141,32 @@ private theorem baseChangeAlgEquiv_tmul_apply_tmul
         (b ⊗ₜ[k] x) = a * b * algebraMap k K (φ.ofConv x) := by
   rw [baseChangeAlgEquiv_apply]
   exact baseChangeLinearEquiv_tmul_apply_tmul a b φ x
+
+end Bialgebra
+
+section DualDistribExt
+
+variable {k : Type u} {K : Type v} {H : Type w}
+variable [CommSemiring k] [CommRing K] [Algebra k K] [AddCommMonoid H] [Module k H]
+  [Module.Finite k H] [Module.Projective k H]
+
+private theorem dualDistribEquiv_ext
+    {w z : ConvolutionDual K (K ⊗[k] H) ⊗[K] ConvolutionDual K (K ⊗[k] H)}
+    (h : ∀ x y : H,
+      dualDistribEquiv K (K ⊗[k] H) w ((1 ⊗ₜ[k] x) ⊗ₜ[K] (1 ⊗ₜ[k] y)) =
+        dualDistribEquiv K (K ⊗[k] H) z ((1 ⊗ₜ[k] x) ⊗ₜ[K] (1 ⊗ₜ[k] y))) :
+    w = z := by
+  apply (dualDistribEquiv K (K ⊗[k] H)).injective
+  ext x y
+  exact h x y
+
+end DualDistribExt
+
+variable {k : Type u} {K : Type v} {H : Type w}
+variable [CommRing k] [CommRing K] [Algebra k K]
+variable [Semiring H] [Bialgebra k H]
+
+variable [Module.Finite k H] [Module.Projective k H]
 
 /-- The base-change algebra equivalence preserves the finite-dual counit. -/
 private theorem baseChangeAlgEquiv_counit_comp :

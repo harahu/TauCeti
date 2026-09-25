@@ -71,7 +71,20 @@ private theorem stabilizer_algebraicClosure_isOpen (a : AlgebraicClosure k) :
     (MulAction.stabilizer (AlgebraicClosure k ≃ₐ[k] AlgebraicClosure k) a : Set _)
   exact stabilizer_isOpen_of_isIntegral a
 
-private theorem stabilizer_scalarExtension_isOpen {A : Type v} [Semiring A] [Algebra k A]
+/-- The scalar-factor Galois action on a base-changed module. -/
+private noncomputable local instance instGaloisScalarDistribMulAction
+    {A : Type v} [AddCommMonoid A] [Module k A] :
+    DistribMulAction (Field.absoluteGaloisGroup k) (AlgebraicClosure k ⊗[k] A) := by
+  letI : DistribMulAction (Field.absoluteGaloisGroup k) (AlgebraicClosure k) :=
+    { instMulSemiringActionAlgebraicClosure (k := k) with }
+  letI : SMulCommClass k (Field.absoluteGaloisGroup k) (AlgebraicClosure k) :=
+    ⟨fun a σ b => by
+      change a • (show AlgebraicClosure k ≃ₐ[k] AlgebraicClosure k from σ) b =
+        (show AlgebraicClosure k ≃ₐ[k] AlgebraicClosure k from σ) (a • b)
+      exact (map_smul (show AlgebraicClosure k ≃ₐ[k] AlgebraicClosure k from σ) a b).symm⟩
+  exact TensorProduct.leftDistribMulAction
+
+private theorem stabilizer_scalarExtension_isOpen {A : Type v} [AddCommMonoid A] [Module k A]
     (x : AlgebraicClosure k ⊗[k] A) :
     IsOpen (MulAction.stabilizer (Field.absoluteGaloisGroup k) x :
       Set (Field.absoluteGaloisGroup k)) := by

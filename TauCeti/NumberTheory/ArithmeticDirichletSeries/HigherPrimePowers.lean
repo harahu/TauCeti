@@ -347,7 +347,7 @@ theorem higherPrimePowerTheta_isLittleO (K : Type*) [Field K] [NumberField K] :
 multiple of the standard logarithmic weight on the higher prime powers.  This is an inequality on
 the weight alone, with no reference to any Euler product. -/
 theorem primePowerSummatory_isBigO_of_le_higherPrimePowerWeight
-    (K : Type*) [Field K] [NumberField K] {E : Type*} [NormedAddCommGroup E]
+    (K : Type*) [Field K] [NumberField K] {E : Type*} [SeminormedAddCommGroup E]
     {w : IdealPrimePower K → E} {C : ℝ} (hC : 0 ≤ C)
     (hw : ∀ A, ‖w A‖ ≤ C * higherPrimePowerWeight A) :
     (fun x ↦ primePowerSummatory K w x) =O[atTop] fun x : ℝ ↦ Real.sqrt x * Real.log x ^ 2 := by

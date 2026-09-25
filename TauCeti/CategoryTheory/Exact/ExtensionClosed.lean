@@ -71,13 +71,19 @@ universe v v' u u'
 
 variable {C : Type u} [Category.{v} C] [Preadditive C]
 
-variable [HasZeroObject C] [HasBinaryBiproducts C]
+section BinaryProducts
+
+variable [HasZeroObject C] [HasBinaryProducts C]
 
 /-- A full subcategory of an additive category closed under binary products has binary
 biproducts: in a preadditive category binary products already are biproducts. -/
 instance (P : ObjectProperty C) [P.IsClosedUnderBinaryProducts] :
     HasBinaryBiproducts P.FullSubcategory :=
   HasBinaryBiproducts.of_hasBinaryProducts
+
+end BinaryProducts
+
+variable [HasZeroObject C] [HasBinaryBiproducts C]
 
 namespace ExactStructure
 
@@ -165,7 +171,7 @@ private theorem conflation_fullSubcategory_of_splitting {S : ShortComplex P.Full
 
 section ZeroObject
 
-variable [P.ContainsZero]
+variable [HasZeroObject P.FullSubcategory]
 
 /-- E0 for the induced class: identity morphisms are inflations. -/
 private theorem isInflation_id_fullSubcategory (X : P.FullSubcategory) :

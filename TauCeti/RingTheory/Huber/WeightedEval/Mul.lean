@@ -68,6 +68,7 @@ section Summable
 variable {k : ℕ} {A B : Type*} [CommRing A] [CommRing B] [TopologicalSpace B] [T3Space B]
   [IsTopologicalRing B] {φ : A →+* B} {b : Fin k → B}
 
+omit [IsTopologicalRing B] in
 /-- **The evaluation is multiplicative**, at the level where that is true: three summable
 families. Nothing topological about `A`, no weights and no restrictedness — those exist only to
 *produce* summability, and the results below are this one composed with ways of producing it.
@@ -75,7 +76,7 @@ families. Nothing topological about `A`, no weights and no restrictedness — th
 The third hypothesis, summability over *pairs*, is what the Cauchy product needs and does not
 follow from the other two in general; in a nonarchimedean target it does, which is how
 `TauCeti.Huber.weightedEval_mul` discharges it. -/
-theorem weightedEval_mul_of_summable {f g : MvPowerSeries (Fin k) A}
+theorem weightedEval_mul_of_summable [IsTopologicalSemiring B] {f g : MvPowerSeries (Fin k) A}
     (hf : Summable (weightedEvalTerm φ b f)) (hg : Summable (weightedEvalTerm φ b g))
     (hfg : Summable fun p : (Fin k →₀ ℕ) × (Fin k →₀ ℕ) ↦
       weightedEvalTerm φ b f p.1 * weightedEvalTerm φ b g p.2) :

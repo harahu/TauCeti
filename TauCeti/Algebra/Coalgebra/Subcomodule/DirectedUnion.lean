@@ -39,6 +39,18 @@ universe u v w x
 
 namespace Subcomodule
 
+section TopEquiv
+
+variable {R : Type u} {M : Type w} [Semiring R] [AddCommMonoid M] [Module R M]
+
+private theorem topEquiv_symm_apply (m : M) :
+    (Submodule.topEquiv (R := R) (M := M)).symm m =
+      (⟨m, Submodule.mem_top⟩ : (⊤ : Submodule R M)) := by
+  apply (Submodule.topEquiv (R := R) (M := M)).injective
+  simp
+
+end TopEquiv
+
 variable {R : Type u} {C : Type v} {M : Type w} {P : Type x}
 variable [CommSemiring R]
 variable [AddCommMonoid C] [Module R C] [Coalgebra R C]
@@ -54,12 +66,6 @@ private theorem finiteSubcomodule_directed_toSubmodule :
   intro N Q
   obtain ⟨K, hNK, hQK⟩ := directedOn_finiteSubcomodules.directed_val N Q
   exact ⟨K, toSubmodule_le_toSubmodule.2 hNK, toSubmodule_le_toSubmodule.2 hQK⟩
-
-private theorem topEquiv_symm_apply (m : M) :
-    (Submodule.topEquiv (R := R) (M := M)).symm m =
-      (⟨m, Submodule.mem_top⟩ : (⊤ : Submodule R M)) := by
-  apply (Submodule.topEquiv (R := R) (M := M)).injective
-  simp
 
 private theorem iSup_finiteSubcomodule_toSubmodule_eq_top
     (hM : ∀ m : M, ∃ N : Subcomodule R C M, Module.Finite R N.toSubmodule ∧ m ∈ N) :
