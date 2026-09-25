@@ -148,8 +148,9 @@ private theorem sum_chainLeTwoIndex_diag_flip {B : Type*} [AddCommMonoid B] (F :
 -- monomial `t ^ m u ^ n` factors accordingly as `u ^ a (t u) ^ b (t ^ 2 u) ^ c t ^ q`. The proof
 -- is the four-factor analogue of the class-two argument in
 -- `TauCeti.RingTheory.Nilpotent.ChevalleyCommutator`, and follows it step for step.
-private theorem sum_smul_mul_sum_smul_of_chainLeTwoOrder {R : Type*} [CommRing R]
-    {B : Type*} [Ring B] [Algebra R B] (Dx Dy Dz Dw : ℕ → B) (N : ℕ)
+private theorem sum_smul_mul_sum_smul_of_chainLeTwoOrder {R : Type*} [CommSemiring R]
+    {B : Type*} [NonUnitalSemiring B] [DistribMulAction R B] [IsScalarTower R B B]
+    [SMulCommClass R B B] (Dx Dy Dz Dw : ℕ → B) (N : ℕ)
     (hno : ∀ m n, Dx m * Dy n =
       ∑ p ∈ Associative.chainLeTwoIndex m n,
         Dy (n - p.1 - p.2) * Dz p.1 * Dw p.2 * Dx (m - p.1 - 2 * p.2))

@@ -119,7 +119,7 @@ local instance algebraRatAdjoinRange :
 
 /-- The integer defining equation `root i ² = d i` recast with base field `ℚ`. Only characteristic
 zero is needed (for the `ℤ → ℚ → L` scalar tower). -/
-private theorem root_sq_algebraMap_rat {L : Type*} [Field L] [CharZero L] {root : ι → L}
+private theorem root_sq_algebraMap_rat {L : Type*} [DivisionRing L] [CharZero L] {root : ι → L}
     {d : ι → ℤ} (hroot : ∀ i, root i ^ 2 = algebraMap ℤ L (d i)) (i : ι) :
     root i ^ 2 = algebraMap ℚ L (d i : ℚ) := by
   rw [hroot i, IsScalarTower.algebraMap_apply ℤ ℚ L]; simp

@@ -83,7 +83,30 @@ namespace WeierstrassCurve
 
 open MvPowerSeries
 
-variable {R : Type*} [CommRing R] (W : WeierstrassCurve R)
+variable {R : Type*}
+
+section CommSemiring
+
+variable [CommSemiring R] (W : WeierstrassCurve R)
+
+/-- **The `z`-cancelled `w`-equation.** If `z · L = w(z)` then `L` satisfies the equation obtained
+from the `w`-equation by cancelling one factor of `z`. This is the coefficient identity the
+third-root comparison runs on, and the only place the `w`-equation enters this file. -/
+private theorem wEquation_of_X_mul {L : PowerSeries R}
+    (hXL : PowerSeries.X * L = formalW W) :
+    L = PowerSeries.X ^ 2 + PowerSeries.C W.a₁ * PowerSeries.X * L +
+      PowerSeries.C W.a₂ * PowerSeries.X ^ 2 * L + PowerSeries.C W.a₃ * PowerSeries.X * L ^ 2 +
+      PowerSeries.C W.a₄ * PowerSeries.X ^ 2 * L ^ 2 +
+      PowerSeries.C W.a₆ * PowerSeries.X ^ 2 * L ^ 3 := by
+  refine PowerSeries.X_mul_cancel ?_
+  rw [hXL]
+  conv_lhs => rw [formalW_wEquation W, wEquationRHS_powerSeries]
+  rw [← hXL]
+  ring
+
+end CommSemiring
+
+variable [CommRing R] (W : WeierstrassCurve R)
 
 /-! ### Setting the second parameter to zero -/
 
@@ -142,21 +165,6 @@ private theorem subst_unitR_formalIntercept :
   linear_combination -X_mul_subst_unitR_formalSlope W
 
 /-! ### The third point of a chord through the origin -/
-
-/-- **The `z`-cancelled `w`-equation.** If `z · L = w(z)` then `L` satisfies the equation obtained
-from the `w`-equation by cancelling one factor of `z`. This is the coefficient identity the
-third-root comparison runs on, and the only place the `w`-equation enters this file. -/
-private theorem wEquation_of_X_mul {L : PowerSeries R}
-    (hXL : PowerSeries.X * L = formalW W) :
-    L = PowerSeries.X ^ 2 + PowerSeries.C W.a₁ * PowerSeries.X * L +
-      PowerSeries.C W.a₂ * PowerSeries.X ^ 2 * L + PowerSeries.C W.a₃ * PowerSeries.X * L ^ 2 +
-      PowerSeries.C W.a₄ * PowerSeries.X ^ 2 * L ^ 2 +
-      PowerSeries.C W.a₆ * PowerSeries.X ^ 2 * L ^ 3 := by
-  refine PowerSeries.X_mul_cancel ?_
-  rw [hXL]
-  conv_lhs => rw [formalW_wEquation W, wEquationRHS_powerSeries]
-  rw [← hXL]
-  ring
 
 /-- **The substituted third root, expanded.** Setting the second parameter to zero sends
 `formalThirdRoot` to `-z` minus the `a₁`/`a₃` numerator over the specialized denominator: every

@@ -67,7 +67,7 @@ attribute [local instance] Subgroup.fintypeQuotientOfFiniteIndex
 /-- The corestriction sum on the transversal `{1, s}`, evaluated on an element of `U`, has the
 two terms `f γ` and `s • f (s⁻¹ γ s)`. -/
 @[simp]
-theorem sum_indexTwoTransversal_smul_lWord [AddCommMonoid M] [DistribMulAction G M]
+theorem sum_indexTwoTransversal_smul_lWord [AddCommMonoid M] [MulAction G M]
     (hU : U.index = 2) {s : G} (hs : s ∉ U) (f : U → M) (γ : G) (hγ : γ ∈ U) :
     letI : U.FiniteIndex := ⟨by omega⟩
     ∑ u, U.indexTwoTransversal s u •

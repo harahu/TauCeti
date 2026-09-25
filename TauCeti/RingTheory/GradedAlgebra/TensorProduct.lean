@@ -144,9 +144,9 @@ noncomputable instance instGradedAlgebraGradedTensorGrading :
     GradedAlgebra (gradedTensorGrading 𝒜 ℬ) :=
   (isInternal_gradedTensorGrading 𝒜 ℬ).gradedAlgebra
 
-section Lift
+section LiftMem
 
-variable {C : Type uC} [Ring C] [Algebra R C]
+variable {C : Type uC} [Semiring C] [Algebra R C]
   (𝒞 : ℤ → Submodule R C) [GradedAlgebra 𝒞]
 
 private theorem gradedTensorLift_map_mem (F : (𝒜 ᵍ⊗[R] ℬ) →ₐ[R] C)
@@ -160,6 +160,13 @@ private theorem gradedTensorLift_map_mem (F : (𝒜 ᵍ⊗[R] ℬ) →ₐ[R] C)
   -- `GradedAlgHom` coercions before normalizing the degree.
   change f a * g b ∈ 𝒞 (p + (n - p)) at hfg
   simpa only [add_sub_cancel] using hfg
+
+end LiftMem
+
+section Lift
+
+variable {C : Type uC} [Ring C] [Algebra R C]
+  (𝒞 : ℤ → Submodule R C) [GradedAlgebra 𝒞]
 
 /-- The graded algebra map out of a graded tensor product induced by two graded algebra maps whose
 images satisfy the Koszul commutation rule. -/

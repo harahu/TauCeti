@@ -149,7 +149,7 @@ theorem proCKernel_le {U : OpenNormalSubgroup G} (hU : C.MemFinite (G ⧸ U.toSu
   fun _ hx ↦ mem_proCKernel_iff.mp hx U hU
 
 /-- The `C`-kernel is closed, so its quotient is profinite when `G` is profinite. -/
-instance isClosed_proCKernel [IsTopologicalGroup G] :
+instance isClosed_proCKernel [SeparatelyContinuousMul G] :
     IsClosed ((proCKernel C G : Subgroup G) : Set G) := by
   rw [proCKernel, Subgroup.coe_iInf]
   exact isClosed_iInter fun U ↦ U.1.toOpenSubgroup.isClosed
@@ -232,12 +232,12 @@ theorem proCCompletion.map_comp {K : Type x} [Group K] [TopologicalSpace K] (f :
 
 section Compact
 
-variable [IsTopologicalGroup G] [CompactSpace G]
+variable [SeparatelyContinuousMul G] [CompactSpace G]
 
 /-- An open subgroup containing the `C`-kernel contains an open normal subgroup whose quotient
 lies in `C`. -/
-theorem exists_openNormalSubgroup_memFinite_le {M : Subgroup G} (hM : IsOpen (M : Set G))
-    (hKM : proCKernel C G ≤ M) :
+theorem exists_openNormalSubgroup_memFinite_le {M : Subgroup G}
+    (hM : IsOpen (M : Set G)) (hKM : proCKernel C G ≤ M) :
     ∃ U : OpenNormalSubgroup G, C.MemFinite (G ⧸ U.toSubgroup) ∧ U.toSubgroup ≤ M := by
   -- The defining family, and the closed sets it cuts out outside `M`.
   let S : Type v := {U : OpenNormalSubgroup G // C.MemFinite (G ⧸ U.toSubgroup)}
@@ -455,18 +455,21 @@ section Comparison
 
 variable [IsTopologicalGroup G] [CompactSpace G] {p : ℕ}
 
+omit [IsTopologicalGroup G] in
 /-- For the class of finite `p`-groups, being pro-`C` is being pro-`p`. -/
-theorem isProC_finiteGroupClassP_iff : IsProC (finiteGroupClassP.{v} p) G ↔ IsProP p G := by
+theorem isProC_finiteGroupClassP_iff [SeparatelyContinuousMul G] :
+    IsProC (finiteGroupClassP.{v} p) G ↔ IsProP p G := by
   rw [isProC_iff, isProP_iff]
   refine forall_congr' fun U ↦ ?_
   have : Finite (G ⧸ U.toSubgroup) := Subgroup.quotient_finite_of_isOpen _ U.toOpenSubgroup.isOpen
   exact FiniteGroupClass.memFinite_iff.trans (finiteGroupClassP_mem_iff p _)
 
+omit [IsTopologicalGroup G] in
 /-- **The `C`-kernel of the class of finite `p`-groups is the pro-`p` kernel.** The two
 subgroups are cut out by different index sets: the pro-`p` kernel by the open normal subgroups
 with `p`-group quotient, the `C`-kernel by those whose quotient is in addition recorded as
 finite, which for a compact group is automatic. -/
-theorem proCKernel_finiteGroupClassP_eq_proPKernel :
+theorem proCKernel_finiteGroupClassP_eq_proPKernel [SeparatelyContinuousMul G] :
     proCKernel (finiteGroupClassP.{v} p) G = proPKernel p G := by
   refine SetLike.ext fun x ↦ ?_
   rw [mem_proCKernel_iff, mem_proPKernel_iff]

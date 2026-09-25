@@ -47,10 +47,10 @@ namespace TauCeti
 
 universe u v w
 
-/-- A Hopf algebra remains nontrivial after extension of its base field. -/
+/-- A Hopf algebra remains nontrivial after extension of scalars to a nontrivial algebra. -/
 private theorem nontrivial_tensorProduct
     (k : Type u) [Field k] (H : CommHopfAlgCat.{v} k)
-    (K : Type u) [Field K] [Algebra k K] :
+    (K : Type u) [Semiring K] [Nontrivial K] [Algebra k K] :
     Nontrivial ((H : Type v) ⊗[k] K) := by
   let : Nontrivial (H : Type v) := Bialgebra.nontrivial k
   exact Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_flat_left

@@ -52,7 +52,7 @@ open TensorProduct
 universe u v
 
 variable {A : Type*} [Ring A] [Algebra ℚ A]
-variable {V : Type u} [AddCommGroup V] [Module ℚ V] [Module A V] [IsScalarTower ℚ A V]
+variable {V : Type u} [AddCommGroup V] [Module ℚ V]
 variable {S : Type*} [SetLike S V] [AddSubgroupClass S V]
 
 /-! ## Transporting powers and divided powers -/
@@ -72,7 +72,9 @@ theorem apply_pow_smul_of_intertwines (hxy : ∀ v, f (x • v) = y • f v) (n 
 
 end Powers
 
-variable (θ : V →ₗ[ℚ] V) {x y : A}
+section MulAction
+
+variable [MulAction A V] [IsScalarTower ℚ A V] (θ : V →ₗ[ℚ] V) {x y : A}
 
 /-- A linear map intertwining the actions of `x` and `y` intertwines the actions of their
 divided powers.
@@ -84,7 +86,9 @@ theorem apply_dividedPower_smul_of_intertwines (hxy : ∀ v, θ (x • v) = y �
   rw [Associative.dividedPower_def, Associative.dividedPower_def, smul_assoc, smul_assoc,
     map_smul, apply_pow_smul_of_intertwines θ hxy]
 
-variable (θ : V ≃ₗ[ℚ] V)
+end MulAction
+
+variable [Module A V] [IsScalarTower ℚ A V] {x y : A} (θ : V ≃ₗ[ℚ] V)
 
 /-! ## Conjugating the base-changed exponential -/
 

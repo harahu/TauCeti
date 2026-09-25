@@ -141,9 +141,11 @@ private theorem extendByZeroLpₗᵢ_testFunctionLp (hsub : Omega ≤ Omega') (p
         (TestFunction.monoCLM ℝ phi)] with x hx
       rw [hx, coe_monoCLM hsub phi]
 
+omit [BorelSpace E] [mu.IsAddHaarMeasure] in
 /-- Extending a test function's gradient by zero gives the gradient of the same test function on
 the larger open set. -/
-private theorem extendByZeroLpₗᵢ_gradientTestFunctionLp (hsub : Omega ≤ Omega')
+private theorem extendByZeroLpₗᵢ_gradientTestFunctionLp [OpensMeasurableSpace E]
+    [IsFiniteMeasureOnCompacts mu] (hsub : Omega ≤ Omega')
     (phi : 𝓓(Omega, ℝ)) :
     extendByZeroLpₗᵢ ℝ mu Omega.isOpen.measurableSet (SetLike.coe_subset_coe.mpr hsub)
         (gradientTestFunctionLp p phi) =

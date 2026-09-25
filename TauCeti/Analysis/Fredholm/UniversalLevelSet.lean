@@ -59,7 +59,7 @@ restricted to the effect of changing the parameter. -/
 private noncomputable def parameterObstruction {F : Type*} [SeminormedAddCommGroup F]
     [NormedSpace 𝕜 F]
     {E : Type*} [SeminormedAddCommGroup E] [NormedSpace 𝕜 E] {D₁ : E →L[𝕜] F}
-    {Λ : Type*} [SeminormedAddCommGroup Λ] [Module 𝕜 Λ] {D₂ : Λ →L[𝕜] F}
+    {Λ : Type*} [TopologicalSpace Λ] [AddCommMonoid Λ] [Module 𝕜 Λ] {D₂ : Λ →L[𝕜] F}
     (pkg : ContinuousLinearMap.FredholmPackage D₁) :
     Λ →L[𝕜] pkg.decCodom.X₀ :=
   (pkg.decCodom.X₀.projectionOntoL pkg.decCodom.X₁ pkg.decCodom.isTopCompl.symm).comp D₂
@@ -69,7 +69,7 @@ space of a Fredholm package. -/
 private theorem parameterObstruction_surjective {F : Type*} [SeminormedAddCommGroup F]
     [NormedSpace 𝕜 F]
     {E : Type*} [SeminormedAddCommGroup E] [NormedSpace 𝕜 E] {D₁ : E →L[𝕜] F}
-    {Λ : Type*} [SeminormedAddCommGroup Λ] [Module 𝕜 Λ] {D₂ : Λ →L[𝕜] F}
+    {Λ : Type*} [TopologicalSpace Λ] [AddCommMonoid Λ] [Module 𝕜 Λ] {D₂ : Λ →L[𝕜] F}
     (pkg : ContinuousLinearMap.FredholmPackage D₁)
     (hD : Function.Surjective (D₁.coprod D₂)) :
     Function.Surjective (parameterObstruction (D₂ := D₂) pkg) := by

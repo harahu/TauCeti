@@ -65,7 +65,11 @@ open PathAlgebra DoubledQuiver
 
 universe u w
 
-variable (k : Type w) [CommRing k] {V : Type u} (G : SimpleGraph V)
+variable (k : Type w) {V : Type u} (G : SimpleGraph V)
+
+section Semiring
+
+variable [Semiring k]
 
 /-! ### A chosen backtrack at each vertex -/
 
@@ -94,6 +98,10 @@ private theorem ofPath_volumePath_eq_backtrackElem (hns : ∀ i : V, ∃ j, G.Ad
       = backtrackElem G k (volumeDart G hns i).adj := by
   rw [volumePath, volumeLoop, dite_eq_left (hns i), backtrackElem_eq_ofPath]
   rfl
+
+end Semiring
+
+variable [CommRing k]
 
 /-! ### Volume classes -/
 

@@ -122,10 +122,10 @@ theorem shortExact_map_quotientToInvariantsFunctor {X : ShortComplex (Rep k G)}
 
 section IsCocycle₂
 
-variable {K A : Type*} [Monoid K] [AddCommGroup A] [MulAction K A]
+variable {K A : Type*} [Mul K] [AddCommGroup A] [SMul K A]
 
 /-- A `2`-cocycle identity along two adjacent commuting squares: if `d * a' = a * d₁` and
-`d₁ * b' = b * d₂` in a monoid `K`, then for a `2`-cocycle `f : K × K → A`, `d • f (a', b')` is an
+`d₁ * b' = b * d₂` in `K`, then for a `2`-cocycle `f : K × K → A`, `d • f (a', b')` is an
 alternating sum of the values of `f` at the sides of the two squares and at the products `a' * b'`
 and `a * b`. -/
 theorem smul_map_eq_of_isCocycle₂_of_mul_eq_mul {f : K × K → A} (hf : IsCocycle₂ f)

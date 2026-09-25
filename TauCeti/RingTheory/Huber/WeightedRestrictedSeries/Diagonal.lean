@@ -69,7 +69,30 @@ open Filter Topology Finsupp MvPowerSeries
 
 namespace TauCeti.Huber
 
-variable {A : Type*} [CommRing A]
+variable {A : Type*}
+
+section Semiring
+
+variable [Semiring A]
+
+private theorem coeff_add_single_X_one_mul (q : MvPowerSeries (Fin 2) A) (μ : Fin 2 →₀ ℕ) :
+    coeff (μ + single 1 1) (X 1 * q) = coeff μ q := by
+  rw [add_comm, X_def, coeff_add_monomial_mul, one_mul]
+
+end Semiring
+
+section CommSemiring
+
+variable [CommSemiring A]
+
+private theorem coeff_X_one_mul_rename_succEmb_eq_zero (p : MvPowerSeries (Fin 1) A)
+    {ν : Fin 2 →₀ ℕ} (hν : ν 0 ≠ 0) : coeff ν (X 1 * rename (Fin.succEmb 1) p) = 0 := by
+  rw [X_def, coeff_monomial_mul, one_mul, ite_eq_right_iff]
+  exact fun _ ↦ coeff_rename_eq_zero_of_apply_ne_zero (j := 0) _ p (by simp) (by simpa using hν)
+
+end CommSemiring
+
+variable [CommRing A]
 
 /-! ### Sums along a diagonal -/
 
@@ -101,15 +124,6 @@ private theorem coeff_one_sub_X_mul_X_mul (w : MvPowerSeries (Fin 2) A) (ν : Fi
     coeff ν ((1 - X 0 * X 1) * w) =
       coeff ν w - if diagStep ≤ ν then coeff (ν - diagStep) w else 0 := by
   simp [sub_mul, X_def, monomial_mul_monomial, coeff_monomial_mul]
-
-private theorem coeff_X_one_mul_rename_succEmb_eq_zero (p : MvPowerSeries (Fin 1) A)
-    {ν : Fin 2 →₀ ℕ} (hν : ν 0 ≠ 0) : coeff ν (X 1 * rename (Fin.succEmb 1) p) = 0 := by
-  rw [X_def, coeff_monomial_mul, one_mul, ite_eq_right_iff]
-  exact fun _ ↦ coeff_rename_eq_zero_of_apply_ne_zero (j := 0) _ p (by simp) (by simpa using hν)
-
-private theorem coeff_add_single_X_one_mul (q : MvPowerSeries (Fin 2) A) (μ : Fin 2 →₀ ℕ) :
-    coeff (μ + single 1 1) (X 1 * q) = coeff μ q := by
-  rw [add_comm, X_def, coeff_add_monomial_mul, one_mul]
 
 private theorem coeff_add_diagStep_one_sub_X_mul_X_mul (w : MvPowerSeries (Fin 2) A)
     (μ : Fin 2 →₀ ℕ) :

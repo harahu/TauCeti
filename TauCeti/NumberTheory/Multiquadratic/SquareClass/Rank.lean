@@ -44,11 +44,11 @@ public section
 
 namespace TauCeti.Multiquadratic
 
-variable {K L : Type*} [Field K] [Field L] [Algebra K L]
+variable {K L : Type*} [Field K]
 
-/-- The only nonzero element of `ZMod 2` is `1`. -/
-private theorem eq_one_of_ne_zero {t : ZMod 2} (ht : t ≠ 0) : t = 1 := by
-  revert ht; revert t; decide
+section Semiring
+
+variable [Semiring L] [Nontrivial L] [Algebra K L]
 
 /-- A root of a unit radicand is nonzero. -/
 private theorem root_ne_zero {ι : Type*} {d : ι → Kˣ} {root : ι → L}
@@ -57,6 +57,14 @@ private theorem root_ne_zero {ι : Type*} {d : ι → Kˣ} {root : ι → L}
   have h2 := hroot i
   rw [h, zero_pow two_ne_zero] at h2
   exact (d i).ne_zero ((algebraMap K L).injective (by rw [← h2, map_zero]))
+
+end Semiring
+
+variable [Field L] [Algebra K L]
+
+/-- The only nonzero element of `ZMod 2` is `1`. -/
+private theorem eq_one_of_ne_zero {t : ZMod 2} (ht : t ≠ 0) : t = 1 := by
+  revert ht; revert t; decide
 
 /-- **The converse of square-class descent.** If the square class of the radicand `d i` lies in
 the span of the square classes of the radicands indexed by `s`, then the root `root i` lies in

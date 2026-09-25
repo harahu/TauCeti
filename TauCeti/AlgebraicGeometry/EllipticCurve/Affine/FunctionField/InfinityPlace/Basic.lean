@@ -157,26 +157,26 @@ private theorem natDegree_norm_add_le (a₁ b₁ a₂ b₂ : R[X]) :
   le_max_iff.2 <| (le_max_iff.1 <| degree_norm_add_le W a₁ b₁ a₂ b₂).imp natDegree_le_natDegree
     natDegree_le_natDegree
 
-end DomainCore
-
-
-variable {F : Type*} [Field F] (W : WeierstrassCurve.Affine F)
-
 /-- **Two functions over a common denominator**: `f = (a₁ + b₁ y) / p` and `g = (a₂ + b₂ y) / p`
 with `p ≠ 0` — the form the degree formula consumes: numerators in the `1, Y` basis, one shared
 polynomial denominator. -/
 private theorem exists_common_smul_basis_div (f g : W.FunctionField) :
-    ∃ a₁ b₁ a₂ b₂ p : F[X], p ≠ 0 ∧
-      f * algebraMap F[X] W.FunctionField p =
+    ∃ a₁ b₁ a₂ b₂ p : R[X], p ≠ 0 ∧
+      f * algebraMap R[X] W.FunctionField p =
         algebraMap W.CoordinateRing W.FunctionField (a₁ • 1 + b₁ • CoordinateRing.mk W Y) ∧
-      g * algebraMap F[X] W.FunctionField p =
+      g * algebraMap R[X] W.FunctionField p =
         algebraMap W.CoordinateRing W.FunctionField (a₂ • 1 + b₂ • CoordinateRing.mk W Y) := by
   obtain ⟨u₁, u₂, ⟨-, p, hp, rfl⟩, h₁, h₂⟩ := IsLocalization.surj₂
-    (Algebra.algebraMapSubmonoid W.CoordinateRing (nonZeroDivisors F[X])) W.FunctionField f g
+    (Algebra.algebraMapSubmonoid W.CoordinateRing (nonZeroDivisors R[X])) W.FunctionField f g
   obtain ⟨a₁, b₁, rfl⟩ := CoordinateRing.exists_smul_basis_eq u₁
   obtain ⟨a₂, b₂, rfl⟩ := CoordinateRing.exists_smul_basis_eq u₂
-  rw [← IsScalarTower.algebraMap_apply F[X] W.CoordinateRing W.FunctionField] at h₁ h₂
+  rw [← IsScalarTower.algebraMap_apply R[X] W.CoordinateRing W.FunctionField] at h₁ h₂
   exact ⟨a₁, b₁, a₂, b₂, p, nonZeroDivisors.ne_zero hp, h₁, h₂⟩
+
+end DomainCore
+
+
+variable {F : Type*} [Field F] (W : WeierstrassCurve.Affine F)
 
 /-- **The ultrametric inequality on the function field.** -/
 private theorem intDegree_norm_add_le {f g : W.FunctionField} (hf : f ≠ 0) (hg : g ≠ 0)

@@ -257,7 +257,7 @@ of the first coordinate given the second is the real Gaussian law with mean
 first block.  Positive definiteness of the observed block says exactly that `v₂` is positive; if
 `v₁` vanishes as well then `ρ` is again the totalized `0` and the law is the Dirac law at `m₁`. -/
 theorem condDistrib_multivariateGaussian_of_unique {Ω : Type*} [MeasurableSpace Ω]
-    {P : Measure Ω} [IsProbabilityMeasure P] [Unique ι] [Unique κ] [DecidableEq ι] [DecidableEq κ]
+    {P : Measure Ω} [IsFiniteMeasure P] [Unique ι] [Unique κ] [DecidableEq ι] [DecidableEq κ]
     (X : Ω → EuclideanSpace ℝ (ι ⊕ κ)) (m : EuclideanSpace ℝ (ι ⊕ κ))
     {S : Matrix (ι ⊕ κ) (ι ⊕ κ) ℝ} (hX : HasLaw X (multivariateGaussian m S) P)
     (hS : S.PosSemidef) (hS₂₂ : (S.submatrix Sum.inr Sum.inr).PosDef) {v₁ v₂ ρ : ℝ}

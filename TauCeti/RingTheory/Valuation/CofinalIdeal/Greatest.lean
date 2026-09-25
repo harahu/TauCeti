@@ -264,6 +264,54 @@ theorem isGreatestIdealCofinal_top_of_forall_eq_zero {v : Valuation A Γ₀} {I 
     (h : ∀ a ∈ I, v a = 0) : IsGreatest {K | IdealCofinalFor v K I} ⊤ :=
   ⟨fun a ha ↦ cofinalValueFor_of_eq_zero (h a ha), fun _ _ ↦ le_top⟩
 
+/-- The value of a power is the power of the value, read in the value group rather than in
+`ValueGroup₀`. Both the disjointness argument and the construction below need it, at the two
+different generators they work with. -/
+private theorem restrict_pow_eq_mk_pow {v : Valuation A Γ₀} {t : A}
+    (ht0 : v t ≠ 0) (n : ℕ) :
+    v.restrict (t ^ n)
+      = ((valueGroup.mk (v : A →*₀ Γ₀) 1 t (by simp) ht0 ^ n : v.valueGroup) :
+          v.ValueGroup₀) := by
+  rw [map_pow, v.restrict_eq_mk ht0]
+  simp
+
+/-- Under Wedhorn's disjointness hypothesis the class of a generator stays out of `cΓ_v`: were
+it inside, so would be its `n`-th power, which is the class of `t ^ n ∈ I` — exactly the
+meeting that is excluded. -/
+private theorem not_mem_characteristicSubgroup_of_pow_mem {v : Valuation A Γ₀} {I : Ideal A}
+    (hdisj : ¬ IdealMeetsCharacteristicSubgroup v I) {t : A}
+    (ht0 : v t ≠ 0) {n : ℕ} (hn : t ^ n ∈ I) :
+    valueGroup.mk (v : A →*₀ Γ₀) 1 t (by simp) ht0 ∉ characteristicSubgroup v := by
+  intro hmem
+  have hn0 : v (t ^ n) ≠ 0 := by
+    simpa [map_pow] using pow_ne_zero n ht0
+  refine hdisj ⟨t ^ n, hn, hn0, ?_⟩
+  have hclass : valueGroup.mk (v : A →*₀ Γ₀) 1 (t ^ n) (by simp) hn0
+      = valueGroup.mk (v : A →*₀ Γ₀) 1 t (by simp) ht0 ^ n :=
+    mod_cast (v.restrict_eq_mk hn0).symm.trans (restrict_pow_eq_mk_pow ht0 n)
+  rw [hclass]
+  exact pow_mem hmem n
+
+section CommSemiring
+
+variable {A : Type*} [CommSemiring A]
+
+/-- Radical membership upgraded to a *nonzero* exponent: if `√I = √J` then every element of `I`
+has a positive power in `J`. The exponent `0` is harmless to exclude, since `a ^ 0 ∈ J` forces
+`J = ⊤`, and then `a ^ 1 ∈ J` too.
+
+Used in both directions below — to move from `I` into the finitely generated `J`, and back. -/
+private theorem exists_pow_ne_zero_mem_of_radical_eq {I J : Ideal A}
+    (hrad : I.radical = J.radical) {a : A} (ha : a ∈ I) : ∃ n, n ≠ 0 ∧ a ^ n ∈ J := by
+  obtain ⟨n, hn⟩ := Ideal.mem_radical_iff.mp (hrad ▸ Ideal.le_radical ha)
+  rcases Nat.eq_zero_or_pos n with rfl | hp
+  · refine ⟨1, one_ne_zero, ?_⟩
+    have h1 : (1 : A) ∈ J := by simpa using hn
+    simp [(Ideal.eq_top_iff_one J).mpr h1]
+  · exact ⟨n, hp.ne', hn⟩
+
+end CommSemiring
+
 /-! ### Reduction along the radical
 
 From here commutativity is needed: the radical of an ideal is Mathlib's `Ideal.radical`, which
@@ -322,20 +370,6 @@ theorem isGreatestIdealCofinal_closure_singleton_of_span {v : Valuation A Γ₀}
     have := le_closure_singleton_of_idealCofinalFor hatt ((pow_lt_one_iff hn).mpr hlt) hK
     rwa [TauCeti.ConvexSubgroup.closure_singleton_pow hn] at this
 
-/-- Radical membership upgraded to a *nonzero* exponent: if `√I = √J` then every element of `I`
-has a positive power in `J`. The exponent `0` is harmless to exclude, since `a ^ 0 ∈ J` forces
-`J = ⊤`, and then `a ^ 1 ∈ J` too.
-
-Used in both directions below — to move from `I` into the finitely generated `J`, and back. -/
-private theorem exists_pow_ne_zero_mem_of_radical_eq {I J : Ideal A}
-    (hrad : I.radical = J.radical) {a : A} (ha : a ∈ I) : ∃ n, n ≠ 0 ∧ a ^ n ∈ J := by
-  obtain ⟨n, hn⟩ := Ideal.mem_radical_iff.mp (hrad ▸ Ideal.le_radical ha)
-  rcases Nat.eq_zero_or_pos n with rfl | hp
-  · refine ⟨1, one_ne_zero, ?_⟩
-    have h1 : (1 : A) ∈ J := by simpa using hn
-    simp [(Ideal.eq_top_iff_one J).mpr h1]
-  · exact ⟨n, hp.ne', hn⟩
-
 /-- If `v` vanishes on a generating set of `J` and `√I = √J`, then `v` vanishes on all of `I`.
 
 Both places where the construction below needs a nonvanishing value are contrapositives of this:
@@ -349,34 +383,6 @@ private theorem mem_supp_of_radical_eq_of_forall_mem_supp {v : Valuation A Γ₀
     exact Ideal.span_le.mpr (fun t ht ↦ hsupp t ht) hn
   rw [v.mem_supp_iff, map_pow] at hpow
   exact (v.mem_supp_iff _).mpr ((pow_eq_zero_iff hn0).mp hpow)
-
-/-- The value of a power is the power of the value, read in the value group rather than in
-`ValueGroup₀`. Both the disjointness argument and the construction below need it, at the two
-different generators they work with. -/
-private theorem restrict_pow_eq_mk_pow {v : Valuation A Γ₀} {t : A}
-    (ht0 : v t ≠ 0) (n : ℕ) :
-    v.restrict (t ^ n)
-      = ((valueGroup.mk (v : A →*₀ Γ₀) 1 t (by simp) ht0 ^ n : v.valueGroup) :
-          v.ValueGroup₀) := by
-  rw [map_pow, v.restrict_eq_mk ht0]
-  simp
-
-/-- Under Wedhorn's disjointness hypothesis the class of a generator stays out of `cΓ_v`: were
-it inside, so would be its `n`-th power, which is the class of `t ^ n ∈ I` — exactly the
-meeting that is excluded. -/
-private theorem not_mem_characteristicSubgroup_of_pow_mem {v : Valuation A Γ₀} {I : Ideal A}
-    (hdisj : ¬ IdealMeetsCharacteristicSubgroup v I) {t : A}
-    (ht0 : v t ≠ 0) {n : ℕ} (hn : t ^ n ∈ I) :
-    valueGroup.mk (v : A →*₀ Γ₀) 1 t (by simp) ht0 ∉ characteristicSubgroup v := by
-  intro hmem
-  have hn0 : v (t ^ n) ≠ 0 := by
-    simpa [map_pow] using pow_ne_zero n ht0
-  refine hdisj ⟨t ^ n, hn, hn0, ?_⟩
-  have hclass : valueGroup.mk (v : A →*₀ Γ₀) 1 (t ^ n) (by simp) hn0
-      = valueGroup.mk (v : A →*₀ Γ₀) 1 t (by simp) ht0 ^ n :=
-    mod_cast (v.restrict_eq_mk hn0).symm.trans (restrict_pow_eq_mk_pow ht0 n)
-  rw [hclass]
-  exact pow_mem hmem n
 
 /-- **A generator of greatest value, not in the support.** If `I` and `Ideal.span T` have the same
 radical and `v` does not vanish identically on `I`, then some `t₀ ∈ T` maximises `v.restrict` over

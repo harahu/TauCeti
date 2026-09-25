@@ -172,6 +172,26 @@ theorem mapEquiv_symm (e : H ≃ₐc[k] K) :
 
 end Map
 
+section ConvMul
+
+variable (k : Type u) [CommRing k]
+variable (H : Type v) [Semiring H] [Algebra k H] [CoalgebraStruct k H] [Module.Finite k H]
+  [Module.Projective k H]
+
+private theorem convMul_apply_eq_dualDistribEquiv
+    (phi psi : ConvolutionDual k H) (x : H) :
+    (phi * psi).ofConv x =
+      dualDistribEquiv k H (phi ⊗ₜ[k] psi) (Coalgebra.comul x) := by
+  rw [LinearMap.convMul_apply]
+  generalize Coalgebra.comul (R := k) x = z
+  induction z using TensorProduct.inductionOn with
+  | add z₁ z₂ hz₁ hz₂ =>
+      simpa only [map_add, LinearMap.add_apply] using
+        congrArg₂ (fun a b => a + b) hz₁ hz₂
+  | tmul a b => simp
+
+end ConvMul
+
 section Evaluation
 
 variable (k : Type u) [CommRing k]
@@ -231,18 +251,6 @@ private theorem evalAlgHom_apply_apply (x : H) (phi : ConvolutionDual k H) :
   by
     let _ : Ring H := Algebra.semiringToRing k
     rfl
-
-private theorem convMul_apply_eq_dualDistribEquiv
-    (phi psi : ConvolutionDual k H) (x : H) :
-    (phi * psi).ofConv x =
-      dualDistribEquiv k H (phi ⊗ₜ[k] psi) (Coalgebra.comul x) := by
-  rw [LinearMap.convMul_apply]
-  generalize Coalgebra.comul (R := k) x = z
-  induction z using TensorProduct.inductionOn with
-  | add z₁ z₂ hz₁ hz₂ =>
-      simpa only [map_add, LinearMap.add_apply] using
-        congrArg₂ (fun a b => a + b) hz₁ hz₂
-  | tmul a b => simp
 
 private theorem dualDistribEquiv_tensor_eval_apply
     (z : H ⊗[k] H) (phi psi : ConvolutionDual k H) :

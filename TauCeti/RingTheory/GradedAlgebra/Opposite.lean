@@ -290,22 +290,26 @@ section Multiplication
 
 variable (G : InternalGrading R A) [SetLike.GradedMonoid G.piece]
 
+omit [SetLike.GradedMonoid G.piece] in
 /-- The unit of the graded opposite is the image of the original unit. -/
 @[simp]
-theorem op_one : op G (1 : A) = 1 := by
+theorem op_one [SetLike.GradedOne G.piece] : op G (1 : A) = 1 := by
   apply (transportAlgEquiv G).injective
   rw [map_one, transportAlgEquiv_op,
     G.opposite.quadraticTwist_apply_of_mem (G.op_mem_opposite_piece_iff 0 1 |>.2
       (SetLike.one_mem_graded G.piece))]
   simp
 
+omit [SetLike.GradedMonoid G.piece] in
 @[simp]
-theorem unop_one : unop G (1 : GradedOpposite G) = 1 := by
+theorem unop_one [SetLike.GradedOne G.piece] : unop G (1 : GradedOpposite G) = 1 := by
   rw [← op_one G, unop_op]
 
+omit [SetLike.GradedMonoid G.piece] in
 /-- Multiplication in the graded opposite reverses homogeneous factors and inserts their Koszul
 sign. -/
-theorem op_mul {p q : ℤ} {a b : A} (ha : a ∈ G.piece p) (hb : b ∈ G.piece q) :
+theorem op_mul [SetLike.GradedMul G.piece] {p q : ℤ} {a b : A} (ha : a ∈ G.piece p)
+    (hb : b ∈ G.piece q) :
     op G a * op G b = (p * q).negOnePow • op G (b * a) := by
   rw [Units.smul_def]
   apply (transportAlgEquiv G).injective
@@ -357,9 +361,10 @@ theorem op_mul_op_of_even_left {q : ℤ} {b : A} (hb : b ∈ G.piece q) (hq : Ev
     LinearMap.mulRight_apply, LinearMap.mulLeft_apply, opLinearEquiv_apply] using
     LinearMap.congr_fun key a
 
+omit [SetLike.GradedMonoid G.piece] in
 /-- Returning a homogeneous product from the graded opposite reverses its factors and retains the
 Koszul sign. -/
-theorem unop_mul {p q : ℤ} {a b : GradedOpposite G}
+theorem unop_mul [SetLike.GradedMul G.piece] {p q : ℤ} {a b : GradedOpposite G}
     (ha : a ∈ (grading G).piece p) (hb : b ∈ (grading G).piece q) :
     unop G (a * b) = (p * q).negOnePow • (unop G b * unop G a) := by
   have h := op_mul G ((mem_piece_iff G p a).1 ha) ((mem_piece_iff G q b).1 hb)

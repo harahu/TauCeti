@@ -66,7 +66,11 @@ namespace TauCeti
 
 universe u v
 
-variable {k : Type u} {G : Type v} [Field k] [Group G] {H : Subgroup G} {S : Set G}
+variable {k : Type u} {G : Type v} [Group G] {H : Subgroup G} {S : Set G}
+
+section Domain
+
+variable [Semiring k] [IsDomain k]
 
 /-- **A class function vanishing at the identity of a trivial-intersection subgroup induces to a
 function agreeing with it on the subgroup.**
@@ -121,6 +125,10 @@ theorem ClassFunction.comap_subtype_ind_eq_self [Finite G] (hH : IsTISubgroup H)
   refine Subtype.ext (funext fun x => ?_)
   simp only [ClassFunction.comap_apply, ClassFunction.ind_apply, Subgroup.coe_subtype]
   exact indClassFun_apply_coe hH hk f.2 hf1 x
+
+end Domain
+
+variable [Field k]
 
 open scoped Classical in
 /-- **Induction from a trivial-intersection subgroup preserves the character pairing**, provided

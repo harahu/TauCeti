@@ -245,7 +245,7 @@ theorem exists_coupling_isOptimalCoupling (μ : ProbabilityMeasure X) (ν : Prob
 /-- The acceptance instance: on a Polish space the Kantorovich–Rubinstein cost `edist`, which is
 continuous and hence lower semicontinuous, admits an optimal transport plan between any two
 probability measures. -/
-theorem exists_isOptimalCoupling_edist {X : Type*} [MetricSpace X] [MeasurableSpace X]
+theorem exists_isOptimalCoupling_edist {X : Type*} [EMetricSpace X] [MeasurableSpace X]
     [BorelSpace X] [SecondCountableTopology X] [CompleteSpace X] (μ ν : Measure X)
     [IsProbabilityMeasure μ] [IsProbabilityMeasure ν] :
     ∃ π, IsOptimalCoupling (fun z : X × X ↦ edist z.1 z.2) π μ ν :=
@@ -254,7 +254,7 @@ theorem exists_isOptimalCoupling_edist {X : Type*} [MetricSpace X] [MeasurableSp
 /-- The cost `edist ^ p` underlying the `p`-Wasserstein distance admits an optimal transport plan
 on a Polish space. The exponent is unrestricted because `ENNReal.rpow` is continuous for every real
 exponent; the case the Wasserstein distances use is `1 ≤ p`. -/
-theorem exists_isOptimalCoupling_edist_rpow {X : Type*} [MetricSpace X] [MeasurableSpace X]
+theorem exists_isOptimalCoupling_edist_rpow {X : Type*} [EMetricSpace X] [MeasurableSpace X]
     [BorelSpace X] [SecondCountableTopology X] [CompleteSpace X] (μ ν : Measure X)
     [IsProbabilityMeasure μ] [IsProbabilityMeasure ν] (p : ℝ) :
     ∃ π, IsOptimalCoupling (fun z : X × X ↦ edist z.1 z.2 ^ p) π μ ν :=

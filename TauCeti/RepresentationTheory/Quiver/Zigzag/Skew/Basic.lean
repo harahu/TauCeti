@@ -346,9 +346,9 @@ theorem skewZigzagMk_backtrackElem_eq_smul {i j j' : V} (h : G.Adj i j) (h' : G.
 
 /-! ### The universal property -/
 
-section Lift
+section Kernel
 
-variable {B : Type*} [Ring B] [Algebra k B]
+variable {B : Type*} [Semiring B] [Algebra k B]
 
 /-- An algebra map which kills the skew relators kills the two-sided ideal they generate. -/
 theorem skewZigzagIdeal_le_ker (f : pathAlgebra k (DoubledQuiver G) →ₐ[k] B)
@@ -357,6 +357,12 @@ theorem skewZigzagIdeal_le_ker (f : pathAlgebra k (DoubledQuiver G) →ₐ[k] B)
   rw [skewZigzagIdeal, TwoSidedIdeal.span_le]
   intro x hx
   exact (TwoSidedIdeal.mem_ker f).mpr (hf x hx)
+
+end Kernel
+
+section Lift
+
+variable {B : Type*} [Ring B] [Algebra k B]
 
 /-- An algebra map which kills every skew-zigzag relator factors through the skew relation
 quotient. -/

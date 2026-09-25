@@ -251,7 +251,56 @@ theorem xCoord_genericPoint : Point.xCoord (genericPoint W) = genericX W :=
 theorem yCoord_genericPoint : Point.yCoord (genericPoint W) = genericY W :=
   Point.yCoord_some _
 
+
+/-- `W_Y` stays nonzero in the coordinate ring: its degree is below `deg W`, so it is not a
+multiple of `W`. -/
+private lemma mk_polynomialY_ne_zero :
+    WeierstrassCurve.Affine.CoordinateRing.mk W W.polynomialY ≠ 0 :=
+  AdjoinRoot.mk_ne_zero_of_natDegree_lt monic_polynomial
+    (polynomialY_ne_zero W.isUnit_Δ.ne_zero) <| by
+    rw [natDegree_polynomial, WeierstrassCurve.Affine.polynomialY]
+    have : (Polynomial.C (Polynomial.C (2 : R)) * (Y : R[X][Y])).natDegree ≤ 1 :=
+      Polynomial.natDegree_mul_le.trans
+        (by simp [Polynomial.natDegree_C, Polynomial.natDegree_X])
+    exact Nat.lt_of_le_of_lt (Polynomial.natDegree_add_le _ _)
+      (by rw [Polynomial.natDegree_C]; omega)
+
+/-- **The partial derivative `W_Y` is nonzero at the generic point** of an elliptic curve. -/
+@[simp]
+theorem evalEval_polynomialY_genericX_genericY_ne_zero :
+    (W⁄W.FunctionField).toAffine.polynomialY.evalEval (genericX W) (genericY W) ≠ 0 := by
+  have h := evalEval_genericX_genericY W W.polynomialY
+  rw [← WeierstrassCurve.Affine.map_polynomialY] at h
+  have h' :
+      (W⁄W.FunctionField).toAffine.polynomialY.evalEval (genericX W) (genericY W) =
+        algebraMap W.CoordinateRing W.FunctionField (CoordinateRing.mk W W.polynomialY) := by
+    simpa only [WeierstrassCurve.baseChange] using h
+  rw [h']
+  exact fun hz => mk_polynomialY_ne_zero W
+    ((IsFractionRing.injective W.CoordinateRing W.FunctionField).eq_iff.mp
+      (hz.trans (map_zero _).symm))
+
 end IsElliptic
+
+section Domain
+
+variable {R : Type*} [CommRing R] [IsDomain R] (W : _root_.WeierstrassCurve.Affine R)
+
+/-- **An `R`-embedding of the function field into a field extension is determined by the image of
+the generic point.** The generic point's two coordinates generate the function field over `R`, so
+an embedding is recoverable from the point it induces. -/
+theorem map_genericPoint_injective [W.IsElliptic] {Ω : Type*} [Field Ω] [Algebra R Ω]
+    [DecidableEq Ω] :
+    Function.Injective fun σ : W.FunctionField →ₐ[R] Ω ↦ Point.map σ (genericPoint W) := by
+  intro σ τ h
+  have hx : σ (genericX W) = τ (genericX W) := by
+    simpa only [Point.xCoord_map, xCoord_genericPoint] using congrArg Point.xCoord h
+  have hy : σ (genericY W) = τ (genericY W) := by
+    simpa only [Point.yCoord_map, yCoord_genericPoint] using congrArg Point.yCoord h
+  apply AlgHom.toRingHom_injective
+  exact FunctionField.ringHom_ext (fun a ↦ by simp) hx hy
+
+end Domain
 
 section Field
 
@@ -288,48 +337,6 @@ theorem algebraMap_YClass (y : F) :
 /-- **The coordinate function `x` takes no constant value**, being transcendental. -/
 theorem genericX_ne_algebraMap (x₁ : F) : genericX W ≠ algebraMap F W.FunctionField x₁ :=
   fun hc ↦ transcendental_genericX W (hc ▸ isAlgebraic_algebraMap _)
-
-/-- `W_Y` stays nonzero in the coordinate ring: its degree is below `deg W`, so it is not a
-multiple of `W`. -/
-private lemma mk_polynomialY_ne_zero [W.IsElliptic] :
-    WeierstrassCurve.Affine.CoordinateRing.mk W W.polynomialY ≠ 0 :=
-  AdjoinRoot.mk_ne_zero_of_natDegree_lt monic_polynomial
-    (polynomialY_ne_zero W.isUnit_Δ.ne_zero) <| by
-    rw [natDegree_polynomial, WeierstrassCurve.Affine.polynomialY]
-    have : (Polynomial.C (Polynomial.C (2 : F)) * (Y : F[X][Y])).natDegree ≤ 1 :=
-      Polynomial.natDegree_mul_le.trans
-        (by simp [Polynomial.natDegree_C, Polynomial.natDegree_X])
-    exact Nat.lt_of_le_of_lt (Polynomial.natDegree_add_le _ _)
-      (by rw [Polynomial.natDegree_C]; omega)
-
-/-- **The partial derivative `W_Y` is nonzero at the generic point** of an elliptic curve. -/
-@[simp]
-theorem evalEval_polynomialY_genericX_genericY_ne_zero [W.IsElliptic] :
-    (W⁄W.FunctionField).toAffine.polynomialY.evalEval (genericX W) (genericY W) ≠ 0 := by
-  have h := evalEval_genericX_genericY W W.polynomialY
-  rw [← WeierstrassCurve.Affine.map_polynomialY] at h
-  have h' :
-      (W⁄W.FunctionField).toAffine.polynomialY.evalEval (genericX W) (genericY W) =
-        algebraMap W.CoordinateRing W.FunctionField (CoordinateRing.mk W W.polynomialY) := by
-    simpa only [WeierstrassCurve.baseChange] using h
-  rw [h']
-  exact fun hz => mk_polynomialY_ne_zero W
-    ((IsFractionRing.injective W.CoordinateRing W.FunctionField).eq_iff.mp
-      (hz.trans (map_zero _).symm))
-
-/-- **An `F`-embedding of the function field into a field extension is determined by the image of
-the generic point.** The generic point's two coordinates generate the function field over `F`, so
-an embedding is recoverable from the point it induces. -/
-theorem map_genericPoint_injective [W.IsElliptic] {Ω : Type*} [Field Ω] [Algebra F Ω]
-    [DecidableEq Ω] :
-    Function.Injective fun σ : W.FunctionField →ₐ[F] Ω ↦ Point.map σ (genericPoint W) := by
-  intro σ τ h
-  have hx : σ (genericX W) = τ (genericX W) := by
-    simpa only [Point.xCoord_map, xCoord_genericPoint] using congrArg Point.xCoord h
-  have hy : σ (genericY W) = τ (genericY W) := by
-    simpa only [Point.yCoord_map, yCoord_genericPoint] using congrArg Point.yCoord h
-  apply AlgHom.toRingHom_injective
-  exact FunctionField.ringHom_ext (fun a ↦ by simp) hx hy
 
 /-- **An embedding is determined by the rational point it displaces the generic point by.** If
 each index `i` carries a rational point whose base change is `e i`'s displacement of the generic

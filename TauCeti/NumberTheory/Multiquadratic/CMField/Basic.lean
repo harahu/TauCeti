@@ -58,13 +58,13 @@ open scoped Function
 namespace TauCeti.Multiquadratic
 
 /-- **Adjoining a negative radicand preserves square-class independence.** Let `d : ι → K` be a
-family of positive radicands in an ordered field, no nonempty subset product of which is a
-square, and let `c < 0`. Index by `Option ι`, sending `none` to `c` and `some i` to `d i`. Then
-no nonempty subset product of this extended family is a square: a subset that avoids `none` is a
-nonempty positive non-square by hypothesis, and a subset that contains `none` has a negative
-product (the negative `c` times a positive product), so it is not a square either. -/
-theorem not_isSquare_prod_optionNeg {K : Type*} [Field K] [LinearOrder K] [IsStrictOrderedRing K]
-    {ι : Type*} {d : ι → K} (hpos : ∀ i, 0 < d i)
+family of positive radicands in an ordered commutative ring, no nonempty subset product of which is
+a square, and let `c < 0`. Index by `Option ι`, sending `none` to `c` and `some i` to `d i`. Then no
+nonempty subset product of this extended family is a square: a subset that avoids `none` is a
+nonempty positive non-square by hypothesis, and a subset that contains `none` has a negative product
+(the negative `c` times a positive product), so it is not a square either. -/
+theorem not_isSquare_prod_optionNeg {K : Type*} [CommRing K] [LinearOrder K]
+    [IsStrictOrderedRing K] {ι : Type*} {d : ι → K} (hpos : ∀ i, 0 < d i)
     (hindep : ∀ S : Finset ι, S.Nonempty → ¬ IsSquare (∏ i ∈ S, d i))
     {c : K} (hc : c < 0) (S : Finset (Option ι)) (hS : S.Nonempty) :
     ¬ IsSquare (∏ x ∈ S, x.elim c d) := by

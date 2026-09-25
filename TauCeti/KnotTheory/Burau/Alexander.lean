@@ -89,11 +89,11 @@ namespace TauCeti
 
 open KnotTheory
 
-variable {R : Type*} [CommRing R] {n : ℕ}
-
 namespace KnotTheory
 
-/-! ### The Burau matrix of a braid with an extra uncrossed strand -/
+section RingHelpers
+
+variable {R : Type*} [Ring R] {n : ℕ}
 
 private theorem burauCol_castSucc (t : R) (i : Fin n) (u : Fin (n + 1)) :
     burauCol (n := n + 2) t i.castSucc u.castSucc = burauCol (n := n + 1) t i u := by
@@ -104,6 +104,45 @@ private theorem burauRow_castSucc (i : Fin n) (u : Fin (n + 1)) :
     burauRow R (n := n + 2) i.castSucc u.castSucc = burauRow R (n := n + 1) i u := by
   rw [burauRow_apply, burauRow_apply]
   simp only [Fin.ext_iff, BraidGroup.val_strand, BraidGroup.val_strandSucc, Fin.val_castSucc]
+
+private theorem burauCol_last_castSucc (t : R) (c : Fin (n + 1)) :
+    burauCol (n := n + 2) t (Fin.last n) c.castSucc = if c = Fin.last n then t else 0 := by
+  have hc := c.isLt
+  have h1 : (c.castSucc = BraidGroup.strand (n := n + 2) (Fin.last n)) ↔ c = Fin.last n := by
+    simp only [Fin.ext_iff, BraidGroup.val_strand, Fin.val_castSucc, Fin.val_last]
+  have h2 : ¬ c.castSucc = BraidGroup.strandSucc (n := n + 2) (Fin.last n) := by
+    simp only [Fin.ext_iff, BraidGroup.val_strandSucc, Fin.val_castSucc, Fin.val_last]
+    omega
+  simp only [burauCol_apply, h1, h2, ite_false, sub_zero]
+
+private theorem burauRow_last_castSucc (c : Fin (n + 1)) :
+    burauRow R (n := n + 2) (Fin.last n) c.castSucc = if c = Fin.last n then 1 else 0 := by
+  have hc := c.isLt
+  have h1 : (c.castSucc = BraidGroup.strand (n := n + 2) (Fin.last n)) ↔ c = Fin.last n := by
+    simp only [Fin.ext_iff, BraidGroup.val_strand, Fin.val_castSucc, Fin.val_last]
+  have h2 : ¬ c.castSucc = BraidGroup.strandSucc (n := n + 2) (Fin.last n) := by
+    simp only [Fin.ext_iff, BraidGroup.val_strandSucc, Fin.val_castSucc, Fin.val_last]
+    omega
+  simp only [burauRow_apply, h1, h2, ite_false, sub_zero]
+
+private theorem burauMatrix_two (t : R) : burauMatrix (n := 2) t 0 = !![1 - t, t; 1, 0] := by
+  have h0 : BraidGroup.strand (n := 2) 0 = 0 := by
+    simp [Fin.ext_iff]
+  have h1 : BraidGroup.strandSucc (n := 2) 0 = 1 := by
+    simp [Fin.ext_iff]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [burauMatrix_apply, burauCol_apply, burauRow_apply, h0, h1]
+
+end RingHelpers
+
+end KnotTheory
+
+variable {R : Type*} [CommRing R] {n : ℕ}
+
+namespace KnotTheory
+
+/-! ### The Burau matrix of a braid with an extra uncrossed strand -/
 
 private theorem burau_strandIncl_aux (t : Rˣ) (b : BraidGroup (n + 1)) :
     ((burau (n + 2) t (BraidGroup.strandIncl b) : Matrix (Fin (n + 2)) (Fin (n + 2)) R) *ᵥ
@@ -193,26 +232,6 @@ theorem burau_strandIncl_mulVec_single (t : Rˣ) (b : BraidGroup (n + 1)) :
 
 /-! ### The elementary Burau matrix of the last crossing -/
 
-private theorem burauCol_last_castSucc (t : R) (c : Fin (n + 1)) :
-    burauCol (n := n + 2) t (Fin.last n) c.castSucc = if c = Fin.last n then t else 0 := by
-  have hc := c.isLt
-  have h1 : (c.castSucc = BraidGroup.strand (n := n + 2) (Fin.last n)) ↔ c = Fin.last n := by
-    simp only [Fin.ext_iff, BraidGroup.val_strand, Fin.val_castSucc, Fin.val_last]
-  have h2 : ¬ c.castSucc = BraidGroup.strandSucc (n := n + 2) (Fin.last n) := by
-    simp only [Fin.ext_iff, BraidGroup.val_strandSucc, Fin.val_castSucc, Fin.val_last]
-    omega
-  simp only [burauCol_apply, h1, h2, ite_false, sub_zero]
-
-private theorem burauRow_last_castSucc (c : Fin (n + 1)) :
-    burauRow R (n := n + 2) (Fin.last n) c.castSucc = if c = Fin.last n then 1 else 0 := by
-  have hc := c.isLt
-  have h1 : (c.castSucc = BraidGroup.strand (n := n + 2) (Fin.last n)) ↔ c = Fin.last n := by
-    simp only [Fin.ext_iff, BraidGroup.val_strand, Fin.val_castSucc, Fin.val_last]
-  have h2 : ¬ c.castSucc = BraidGroup.strandSucc (n := n + 2) (Fin.last n) := by
-    simp only [Fin.ext_iff, BraidGroup.val_strandSucc, Fin.val_castSucc, Fin.val_last]
-    omega
-  simp only [burauRow_apply, h1, h2, ite_false, sub_zero]
-
 /-! ### The two vectors annihilating `burau b - 1` -/
 
 /-- The all-ones column vector is annihilated by `burau b - 1`. -/
@@ -297,15 +316,6 @@ private theorem submatrix_burau_strandIncl_mul (t : Rˣ) (b : BraidGroup (n + 1)
     simp only [hv, ite_false, mul_zero, zero_mul, sub_zero]
 
 /-! ### The two-strand braids -/
-
-private theorem burauMatrix_two (t : R) : burauMatrix (n := 2) t 0 = !![1 - t, t; 1, 0] := by
-  have h0 : BraidGroup.strand (n := 2) 0 = 0 := by
-    simp [Fin.ext_iff]
-  have h1 : BraidGroup.strandSucc (n := 2) 0 = 1 := by
-    simp [Fin.ext_iff]
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [burauMatrix_apply, burauCol_apply, burauRow_apply, h0, h1]
 
 private theorem burauMatrix_two_pow_three_apply (t : R) :
     (burauMatrix (n := 2) t 0 ^ 3) 0 0 = (1 - t) * (1 + t ^ 2) := by

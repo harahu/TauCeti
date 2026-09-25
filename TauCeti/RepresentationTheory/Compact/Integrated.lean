@@ -93,9 +93,9 @@ namespace TauCeti
 
 namespace ContRepresentation
 
-section Conjugation
+section ConjMap
 
-variable {𝕜 G : Type*} [RCLike 𝕜] [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
+variable {G : Type*} [Group G] [TopologicalSpace G] [SeparatelyContinuousMul G]
 
 /-- Conjugating the group variable, as a continuous self-map of the group. -/
 private def conjMap (h : G) : C(G, G) :=
@@ -104,6 +104,12 @@ private def conjMap (h : G) : C(G, G) :=
 /-- Conjugation of the group variable, unfolded. -/
 private theorem conjMap_apply (h g : G) : conjMap h g = h⁻¹ * (g * h) :=
   (rfl)
+
+end ConjMap
+
+section Conjugation
+
+variable {𝕜 G : Type*} [RCLike 𝕜] [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
 
 variable [CompactSpace G] [MeasurableSpace G] [BorelSpace G]
 

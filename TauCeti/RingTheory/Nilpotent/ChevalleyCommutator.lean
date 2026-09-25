@@ -176,8 +176,9 @@ private theorem sum_range_min_diag_flip {B : Type*} [AddCommMonoid B]
 -- The combinatorial core: a truncated left factor times a truncated right factor is the reordered
 -- triple product, once the truncation is wide enough that the reindexed square contains no extra
 -- nonzero terms. The reindexing is `(m, n, k) ↦ (n - k, k, m - k)`.
-private theorem sum_smul_mul_sum_smul_of_normalOrder {R : Type*} [CommRing R]
-    {B : Type*} [Ring B] [Algebra R B] (Dx Dy Dz : ℕ → B) (N : ℕ)
+private theorem sum_smul_mul_sum_smul_of_normalOrder {R : Type*} [CommSemiring R]
+    {B : Type*} [NonUnitalSemiring B] [DistribMulAction R B] [IsScalarTower R B B]
+    [SMulCommClass R B B] (Dx Dy Dz : ℕ → B) (N : ℕ)
     (hno : ∀ m n, Dx m * Dy n =
       ∑ k ∈ range (min m n + 1), Dy (n - k) * Dz k * Dx (m - k))
     (hzero : ∀ p k q : ℕ, N ≤ p + k ∨ N ≤ q + k → Dy p * Dz k * Dx q = 0)

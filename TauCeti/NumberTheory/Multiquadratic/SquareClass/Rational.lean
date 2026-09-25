@@ -65,7 +65,29 @@ open scoped Function
 
 namespace TauCeti.Multiquadratic
 
-variable {L : Type*} [Field L] [Algebra ℚ L]
+variable {L : Type*}
+
+section CommRing
+
+variable [CommRing L] [Algebra ℚ L]
+
+/-- **Rescaling a square root into the integral square class.** If `d = a * c ^ 2` with `c ≠ 0`
+and `x` is a square root of `d`, then `c⁻¹ * x` is a square root of the integer `a`. This is the
+root-level half of the square-class reduction: the rescaled root generates the same field
+(`TauCeti.IntermediateField.adjoin_range_algebraMap_mul`) and satisfies an integral equation. -/
+theorem sq_algebraMap_inv_mul_eq_of_eq_mul_sq {d : ℚ} {a : ℤ} {c : ℚ} (hc : c ≠ 0)
+    (hdec : d = a * c ^ 2) {x : L} (hx : x ^ 2 = algebraMap ℚ L d) :
+    (algebraMap ℚ L c⁻¹ * x) ^ 2 = algebraMap ℤ L a := by
+  calc
+    (algebraMap ℚ L c⁻¹ * x) ^ 2 = algebraMap ℚ L a := by
+      rw [mul_pow, ← map_pow, hx, ← map_mul, hdec]
+      congr 1
+      field_simp
+    _ = algebraMap ℤ L a := by simp
+
+end CommRing
+
+variable [Field L] [Algebra ℚ L]
 
 /-- **Square-class transfer for subset products.** If each rational radicand `d i` is an integer
 representative `a i` times a nonzero square, then a subset product of the `d i` is a rational
@@ -98,20 +120,6 @@ theorem finrank_adjoin_range_of_eq_mul_sq {ι : Type*} [Finite ι] {d : ι → �
     Module.finrank ℚ (adjoin ℚ (Set.range root)) = 2 ^ Nat.card ι :=
   finrank_adjoin_range hroot fun S hS =>
     (isSquare_prod_iff_of_eq_mul_sq (fun i _ => hc i) (fun i _ => hdec i)).not.mpr (hindep S hS)
-
-/-- **Rescaling a square root into the integral square class.** If `d = a * c ^ 2` with `c ≠ 0`
-and `x` is a square root of `d`, then `c⁻¹ * x` is a square root of the integer `a`. This is the
-root-level half of the square-class reduction: the rescaled root generates the same field
-(`TauCeti.IntermediateField.adjoin_range_algebraMap_mul`) and satisfies an integral equation. -/
-theorem sq_algebraMap_inv_mul_eq_of_eq_mul_sq {d : ℚ} {a : ℤ} {c : ℚ} (hc : c ≠ 0)
-    (hdec : d = a * c ^ 2) {x : L} (hx : x ^ 2 = algebraMap ℚ L d) :
-    (algebraMap ℚ L c⁻¹ * x) ^ 2 = algebraMap ℤ L a := by
-  calc
-    (algebraMap ℚ L c⁻¹ * x) ^ 2 = algebraMap ℚ L a := by
-      rw [mul_pow, ← map_pow, hx, ← map_mul, hdec]
-      congr 1
-      field_simp
-    _ = algebraMap ℤ L a := by simp
 
 /-- **Rational radicands reduce to squarefree integer radicands.** If the `d i` are nonzero
 rationals with square roots `root i` in a field `L` over `ℚ`, then there are squarefree *integers*

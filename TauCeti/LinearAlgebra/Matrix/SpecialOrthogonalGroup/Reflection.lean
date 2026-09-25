@@ -205,7 +205,9 @@ open scoped LaurentPolynomial
 
 open LaurentPolynomial
 
-variable {K : Type u} [Field K]
+section CommRing
+
+variable {K : Type u} [CommRing K]
 
 /-- The constant Laurent-polynomial vector attached to a vector over the coefficient field. -/
 private noncomputable def constVector (v : n → K) : n → K[T;T⁻¹] := fun i => C (v i)
@@ -272,6 +274,10 @@ private theorem reflectionMatrix_comp_pathVector_right (φ : K[T;T⁻¹] →ₐ[
     simp only [Function.comp_apply, RingHom.coe_coe, pathVector, map_add, map_mul,
       C_eq_algebraMap, AlgHom.commutes, Algebra.algebraMap_self_apply, hX, zero_mul, zero_add]
   rw [h, reflectionMatrix_smul, hd]
+
+end CommRing
+
+variable {K : Type u} [Field K]
 
 /-- Assembling a one-parameter family from path data: a coefficient pair `(X, Y)` for the
 moving vector, a normalizing scalar `E`, and two parameters at which one of the coefficients

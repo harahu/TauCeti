@@ -74,12 +74,14 @@ private theorem measurable_partProportion (hP : ∀ p ∈ P.parts, MeasurableSet
     (fun p : P.parts => μ.real ((p : Set Ω) ∩ S) / μ.real (p : Set Ω))).comp
     (P.measurable_indexedPartition_index hP)
 
-private theorem partProportion_mem_Icc (S : Set Ω) (x : Ω) :
+omit [IsProbabilityMeasure μ] in
+private theorem partProportion_mem_Icc [IsFiniteMeasure μ] (S : Set Ω) (x : Ω) :
     partProportion (μ := μ) P S x ∈ Icc (0 : ℝ) 1 :=
   ⟨div_nonneg measureReal_nonneg measureReal_nonneg,
     div_le_one_of_le₀ (measureReal_mono inter_subset_left) measureReal_nonneg⟩
 
-private theorem partProportion_mem_Icc_neg_one_one (S : Set Ω) (x : Ω) :
+omit [IsProbabilityMeasure μ] in
+private theorem partProportion_mem_Icc_neg_one_one [IsFiniteMeasure μ] (S : Set Ω) (x : Ω) :
     partProportion (μ := μ) P S x ∈ Icc (-1 : ℝ) 1 :=
   Icc_subset_Icc (by norm_num) le_rfl (partProportion_mem_Icc P S x)
 

@@ -105,7 +105,7 @@ variable {N : Type w} [AddCommMonoid N] [Module A N]
 
 section Map
 
-variable {k : Type u} [CommSemiring k] [Algebra k A]
+variable {k : Type u} [Semiring k] [SMul k A]
 variable [Module k M] [IsScalarTower k A M] [Module k N] [IsScalarTower k A N]
 
 /-- Transporting an internal grading along a linear equivalence preserves generation in every

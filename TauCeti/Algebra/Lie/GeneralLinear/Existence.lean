@@ -118,6 +118,14 @@ theorem exists_ne_zero_forall_lie_single_self_eq_smul [CharZero K] [IsAlgClosed 
   rw [LieSubalgebra.coe_bracket_of_module, hchi'] at h
   exact h
 
+end Eigenvector
+
+section EigenvectorRing
+
+variable {K : Type u} [CommRing K] {n : Type v} [Fintype n] [DecidableEq n]
+variable {M : Type w} [AddCommGroup M] [Module K M] [LieRingModule (Matrix n n K) M]
+  [LieModule K (Matrix n n K) M]
+
 /-- **Raising a weight vector.** Bracketing a simultaneous eigenvector of the diagonal matrix units
 of weight `μ` with the matrix unit `Eₚq` gives a simultaneous eigenvector of weight
 `μ + εₚ - ε_q`, whenever the result is nonzero. -/
@@ -137,13 +145,13 @@ theorem lie_single_self_lie_single_eq_smul {mu : n → K} {v : M}
   simp only [Pi.add_apply, Pi.sub_apply, add_smul, sub_smul]
   abel
 
-end Eigenvector
+end EigenvectorRing
 
 /-! ### Existence of a highest weight vector -/
 
-section Existence
+section Height
 
-variable {K : Type u} [Field K] {N : ℕ}
+variable {K : Type u} [CommRing K] {N : ℕ}
 variable {M : Type w} [AddCommGroup M] [Module K M]
   [LieRingModule (Matrix (Fin N) (Fin N) K) M] [LieModule K (Matrix (Fin N) (Fin N) K) M]
 
@@ -183,6 +191,14 @@ private theorem lie_heightMatrix_eq_smul {mu : Fin N → K} {v : M}
     ⁅heightMatrix K N, v⁆ = glHeight mu • v := by
   rw [heightMatrix, sum_lie, glHeight, Finset.sum_smul]
   exact Finset.sum_congr rfl fun i _ => by rw [smul_lie, hv i, smul_smul]
+
+end Height
+
+section Existence
+
+variable {K : Type u} [Field K] {N : ℕ}
+variable {M : Type w} [AddCommGroup M] [Module K M]
+  [LieRingModule (Matrix (Fin N) (Fin N) K) M] [LieModule K (Matrix (Fin N) (Fin N) K) M]
 
 /-- **Existence of a highest weight vector for `gl n`.** Over an algebraically closed field of
 characteristic zero every nonzero finite-dimensional `gl N`-module has a highest weight vector for
@@ -235,12 +251,9 @@ end Existence
 
 /-! ### Dominance of the highest weight -/
 
-section Dominant
+section Sl2Triple
 
-variable {K : Type u} [Field K] [CharZero K] {N : ℕ}
-variable {M : Type w} [AddCommGroup M] [Module K M]
-  [LieRingModule (Matrix (Fin N) (Fin N) K) M] [LieModule K (Matrix (Fin N) (Fin N) K) M]
-variable {mu : Fin N → K} {v : M}
+variable {K : Type u} [CommRing K] [Nontrivial K] {N : ℕ}
 
 /-- **The `sl₂` triple of a pair of indices in `gl n`.** For `p ≠ q` the matrix units `Eₚq` and
 `E_qp` together with their commutator `Eₚₚ - E_qq` satisfy the `sl₂` relations; this is the
@@ -256,6 +269,15 @@ theorem isSl2Triple_matrix_single (p q : Fin N) (hpq : p ≠ q) :
   simpa [LieAlgebra.SpecialLinear.val_single,
     LieAlgebra.SpecialLinear.val_singleSubSingle] using
     (isSl2Triple_single (R := K) hpq).map (LieAlgebra.SpecialLinear.sl (Fin N) K).incl hne
+
+end Sl2Triple
+
+section Dominant
+
+variable {K : Type u} [Field K] [CharZero K] {N : ℕ}
+variable {M : Type w} [AddCommGroup M] [Module K M]
+  [LieRingModule (Matrix (Fin N) (Fin N) K) M] [LieModule K (Matrix (Fin N) (Fin N) K) M]
+variable {mu : Fin N → K} {v : M}
 
 /-- **The weight of a highest weight vector is dominant integral.** Restricting to the `sl₂` triple
 of a pair `p < q` makes the highest weight vector a primitive vector of eigenvalue `μ p - μ q`, and

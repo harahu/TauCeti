@@ -830,11 +830,13 @@ theorem eigenspace_diag [CharZero K] (i : Fin (n + 1)) :
   · rw [Submodule.span_le, Set.singleton_subset_iff]
     exact Module.End.mem_eigenspace_iff.2 (diag_basis i)
 
+omit [IsDomain K] in
 /-- **The weights of `V(n)` are exactly `n, n - 2, …, -n`**: no other scalar is an eigenvalue of
 the Cartan operator, every coordinate of a would-be eigenvector being killed. Characteristic zero
 is not needed here: it is what makes those `n + 1` weights distinct, not what makes them the only
 ones. -/
-theorem eigenspace_diag_eq_bot {μ : K} (hμ : ∀ i : Fin (n + 1), μ ≠ (n : K) - 2 * (i : ℕ)) :
+theorem eigenspace_diag_eq_bot [NoZeroDivisors K] {μ : K}
+    (hμ : ∀ i : Fin (n + 1), μ ≠ (n : K) - 2 * (i : ℕ)) :
     Module.End.eigenspace (diag K n) μ = ⊥ := by
   refine (Submodule.eq_bot_iff _).2 fun v hv => ?_
   rw [Module.End.mem_eigenspace_iff] at hv

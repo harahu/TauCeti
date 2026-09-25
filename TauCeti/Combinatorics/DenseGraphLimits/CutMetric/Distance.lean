@@ -106,7 +106,7 @@ private def couplingCutNorms (U : Graphon Ω₁ μ₁) (W : Graphon Ω₂ μ₂)
 /-- Every coupling contributes its overlaid cut norm to `couplingCutNorms`. -/
 private theorem mem_couplingCutNorms (U : Graphon Ω₁ μ₁) (W : Graphon Ω₂ μ₂)
     {π : Measure (Ω₁ × Ω₂)}
-    [IsProbabilityMeasure π] (hπ : IsCoupling μ₁ μ₂ π) :
+    [IsFiniteMeasure π] (hπ : IsCoupling μ₁ μ₂ π) :
     cutNorm π (overlayDiff U W π) ∈ couplingCutNorms U W :=
   ⟨π, hπ, rfl⟩
 

@@ -51,7 +51,7 @@ namespace Place
 universe u v v'
 
 variable {k : Type u} {F : Type v} {F' : Type v'}
-variable [Field k] [Field F] [Field F'] [Algebra k F] [Algebra F F']
+variable [Field k] [Field F] [Algebra k F]
 
 attribute [local instance 10] algebraIntegersExtension isScalarTowerIntegersExtension
 
@@ -61,7 +61,8 @@ attribute [local instance 10] algebraIntegersExtension isScalarTowerIntegersExte
 
 Indeed, outside the poles of the coefficients of its minimal polynomial over `F`, that monic
 polynomial has coefficients in `𝒪_P` and witnesses integrality over `𝒪_P`. -/
-theorem finite_setOf_not_isIntegral (hF : IsFunctionField k F) (x : F') (hx : IsIntegral F x) :
+theorem finite_setOf_not_isIntegral [Ring F'] [Algebra F F'] (hF : IsFunctionField k F) (x : F')
+    (hx : IsIntegral F x) :
     {P : Place k F | ¬ IsIntegral P.integers x}.Finite := by
   let p : F[X] := minpoly F x
   let S : Set (Place k F) :=
@@ -92,7 +93,8 @@ theorem finite_setOf_not_isIntegral (hF : IsFunctionField k F) (x : F') (hx : Is
 
 /-- **Every basis of a finite separable extension is an integral basis at all but finitely many
 places** (Stichtenoth, Theorem 3.3.6). -/
-theorem finite_setOf_not_isIntegralBasis (hF : IsFunctionField k F) {ι : Type*}
+theorem finite_setOf_not_isIntegralBasis [Field F'] [Algebra F F'] (hF : IsFunctionField k F)
+    {ι : Type*}
     [FiniteDimensional F F'] [Algebra.IsSeparable F F'] (b : Basis ι F F') :
     {P : Place k F | ¬ P.IsIntegralBasis F' b}.Finite := by
   classical

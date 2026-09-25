@@ -146,9 +146,10 @@ theorem t0Space_weightedRestrictedSubring [T0Space A] {T : Fin k → Set A}
     (fun _ _ h ↦ Subtype.ext (MvPowerSeries.ext fun ν ↦ congrFun h ν))
     (continuous_pi fun ν ↦ hT.continuous_coeff (hb ν))
 
+omit [NonarchimedeanRing A] in
 /-- The trivial weight family is bounded at every multi-index, since `Tν` is then `{1}`. This
 is the whole of what the specialisations below need. -/
-private theorem isBounded_weightPow_one_weight (ν : Fin k →₀ ℕ) :
+private theorem isBounded_weightPow_one_weight [ContinuousMul A] (ν : Fin k →₀ ℕ) :
     IsBounded (weightPow (fun _ : Fin k ↦ ({1} : Set A)) ν) := by
   simpa only [weightPow_one_weight] using isBounded_singleton (1 : A)
 

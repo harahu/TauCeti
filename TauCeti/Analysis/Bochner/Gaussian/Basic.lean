@@ -69,16 +69,16 @@ namespace TauCeti
 
 section Elementary
 
-variable {V : Type*} [NormedAddCommGroup V]
+variable {V : Type*}
 
 /-- The Gaussian `a ↦ exp (-c‖a‖²)` is continuous on `V` for every real `c`. -/
-theorem continuous_cexp_neg_mul_sq_norm (c : ℝ) :
+theorem continuous_cexp_neg_mul_sq_norm [SeminormedAddGroup V] (c : ℝ) :
     Continuous fun a : V => Complex.exp (-(c * ‖a‖ ^ 2 : ℝ)) := by
   fun_prop
 
 /-- The Gaussian factor `exp (-c‖a‖²)` tends to `1` as the width parameter `c` tends to `0`.
 This is the pointwise convergence underlying Gaussian regularization. -/
-theorem tendsto_cexp_neg_mul_sq_norm (a : V) :
+theorem tendsto_cexp_neg_mul_sq_norm [Norm V] (a : V) :
     Filter.Tendsto (fun c : ℝ => Complex.exp (-(c * ‖a‖ ^ 2 : ℝ))) (𝓝 0) (𝓝 1) := by
   have hc : Continuous fun c : ℝ => Complex.exp (-(c * ‖a‖ ^ 2 : ℝ)) := by fun_prop
   simpa using hc.tendsto 0

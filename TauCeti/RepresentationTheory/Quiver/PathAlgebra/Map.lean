@@ -119,7 +119,28 @@ open Prefunctor
 
 variable {Q : Type u} {R : Type u'} {S : Type u''} [Quiver.{v} Q] [Quiver.{v'} R] [Quiver.{v''} S]
 
-variable (k : Type w) [CommSemiring k] [Finite Q] [Finite R] [Finite S]
+variable (k : Type w)
+
+section Semiring
+
+variable [Semiring k] [Finite Q] [Finite R]
+
+/-- The images of the trivial paths under a prefunctor bijective on vertices enumerate the vertex
+idempotents of the target without repetition, so their sum is its unit. This is the `hone`
+hypothesis of
+`TauCeti.PathAlgebra.liftAlgHom` for `TauCeti.PathAlgebra.mapAlgHom`. -/
+private theorem mapAlgHom_hone (φ : Q ⥤q R) (hφ : Function.Bijective φ.obj) :
+    letI := Fintype.ofFinite Q
+    ∑ v : Q, (ofPath (mapTotalPath φ ⟨v, v, Quiver.Path.nil⟩) : pathAlgebra k R) = 1 := by
+  let _ := Fintype.ofFinite Q
+  let _ := Fintype.ofFinite R
+  rw [one_def]
+  refine Fintype.sum_bijective _ hφ _ _ fun v ↦ ?_
+  rw [mapTotalPath_mk, Prefunctor.mapPath_nil, vertexIdempotent_eq_single, ofPath_eq_single]
+
+end Semiring
+
+variable [CommSemiring k] [Finite Q] [Finite R] [Finite S]
 
 omit [Finite Q] [Finite R] in
 /-- Pushing paths along a prefunctor turns concatenation into concatenation. This is the `hcomp`
@@ -140,19 +161,6 @@ private theorem mapAlgHom_hzero (φ : Q ⥤q R) (hφ : Function.Injective φ.obj
     (ofPath (mapTotalPath φ x) : pathAlgebra k R) * ofPath (mapTotalPath φ y) = 0 :=
   ofPath_mul_ofPath_of_not_composable fun hc ↦ h (hφ (by
     simpa only [Prefunctor.mapTotalPath_snd_fst, Prefunctor.mapTotalPath_fst] using hc))
-
-/-- The images of the trivial paths under a prefunctor bijective on vertices enumerate the vertex
-idempotents of the target without repetition, so their sum is its unit. This is the `hone`
-hypothesis of
-`TauCeti.PathAlgebra.liftAlgHom` for `TauCeti.PathAlgebra.mapAlgHom`. -/
-private theorem mapAlgHom_hone (φ : Q ⥤q R) (hφ : Function.Bijective φ.obj) :
-    letI := Fintype.ofFinite Q
-    ∑ v : Q, (ofPath (mapTotalPath φ ⟨v, v, Quiver.Path.nil⟩) : pathAlgebra k R) = 1 := by
-  let _ := Fintype.ofFinite Q
-  let _ := Fintype.ofFinite R
-  rw [one_def]
-  refine Fintype.sum_bijective _ hφ _ _ fun v ↦ ?_
-  rw [mapTotalPath_mk, Prefunctor.mapPath_nil, vertexIdempotent_eq_single, ofPath_eq_single]
 
 /-- **The algebra homomorphism of path algebras induced by a prefunctor** bijective on vertices: it
 sends the basis element of a path to the basis element of the image path. -/
@@ -194,7 +202,7 @@ theorem mapAlgHom_ofArrow (φ : Q ⥤q R) (hφ : Function.Bijective φ.obj) {a b
   rw [ofArrow_eq_ofPath, mapAlgHom_ofPath, mapTotalPath_mk, Prefunctor.mapPath_toPath,
     ofArrow_eq_ofPath]
 
-variable {M : Type*} [AddCommMonoid M]
+variable {M : Type*} [AddMonoid M]
 
 /-- **A prefunctor-induced algebra map is graded for the pulled-back arrow weight.** If an element
 is homogeneous for the weight obtained by pulling `wt` back along `φ`, then its image is

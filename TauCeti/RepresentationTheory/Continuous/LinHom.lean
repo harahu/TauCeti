@@ -120,7 +120,7 @@ theorem linHom_apply_apply (g : G) (T : V →L[𝕜] W) (v : V) :
   rw [linHom_apply]
   rfl
 
-variable [TopologicalSpace G] [IsTopologicalGroup G]
+variable [TopologicalSpace G] [ContinuousInv G]
 
 /-- **The Hom representation has a continuous operator-valued action.** Conjugation is the
 composition of the two contractions of `ContinuousLinearMap.compL` by the separate actions, and
@@ -182,10 +182,10 @@ theorem continuous_biLinHom (hπ : Continuous π) (hρ : Continuous ρ) :
 
 end BiLinHom
 
-section Invariants
+section Intertwining
 
-variable {𝕜 G V W : Type*} [NontriviallyNormedField 𝕜] [Group G]
-  [NormedAddCommGroup V] [NormedSpace 𝕜 V] [NormedAddCommGroup W] [NormedSpace 𝕜 W]
+variable {𝕜 G V W : Type*} [CommRing 𝕜] [Group G]
+  [SeminormedAddCommGroup V] [Module 𝕜 V] [SeminormedAddCommGroup W] [Module 𝕜 W]
   (π : ContRepresentation 𝕜 G V) (ρ : ContRepresentation 𝕜 G W)
 
 /-- **An operator fixed by the conjugation action is exactly one that intertwines.** This is
@@ -208,6 +208,14 @@ theorem linHom_apply_eq_self_iff_isIntertwining (T : V →L[𝕜] W) :
   simp only [LinearMap.ext_iff, LinearMap.comp_apply, ContinuousLinearMap.coe_coe] at key
   simp only [ContinuousLinearMap.ext_iff, ContinuousLinearMap.comp_apply]
   exact key
+
+end Intertwining
+
+section Invariants
+
+variable {𝕜 G V W : Type*} [NontriviallyNormedField 𝕜] [Group G]
+  [NormedAddCommGroup V] [NormedSpace 𝕜 V] [NormedAddCommGroup W] [NormedSpace 𝕜 W]
+  (π : ContRepresentation 𝕜 G V) (ρ : ContRepresentation 𝕜 G W)
 
 /-- **An operator is invariant in the Hom representation exactly when it intertwines.** This is
 `ContRepresentation.linHom_apply_eq_self_iff_isIntertwining` phrased in terms of the invariant
@@ -270,10 +278,11 @@ theorem conj_linHom (g : G) :
   simp only [ContinuousLinearMap.coe_coe, linHom_apply_apply]
   simp [LinearEquiv.conj_apply, ContRepresentation.toMonoidHom_apply]
 
+omit [IsTopologicalGroup G] in
 /-- **The character of the Hom representation is `χ_π(g⁻¹) · χ_ρ(g)`.** The trace is unchanged by
 transporting along `LinearMap.toContinuousLinearMap`, so this is Mathlib's
 `Representation.char_linHom` read on the operator space. -/
-theorem character_linHom (hπ : Continuous π) (hρ : Continuous ρ) (g : G) :
+theorem character_linHom [ContinuousInv G] (hπ : Continuous π) (hρ : Continuous ρ) (g : G) :
     character (linHom π ρ) (continuous_linHom π ρ hπ hρ) g
       = character π hπ g⁻¹ * character ρ hρ g := by
   have h : character (linHom π ρ) (continuous_linHom π ρ hπ hρ) g

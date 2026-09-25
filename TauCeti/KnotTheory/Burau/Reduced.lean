@@ -124,6 +124,21 @@ theorem mem_reducedBurauSpace_iff (n : ℕ) (t : R) (x : Fin n → R) :
 
 end CommSemiring
 
+section Monoid
+
+variable [Monoid R]
+
+private theorem unit_mul_inv_pow_succ (t : Rˣ) (k : ℕ) :
+    (t : R) * ((t⁻¹ : Rˣ) : R) ^ (k + 1) = ((t⁻¹ : Rˣ) : R) ^ k := by
+  rw [pow_succ', ← mul_assoc, ← Units.val_mul]
+  simp
+
+private theorem inv_pow_mul_pow (t : Rˣ) {a m : ℕ} (h : a ≤ m) :
+    ((t⁻¹ : Rˣ) : R) ^ m * (t : R) ^ a = ((t⁻¹ : Rˣ) : R) ^ (m - a) := by
+  exact congrArg Units.val (inv_pow_sub t h).symm
+
+end Monoid
+
 section Ring
 
 variable [Ring R] {n : ℕ}
@@ -273,11 +288,6 @@ private theorem burauColMatrix_mulVec_succ (m : ℕ) (t : R) (c : Fin m → R) (
         exact j.isLt)
     simp [h, hsucc]
 
-private theorem unit_mul_inv_pow_succ (t : Rˣ) (k : ℕ) :
-    (t : R) * ((t⁻¹ : Rˣ) : R) ^ (k + 1) = ((t⁻¹ : Rˣ) : R) ^ k := by
-  rw [pow_succ', ← mul_assoc, ← Units.val_mul]
-  simp
-
 private theorem burauCoordMatrix_mulVec_zero (m : ℕ) (hm : 0 < m) (t : Rˣ)
     (x : Fin (m + 1) → R) :
     (t : R) * (burauCoordMatrix (m + 1) t *ᵥ x) ⟨0, hm⟩ = x 0 := by
@@ -308,10 +318,6 @@ private theorem burauCoordMatrix_mulVec_succ (m : ℕ) (t : Rˣ) (x : Fin (m + 1
   apply congrArg x
   apply Fin.ext
   simp
-
-private theorem inv_pow_mul_pow (t : Rˣ) {a m : ℕ} (h : a ≤ m) :
-    ((t⁻¹ : Rˣ) : R) ^ m * (t : R) ^ a = ((t⁻¹ : Rˣ) : R) ^ (m - a) := by
-  exact congrArg Units.val (inv_pow_sub t h).symm
 
 private theorem burauCoordMatrix_mulVec_last (m : ℕ) (t : Rˣ) (x : Fin (m + 2) → R)
     (hx : (fun k : Fin (m + 2) => (t : R) ^ (k : ℕ)) ⬝ᵥ x = 0) :

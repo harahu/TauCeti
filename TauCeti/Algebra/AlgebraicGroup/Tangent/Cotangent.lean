@@ -136,7 +136,10 @@ namespace Derivation
 open TauCeti _root_.Coalgebra TensorProduct
 
 variable {R A B : Type*} [CommRing R] [CommRing A] [Bialgebra R A]
-  [CommRing B] [Algebra R B]
+
+section Ring
+
+variable [Ring B] [Algebra R B]
 
 /-- Construct a counit-valued derivation from a linear map out of the cotangent space. -/
 private noncomputable def ofCotangentLinearMap
@@ -294,6 +297,12 @@ lemma cotangentLinearEquiv_symm_toCotangent
       Bialgebra.CounitAlgebra.algEquivSelf R A B (d x) := by
   exact toCotangentLinearMap_toCotangent d x
 
+end Ring
+
+section CommRing
+
+variable [CommRing B] [Algebra R B]
+
 /-- Scalar extension of tangent vectors. If the cotangent space is finite
 projective, `B` tensored with its dual is naturally the space of `B`-valued
 tangent vectors. The dual is identified with `Lie(G)(R)` by
@@ -385,5 +394,7 @@ lemma tangentScalarExtensionEquiv_tmul_apply
       b * algebraMap R B (f (Bialgebra.cotangentMap R A a)) := by
   rw [tangentScalarExtensionEquiv_apply,
     tangentScalarExtensionEquivBase_tmul_apply]
+
+end CommRing
 
 end Derivation
