@@ -169,7 +169,7 @@ end DirectedUnions
 /-- If `C` is a coalgebra that is free as a module over a commutative principal ideal domain,
 then every element of `C` belongs to a subcoalgebra that is finite as a module. -/
 theorem exists_finite_subcoalgebra_mem [CommRing R] [IsDomain R] [IsPrincipalIdealRing R]
-    [AddCommGroup C] [Module R C] [Coalgebra R C] [Module.Free R C] (c : C) :
+    [AddCommMonoid C] [Module R C] [Coalgebra R C] [Module.Free R C] (c : C) :
     ∃ D : Subcoalgebra R C, Module.Finite R D.toSubmodule ∧ c ∈ D := by
   let : Module.Flat R C := Module.Flat.of_free
   obtain ⟨N, hNfinite, hcN⟩ :=
@@ -197,7 +197,7 @@ theorem exists_finite_subcoalgebra_mem [CommRing R] [IsDomain R] [IsPrincipalIde
 /-- Every finite subset of a coalgebra that is free over a commutative principal ideal domain
 is contained in a module-finite subcoalgebra. -/
 theorem exists_finite_subcoalgebra_of_setFinite [CommRing R] [IsDomain R]
-    [IsPrincipalIdealRing R] [AddCommGroup C] [Module R C] [Coalgebra R C] [Module.Free R C]
+    [IsPrincipalIdealRing R] [AddCommMonoid C] [Module R C] [Coalgebra R C] [Module.Free R C]
     (s : Set C) (hs : s.Finite) :
     ∃ D : Subcoalgebra R C, Module.Finite R D.toSubmodule ∧ s ⊆ D :=
   exists_finite_subcoalgebra_of_setFinite_of_exists_mem
@@ -206,7 +206,7 @@ theorem exists_finite_subcoalgebra_of_setFinite [CommRing R] [IsDomain R]
 /-- Every module-finite submodule of a coalgebra that is free over a commutative principal ideal
 domain is contained in a module-finite subcoalgebra. -/
 theorem exists_finite_subcoalgebra_of_finite_submodule [CommRing R] [IsDomain R]
-    [IsPrincipalIdealRing R] [AddCommGroup C] [Module R C] [Coalgebra R C] [Module.Free R C]
+    [IsPrincipalIdealRing R] [AddCommMonoid C] [Module R C] [Coalgebra R C] [Module.Free R C]
     (M : Submodule R C) [Module.Finite R M] :
     ∃ D : Subcoalgebra R C, Module.Finite R D.toSubmodule ∧ M ≤ D.toSubmodule :=
   exists_finite_subcoalgebra_of_finite_submodule_of_exists_mem
@@ -215,7 +215,7 @@ theorem exists_finite_subcoalgebra_of_finite_submodule [CommRing R] [IsDomain R]
 /-- A coalgebra that is free over a commutative principal ideal domain is the supremum of its
 module-finite subcoalgebras. -/
 theorem sSup_finiteSubcoalgebras_eq_top [CommRing R] [IsDomain R]
-    [IsPrincipalIdealRing R] [AddCommGroup C] [Module R C] [Coalgebra R C] [Module.Free R C] :
+    [IsPrincipalIdealRing R] [AddCommMonoid C] [Module R C] [Coalgebra R C] [Module.Free R C] :
     sSup (finiteSubcoalgebras R C) = ⊤ :=
   sSup_finiteSubcoalgebras_eq_top_of_exists_mem
     fun c => exists_finite_subcoalgebra_mem (R := R) (C := C) c
@@ -223,7 +223,7 @@ theorem sSup_finiteSubcoalgebras_eq_top [CommRing R] [IsDomain R]
 /-- A coalgebra that is free over a commutative principal ideal domain is the literal union of
 its module-finite subcoalgebras. -/
 theorem iUnion_finiteSubcoalgebras_eq_univ [CommRing R] [IsDomain R]
-    [IsPrincipalIdealRing R] [AddCommGroup C] [Module R C] [Coalgebra R C] [Module.Free R C] :
+    [IsPrincipalIdealRing R] [AddCommMonoid C] [Module R C] [Coalgebra R C] [Module.Free R C] :
     (⋃ D ∈ finiteSubcoalgebras R C, (D : Set C)) = Set.univ :=
   iUnion_finiteSubcoalgebras_eq_univ_of_exists_mem
     fun c => exists_finite_subcoalgebra_mem (R := R) (C := C) c

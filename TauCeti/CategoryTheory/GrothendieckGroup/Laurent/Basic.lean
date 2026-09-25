@@ -221,7 +221,7 @@ instance : IsScalarTower ℤ (LaurentPolynomial ℤ) (LaurentK0 E) where
 
 /-- **A `ℤ[q,q⁻¹]`-linear map out of the graded Grothendieck group is determined by its values on
 object classes**, because those classes generate the underlying group. -/
-theorem hom_ext {N : Type*} [AddCommGroup N] [Module (LaurentPolynomial ℤ) N]
+theorem hom_ext {N : Type*} [SubtractionCommMonoid N] [Module (LaurentPolynomial ℤ) N]
     {f g : LaurentK0 E →ₗ[LaurentPolynomial ℤ] N} (h : ∀ X : C, f (of E X) = g (of E X)) :
     f = g := by
   refine LinearMap.ext fun x => ?_
@@ -233,7 +233,9 @@ theorem hom_ext {N : Type*} [AddCommGroup N] [Module (LaurentPolynomial ℤ) N]
 section UniversalProperty
 
 variable {E}
-variable {N : Type*} [AddCommGroup N] [Module (LaurentPolynomial ℤ) N]
+section ShiftMap
+
+variable {N : Type*} [AddCommMonoid N] [Module (LaurentPolynomial ℤ) N]
 
 /-- An additive map out of the exact Grothendieck group which turns the grading shift into
 multiplication by `q` turns the whole `ℤ`-action into multiplication by `qⁿ`. -/
@@ -255,6 +257,10 @@ theorem map_shiftZPow (f : ExactK0 E.toExactStructure →+ N)
       rw [GradedExactStructure.shiftZPow_sub_one_apply, hsymm, ih, smul_smul, ← T_add]
       have h : (-1 : ℤ) + (-(k : ℤ)) = -(k : ℤ) - 1 := by ring
       rw [h]
+
+end ShiftMap
+
+variable {N : Type*} [AddCommGroup N] [Module (LaurentPolynomial ℤ) N]
 
 /-- The `ℤ[q,q⁻¹]`-linear map out of the graded Grothendieck group determined by a
 shift-compatible additive map on the underlying exact one. -/

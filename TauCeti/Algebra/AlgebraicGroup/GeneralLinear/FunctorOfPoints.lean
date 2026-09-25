@@ -62,7 +62,9 @@ variable {R : Type u} [CommRing R] (n : ℕ)
 
 section Pointwise
 
-variable {A : Type w} [CommRing A] [Algebra R A]
+section MatrixOfPoint
+
+variable {A : Type w} [Semiring A] [Algebra R A]
 
 /-- The matrix of values of a point on the localized generic matrix. -/
 private noncomputable def matrixOfPoint
@@ -78,6 +80,10 @@ private theorem matrixOfPoint_apply
       f.ofConv (coordinateHopfAlgebraAlgEquiv R n
         (coordinateRingMap R n (MvPolynomial.X (i, j)))) := by
   simp [matrixOfPoint]
+
+end MatrixOfPoint
+
+variable {A : Type w} [CommRing A] [Algebra R A]
 
 private theorem isUnit_det_matrixOfPoint
     (f : WithConv (coordinateHopfAlgebra R n →ₐ[R] A)) :

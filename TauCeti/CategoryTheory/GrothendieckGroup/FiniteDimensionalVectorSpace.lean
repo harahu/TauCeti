@@ -82,7 +82,7 @@ private noncomputable def isoStandard (L : FGModuleCat.{v} k) (hL : Module.finra
   exact e.toFGModuleCatIso
 
 private theorem class_standard
-    {G : Type*} [AddCommGroup G] (c : FGModuleCat.{v} k → G)
+    {G : Type*} [AddCommMonoid G] (c : FGModuleCat.{v} k → G)
     (map_zero : c 0 = 0) (map_biprod : ∀ X Y, c (X ⊞ Y) = c X + c Y) (n : ℕ) :
     ∀ L : FGModuleCat.{v} k, c (standard k L n) = n • c L := by
   intro L
@@ -93,7 +93,7 @@ private theorem class_standard
       exact add_comm _ _
 
 private theorem class_eq_finrank_nsmul
-    {G : Type*} [AddCommGroup G] (c : FGModuleCat.{v} k → G)
+    {G : Type*} [AddCommMonoid G] (c : FGModuleCat.{v} k → G)
     (map_iso : ∀ ⦃X Y⦄, (X ≅ Y) → c X = c Y) (map_zero : c 0 = 0)
     (map_biprod : ∀ X Y, c (X ⊞ Y) = c X + c Y) (L X : FGModuleCat.{v} k)
     (hL : Module.finrank k L = 1) : c X = Module.finrank k X • c L := by

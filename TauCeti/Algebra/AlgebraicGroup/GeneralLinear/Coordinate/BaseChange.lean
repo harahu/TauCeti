@@ -64,6 +64,42 @@ namespace TauCeti.GeneralLinear
 
 universe u v
 
+section BaseChangeExt
+
+section BaseChangeAntipode
+
+variable (R : Type u) (K : Type v) [CommRing R] [CommSemiring K] [Algebra R K]
+variable (n : ℕ)
+
+private theorem baseChange_antipode_one_tmul (x : coordinateHopfAlgebra R n) :
+    HopfAlgebra.antipode K ((1 : K) ⊗ₜ[R] x) =
+      (1 : K) ⊗ₜ[R] HopfAlgebra.antipode R x := by
+  rw [TensorProduct.antipode_def, TensorProduct.AlgebraTensorModule.map_tmul,
+    HopfAlgebra.antipode_one]
+
+end BaseChangeAntipode
+
+variable (R : Type u) (K : Type v) [CommRing R] [CommSemiring K] [Algebra R K]
+variable (n : ℕ)
+
+/-- Two `K`-algebra maps out of the base-changed coordinate Hopf algebra of `GLₙ` are equal if
+they agree on the pure tensors of localized generic entries. -/
+theorem coordinateHopfAlgebra_baseChange_algHom_ext
+    {C : Type*} [CommRing C] [Algebra R C] [Algebra K C] [IsScalarTower R K C]
+    {f g : K ⊗[R] coordinateHopfAlgebra R n →ₐ[K] C}
+    (h : ∀ i j, f (1 ⊗ₜ[R] coordinateHopfAlgebraAlgEquiv R n
+        (coordinateRingMap R n (MvPolynomial.X (i, j)))) =
+      g (1 ⊗ₜ[R] coordinateHopfAlgebraAlgEquiv R n
+        (coordinateRingMap R n (MvPolynomial.X (i, j))))) :
+    f = g := by
+  apply (Algebra.TensorProduct.liftEquivRight R K _ _).symm.injective
+  apply coordinateHopfAlgebra_algHom_ext R n
+  intro i j
+  simpa only [Algebra.TensorProduct.liftEquivRight_symm_apply, AlgHom.comp_apply,
+    AlgHom.coe_restrictScalars', Algebra.TensorProduct.includeRight_apply] using h i j
+
+end BaseChangeExt
+
 variable (R : Type u) (K : Type v) [CommRing R] [CommRing K] [Algebra R K]
 variable (n : ℕ)
 
@@ -148,22 +184,6 @@ private theorem bundledCoordinateBaseChangeAlgEquiv_tmul
         (coordinateRingBaseChangeAlgEquiv R K n
           (s ⊗ₜ[R] (coordinateHopfAlgebraAlgEquiv R n).symm x)) :=
   by simp [bundledCoordinateBaseChangeAlgEquiv]
-
-/-- Two `K`-algebra maps out of the base-changed coordinate Hopf algebra of `GLₙ` are equal if
-they agree on the pure tensors of localized generic entries. -/
-theorem coordinateHopfAlgebra_baseChange_algHom_ext
-    {C : Type*} [CommRing C] [Algebra R C] [Algebra K C] [IsScalarTower R K C]
-    {f g : K ⊗[R] coordinateHopfAlgebra R n →ₐ[K] C}
-    (h : ∀ i j, f (1 ⊗ₜ[R] coordinateHopfAlgebraAlgEquiv R n
-        (coordinateRingMap R n (MvPolynomial.X (i, j)))) =
-      g (1 ⊗ₜ[R] coordinateHopfAlgebraAlgEquiv R n
-        (coordinateRingMap R n (MvPolynomial.X (i, j))))) :
-    f = g := by
-  apply (Algebra.TensorProduct.liftEquivRight R K _ _).symm.injective
-  apply coordinateHopfAlgebra_algHom_ext R n
-  intro i j
-  simpa only [Algebra.TensorProduct.liftEquivRight_symm_apply, AlgHom.comp_apply,
-    AlgHom.coe_restrictScalars', Algebra.TensorProduct.includeRight_apply] using h i j
 
 -- `CommHopfAlgCat.baseChange H` abbreviates `CommHopfAlgCat.of K (K ⊗[R] H)`, so its
 -- stored counit and comultiplication are definitionally Mathlib's tensor-product bialgebra
@@ -264,12 +284,6 @@ theorem coordinateHopfAlgebraBaseChangeBialgEquiv_one_tmul_X (i j : Fin n) :
         (coordinateRingMap K n (MvPolynomial.X (i, j))) := by
   simpa using coordinateHopfAlgebraBaseChangeBialgEquiv_tmul_coordinateRingMap R K n
     (1 : K) (MvPolynomial.X (i, j))
-
-private theorem baseChange_antipode_one_tmul (x : coordinateHopfAlgebra R n) :
-    HopfAlgebra.antipode K ((1 : K) ⊗ₜ[R] x) =
-      (1 : K) ⊗ₜ[R] HopfAlgebra.antipode R x := by
-  rw [TensorProduct.antipode_def, TensorProduct.AlgebraTensorModule.map_tmul,
-    HopfAlgebra.antipode_one]
 
 /-- Base change carries each inverse localized generic matrix entry to the corresponding inverse
 entry over the new base. -/
