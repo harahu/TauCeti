@@ -43,7 +43,9 @@ open Filter Topology
 
 namespace TauCeti
 
-variable {K : Type*} [NormedField K]
+section Field
+
+variable {K : Type*} [Field K]
 
 private def xTerm (x : K) : K := x / (1 - x) ^ 2
 private def yTerm (x : K) : K := x ^ 2 / (1 - x) ^ 3
@@ -78,7 +80,9 @@ private theorem yTerm_zpow_neg (q u : Kˣ) (n : ℤ) :
     yTerm_inv ((q : K) ^ n * (u : K)⁻¹)
       (mul_ne_zero (zpow_ne_zero _ q.ne_zero) (inv_ne_zero u.ne_zero))
 
-variable [CompleteSpace K] [IsUltrametricDist K]
+end Field
+
+variable {K : Type*} [NormedField K] [CompleteSpace K] [IsUltrametricDist K]
 
 private theorem summable_xTerm_nat (q : K) (hq : ‖q‖ < 1) (u : K) :
     Summable (fun n : ℕ ↦ xTerm (q ^ n * u)) := by

@@ -31,10 +31,10 @@ The comparison is the connecting map of the long exact sequence for
 `ψ k / p ^ n`. Its kernel consists of the functionals extending along `f`, because `M[p^∞]` is a
 direct summand of `M` over `ℤ_p`, and it is surjective because `P₀` is projective.
 
-The modules may carry an action of a `ℤ_p`-algebra `A` for which the maps are `A`-linear; the
-connecting map is then compatible with the contragredient actions of `A`: precomposing a functional
-on `P₁` with the action of `a ∈ A` corresponds to precomposing a character of `M[p^∞]` with the
-action of `a`. Applied to the group algebra `A = ℤ_p[G]` of a finite group,
+The modules may carry an action of a ring `A`, compatible with that of `ℤ_p`, for which the maps
+are `A`-linear; the connecting map is then compatible with the contragredient actions of `A`:
+precomposing a functional on `P₁` with the action of `a ∈ A` corresponds to precomposing a character
+of `M[p^∞]` with the action of `a`. Applied to the group algebra `A = ℤ_p[G]` of a finite group,
 this identifies `E¹(M) = Ext¹_{ℤ_p[G]}(M, ℤ_p[G])` of a module of projective dimension one with the
 Pontryagin dual of its `p`-power torsion.
 
@@ -67,14 +67,14 @@ open Module
 
 namespace TauCeti
 
-variable {p : ℕ} [Fact p.Prime] {A : Type*} [Ring A] [Algebra ℤ_[p] A]
+variable {p : ℕ} [Fact p.Prime] {A : Type*} [Ring A] [SMul ℤ_[p] A]
   {P₁ P₀ M : Type*} [AddCommGroup P₁] [Module A P₁] [Module ℤ_[p] P₁] [IsScalarTower ℤ_[p] A P₁]
   [AddCommGroup P₀] [Module A P₀] [Module ℤ_[p] P₀] [IsScalarTower ℤ_[p] A P₀]
   [AddCommGroup M] [Module A M] {f : P₁ →ₗ[A] P₀} {π : P₀ →ₗ[A] M}
 
 section Extension
 
-omit [Fact p.Prime] [Algebra ℤ_[p] A] [Module ℤ_[p] P₁] [IsScalarTower ℤ_[p] A P₁] [Module ℤ_[p] P₀]
+omit [Fact p.Prime] [SMul ℤ_[p] A] [Module ℤ_[p] P₁] [IsScalarTower ℤ_[p] A P₁] [Module ℤ_[p] P₀]
   [IsScalarTower ℤ_[p] A P₀] in
 /-- Some power of `p` carries an element of the preimage of the `p`-power torsion into the range
 of `f`. -/
@@ -89,7 +89,7 @@ private def extendDualFun (hf : Function.Exact f π) (ψ : Dual ℤ_[p] P₁)
     (y : (pPowerTorsion p A M).comap π) : ℚ_[p] :=
   (ψ (exists_nsmul_eq hf y).choose.2 : ℚ_[p]) / (p : ℚ_[p]) ^ (exists_nsmul_eq hf y).choose.1
 
-omit [Algebra ℤ_[p] A] [IsScalarTower ℤ_[p] A P₁] [Module ℤ_[p] P₀] [IsScalarTower ℤ_[p] A P₀] in
+omit [SMul ℤ_[p] A] [IsScalarTower ℤ_[p] A P₁] [Module ℤ_[p] P₀] [IsScalarTower ℤ_[p] A P₀] in
 private theorem extendDualFun_eq (hf : Function.Exact f π) (hfi : Function.Injective f)
     (ψ : Dual ℤ_[p] P₁) (y : (pPowerTorsion p A M).comap π) {n : ℕ} {k : P₁}
     (h : p ^ n • (y : P₀) = f k) : extendDualFun hf ψ y = ψ k / (p : ℚ_[p]) ^ n := by
@@ -156,7 +156,7 @@ section TorsionDual
 
 variable (hf : Function.Exact f π) (hfi : Function.Injective f) (hπ : Function.Surjective π)
 
-omit [Fact p.Prime] [Algebra ℤ_[p] A] [Module ℤ_[p] P₁] [IsScalarTower ℤ_[p] A P₁] [Module ℤ_[p] P₀]
+omit [Fact p.Prime] [SMul ℤ_[p] A] [Module ℤ_[p] P₁] [IsScalarTower ℤ_[p] A P₁] [Module ℤ_[p] P₀]
   [IsScalarTower ℤ_[p] A P₀] in
 private theorem exists_lift (hπ : Function.Surjective π) (t : pPowerTorsion p A M) :
     ∃ y : (pPowerTorsion p A M).comap π, ⟨π y, y.2⟩ = t := by
@@ -212,7 +212,7 @@ private theorem torsionDualMap_eq (ψ : Dual ℤ_[p] P₁) (y : (pPowerTorsion p
     torsionDualMap p hf hfi hπ ψ ⟨π y, y.2⟩ = Submodule.Quotient.mk (extendDual hf hfi ψ y) :=
   torsionDualFun_eq hf hfi hπ ψ y
 
-omit [Fact p.Prime] [Algebra ℤ_[p] A] [Module ℤ_[p] P₁] [IsScalarTower ℤ_[p] A P₁] [Module ℤ_[p] P₀]
+omit [Fact p.Prime] [SMul ℤ_[p] A] [Module ℤ_[p] P₁] [IsScalarTower ℤ_[p] A P₁] [Module ℤ_[p] P₀]
   [IsScalarTower ℤ_[p] A P₀] in
 /-- Every `p`-power torsion element of `M` has a lift `x ∈ P₀` with `p ^ n • x` in the range of
 `f`. -/
@@ -248,6 +248,7 @@ theorem torsionDualMap_apply_of_extension (ψ : Dual ℤ_[p] P₁) (Φ : P₀ �
   have hp : (p : ℚ_[p]) ≠ 0 := Nat.cast_ne_zero.mpr (Fact.out : p.Prime).ne_zero
   simp [← hk, hp]
 
+variable [SMulCommClass A ℤ_[p] P₁] in
 /-- The connecting map is compatible with the contragredient actions of `A`: precomposing a
 functional with the action of `a ∈ A` on `P₁` corresponds to evaluating its image at `a • t`. -/
 @[simp]

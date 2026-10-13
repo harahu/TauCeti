@@ -195,6 +195,14 @@ instance : FaithfulSMul R W'.CoordinateRing :=
   (faithfulSMul_iff_algebraMap_injective R _).mpr <|
     Function.LeftInverse.injective W'.evalZero.commutes
 
+/-- Two ring homomorphisms out of the homogeneous coordinate ring are equal when they agree on the
+base ring and on the classes of the coordinates. -/
+theorem ringHom_ext {S : Type*} [Semiring S] {f₁ f₂ : W'.CoordinateRing →+* S}
+    (h₁ : f₁.comp (algebraMap R W'.CoordinateRing) = f₂.comp (algebraMap R W'.CoordinateRing))
+    (h₂ : f₁ ∘ W'.coord = f₂ ∘ W'.coord) : f₁ = f₂ :=
+  Ideal.Quotient.ringHom_ext <|
+    MvPolynomial.ringHom_ext (fun r ↦ RingHom.congr_fun h₁ r) (fun i ↦ congrFun h₂ i)
+
 section Eval
 
 variable {S : Type*} [CommRing S] (g : R →+* S) {P : Fin 3 → S} (hP : (W'.map g).Equation P)
@@ -228,14 +236,6 @@ theorem evalHom_comp_coord : W'.evalHom g hP ∘ W'.coord = P :=
 theorem map_evalHom :
     (W'.map (algebraMap R W'.CoordinateRing)).map (W'.evalHom g hP) = W'.map g :=
   (W'.map_map _ _).trans (congrArg W'.map (W'.evalHom_comp_algebraMap g hP))
-
-/-- Two ring homomorphisms out of the homogeneous coordinate ring are equal when they agree on the
-base ring and on the classes of the coordinates. -/
-theorem ringHom_ext {f₁ f₂ : W'.CoordinateRing →+* S}
-    (h₁ : f₁.comp (algebraMap R W'.CoordinateRing) = f₂.comp (algebraMap R W'.CoordinateRing))
-    (h₂ : f₁ ∘ W'.coord = f₂ ∘ W'.coord) : f₁ = f₂ :=
-  Ideal.Quotient.ringHom_ext <|
-    MvPolynomial.ringHom_ext (fun r ↦ RingHom.congr_fun h₁ r) (fun i ↦ congrFun h₂ i)
 
 /-- `evalHom` is the only ring homomorphism out of the homogeneous coordinate ring that restricts to
 `g` on `R` and sends the class of each coordinate `Xᵢ` to `Pᵢ`. -/

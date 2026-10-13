@@ -70,12 +70,14 @@ open TensorProduct
 
 namespace TauCeti
 
-section
+section Alternating
 
-variable {E F₁ F₂ F₃ : Type*} [SeminormedAddCommGroup E] [NormedSpace ℝ E]
-  [SeminormedAddCommGroup F₁] [NormedSpace ℝ F₁]
-  [SeminormedAddCommGroup F₂] [NormedSpace ℝ F₂]
-  [SeminormedAddCommGroup F₃] [NormedSpace ℝ F₃]
+variable {E F₁ F₂ F₃ : Type*}
+  [AddCommGroup E] [Module ℝ E] [TopologicalSpace E]
+  [AddCommGroup F₁] [Module ℝ F₁] [TopologicalSpace F₁]
+  [AddCommGroup F₂] [Module ℝ F₂] [TopologicalSpace F₂]
+  [AddCommGroup F₃] [Module ℝ F₃] [TopologicalSpace F₃]
+  [IsTopologicalAddGroup F₃] [ContinuousSMul ℝ F₃]
 
 private noncomputable def wedgeAlternating {k l : ℕ} (mu : F₁ →L[ℝ] F₂ →L[ℝ] F₃)
     (phi : E [⋀^Fin k]→L[ℝ] F₁) (psi : E [⋀^Fin l]→L[ℝ] F₂) :
@@ -123,6 +125,15 @@ private lemma wedgeAlternating_apply {k l : ℕ} (mu : F₁ →L[ℝ] F₂ →L[
   rw [wedgeAlternating_eq_alternatization]
   simp [MultilinearMap.alternatization_apply,
     ContinuousAlternatingMap.wedgeWithUnalternated_apply]
+
+end Alternating
+
+section
+
+variable {E F₁ F₂ F₃ : Type*} [SeminormedAddCommGroup E] [NormedSpace ℝ E]
+  [SeminormedAddCommGroup F₁] [NormedSpace ℝ F₁]
+  [SeminormedAddCommGroup F₂] [NormedSpace ℝ F₂]
+  [SeminormedAddCommGroup F₃] [NormedSpace ℝ F₃]
 
 private lemma norm_wedgeWithUnalternated_le {k l : ℕ} (mu : F₁ →L[ℝ] F₂ →L[ℝ] F₃)
     (phi : E [⋀^Fin k]→L[ℝ] F₁) (psi : E [⋀^Fin l]→L[ℝ] F₂)
@@ -510,10 +521,11 @@ section InteriorProduct
 open Equiv
 
 variable {E F₁ F₂ F₃ : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
-  [NormedAddCommGroup F₁] [NormedSpace ℝ F₁]
-  [NormedAddCommGroup F₂] [NormedSpace ℝ F₂]
   [NormedAddCommGroup F₃] [NormedSpace ℝ F₃]
   {k l : ℕ}
+
+variable [NormedAddCommGroup F₁] [NormedSpace ℝ F₁]
+  [AddCommGroup F₂] [Module ℝ F₂] [TopologicalSpace F₂] in
 
 /-- The terms of the expansion of `(wedgeWith mu phi psi).curryLeft v` in which `v` lands in the
 `i`-th slot of `phi`: each such slot contributes the signed sum of `wedgeWith mu (phi.curryLeft v)
@@ -544,6 +556,8 @@ private lemma sum_sign_smul_insertNth_castAdd (mu : F₁ →L[ℝ] F₂ →L[ℝ
     fun sigma => ?_
   simp [Perm.sign_permCongr]
 
+variable [AddCommGroup F₁] [Module ℝ F₁] [TopologicalSpace F₁]
+  [NormedAddCommGroup F₂] [NormedSpace ℝ F₂] in
 /-- The terms of the expansion of `(wedgeWith mu phi psi).curryLeft v` in which `v` lands in the
 `i`-th slot of `psi`: each such slot contributes `(-1) ^ (k + 1)` times the signed sum of
 `wedgeWith mu phi (psi.curryLeft v)`. -/
@@ -566,6 +580,8 @@ private lemma sum_sign_smul_insertNth_natAdd (mu : F₁ →L[ℝ] F₂ →L[ℝ]
   -- Collect the two signs in front of the sum, where they combine to `(-1) ^ (k + 1)`.
   simp only [map_zsmul, smul_comm (Perm.sign _), ← Finset.smul_sum, smul_smul, hsign,
     Function.comp_apply]
+
+variable [NormedAddCommGroup F₁] [NormedSpace ℝ F₁] [NormedAddCommGroup F₂] [NormedSpace ℝ F₂]
 
 /-- The interior product is an antiderivation of degree `-1` for the paired wedge:
 `ι_v (φ ∧ ψ) = ι_v φ ∧ ψ + (-1) ^ (k + 1) φ ∧ ι_v ψ` for a `(k + 1)`-form `φ`, where the interior

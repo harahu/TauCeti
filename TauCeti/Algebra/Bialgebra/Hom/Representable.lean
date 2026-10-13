@@ -79,8 +79,11 @@ namespace HomAlgebra
 
 section Conditions
 
-variable {R T H G : Type*} [CommRing R] [CommRing T] [Algebra R T] [CommRing H] [CommRing G]
-  [_root_.Bialgebra R H] [_root_.Bialgebra R G]
+variable {R T H G : Type*} [CommSemiring R] [CommSemiring T] [Algebra R T]
+
+section MulBase
+
+variable [CommSemiring G] [Algebra R G]
 
 variable (R T G) in
 -- The `R`-algebra homomorphism `(T ⊗[R] G) ⊗[R] (T ⊗[R] G) → T ⊗[R] (G ⊗[R] G)` multiplying the
@@ -94,7 +97,7 @@ private lemma mulBase_tmul (a b : T) (x y : G) :
   simp [mulBase, Algebra.TensorProduct.productMap_apply_tmul]
 
 -- `mulBase` is natural in `T`.
-private lemma map_comp_mulBase {T' : Type*} [CommRing T'] [Algebra R T'] (k : T →ₐ[R] T') :
+private lemma map_comp_mulBase {T' : Type*} [CommSemiring T'] [Algebra R T'] (k : T →ₐ[R] T') :
     (map k (AlgHom.id R (G ⊗[R] G))).comp (mulBase R T G) =
       (mulBase R T' G).comp (map (map k (AlgHom.id R G)) (map k (AlgHom.id R G))) := by
   ext <;> simp [Algebra.TensorProduct.one_def, mulBase_tmul]
@@ -111,8 +114,11 @@ private lemma distribBaseChange_symm_tmul (u v : T ⊗[R] G) :
     | add v v' hv hv' => simp only [TensorProduct.tmul_add, map_add, hv, hv']
     | tmul b y => simp [mulBase_tmul]
 
+end MulBase
+
 -- `TauCeti.Coalgebra.baseChange_comul`, with the scalar extension of the comultiplication written
 -- as an algebra homomorphism.
+variable [Semiring G] [_root_.Bialgebra R G] in
 private lemma comulAlgHom_baseChange (z : T ⊗[R] G) :
     _root_.Bialgebra.comulAlgHom T (T ⊗[R] G) z =
       TensorProduct.AlgebraTensorModule.distribBaseChange R T G G
@@ -123,6 +129,7 @@ private lemma comulAlgHom_baseChange (z : T ⊗[R] G) :
   | tmul a x => simp
 
 -- Compatibility with the comultiplications, restricted to `H`.
+variable [Semiring H] [CommSemiring G] [_root_.Bialgebra R H] [_root_.Bialgebra R G] in
 private lemma map_comp_comulAlgHom_eq_iff (F : T ⊗[R] H →ₐ[T] T ⊗[R] G) :
     (map F F).comp (_root_.Bialgebra.comulAlgHom T (T ⊗[R] H)) =
         (_root_.Bialgebra.comulAlgHom T (T ⊗[R] G)).comp F ↔
@@ -151,6 +158,7 @@ private lemma map_comp_comulAlgHom_eq_iff (F : T ⊗[R] H →ₐ[T] T ⊗[R] G) 
   simp only [f, AlgHom.liftEquiv_symm_apply]
 
 -- Compatibility with the counits, restricted to `H`.
+variable [Semiring H] [Semiring G] [_root_.Bialgebra R H] [_root_.Bialgebra R G] in
 private lemma counitAlgHom_comp_eq_iff (F : T ⊗[R] H →ₐ[T] T ⊗[R] G) :
     (_root_.Bialgebra.counitAlgHom T (T ⊗[R] G)).comp F =
         _root_.Bialgebra.counitAlgHom T (T ⊗[R] H) ↔
@@ -166,9 +174,12 @@ section Construction
 
 open Algebra.FiniteType (out)
 
-variable (R H G : Type*) [CommRing R] [CommRing H] [CommRing G] [_root_.Bialgebra R H]
-  [_root_.Bialgebra R G] [Algebra.FinitePresentation R H] [Module.Finite R G]
-  [Module.Projective R G]
+variable (R H G : Type*) [CommRing R] [CommRing H] [CommRing G]
+
+section Classifying
+
+variable [Algebra R H] [Algebra R G]
+  [Algebra.FinitePresentation R H] [Module.Finite R G] [Module.Projective R G]
 
 -- The scheme of morphisms `Spec G → Spec H` over `Spec R`: its `T`-points are the algebra
 -- homomorphisms `H → T ⊗[R] G`.
@@ -182,51 +193,18 @@ private abbrev Ambient₂ := TauCeti.Algebra.WeilRestriction R (G ⊗[R] G) ((G 
 private def univ : H →ₐ[R] Ambient R H G ⊗[R] G :=
   TauCeti.Algebra.WeilRestriction.tensorHomEquiv R G H _ (AlgHom.id R _)
 
--- The two sides of the compatibility with the comultiplications, as maps classifying points of
--- `Ambient₂` with values in `Ambient`.
-private def comulLeft : Ambient₂ R H G →ₐ[R] Ambient R H G :=
-  (TauCeti.Algebra.WeilRestriction.tensorHomEquiv R (G ⊗[R] G) H _).symm
-    ((map (AlgHom.id R _) (_root_.Bialgebra.comulAlgHom R G)).comp (univ R H G))
-
-private def comulRight : Ambient₂ R H G →ₐ[R] Ambient R H G :=
-  (TauCeti.Algebra.WeilRestriction.tensorHomEquiv R (G ⊗[R] G) H _).symm
-    ((mulBase R _ G).comp
-      ((map (univ R H G) (univ R H G)).comp (_root_.Bialgebra.comulAlgHom R H)))
-
--- The two sides of the compatibility with the counits, as points of `H` with values in `Ambient`.
-private def counitLeft : H →ₐ[R] Ambient R H G :=
-  ((_root_.Bialgebra.counitAlgHom (Ambient R H G) (Ambient R H G ⊗[R] G)).restrictScalars R).comp
-    (univ R H G)
-
-private def counitRight : H →ₐ[R] Ambient R H G :=
-  (Algebra.ofId R _).comp (_root_.Bialgebra.counitAlgHom R H)
-
--- The ideal of `Ambient` cut out by the two compatibilities, imposed on finite sets of generators.
-private def ideal : Ideal (Ambient R H G) :=
-  Ideal.span ((fun x ↦ comulLeft R H G x - comulRight R H G x) '' ↑(out (R := R)
-      (A := Ambient₂ R H G)).choose ∪
-    (fun h ↦ counitLeft R H G h - counitRight R H G h) '' ↑(out (R := R) (A := H)).choose)
-
-private lemma ideal_fg : (ideal R H G).FG :=
-  Submodule.fg_span <| ((Finset.finite_toSet _).image _).union ((Finset.finite_toSet _).image _)
-
-variable {R H G} {T : Type*} [CommRing T] [Algebra R T]
+variable {R H G}
 
 -- Two algebra homomorphisms out of a finite type algebra agree once they agree on the chosen
 -- generators.
-private lemma comp_eq_comp_iff {A : Type*} [CommRing A] [Algebra R A] [Algebra.FiniteType R A]
-    (g : Ambient R H G →ₐ[R] T) (a b : A →ₐ[R] Ambient R H G) :
+private lemma comp_eq_comp_iff {T A : Type*} [Ring T] [Algebra R T] [Semiring A] [Algebra R A]
+    [Algebra.FiniteType R A] (g : Ambient R H G →ₐ[R] T) (a b : A →ₐ[R] Ambient R H G) :
     (∀ x ∈ (out (R := R) (A := A)).choose, g (a x - b x) = 0) ↔ g.comp a = g.comp b := by
   refine ⟨fun h ↦ AlgHom.ext_of_adjoin_eq_top (out (R := R) (A := A)).choose_spec fun x hx ↦ ?_,
     fun h x _ ↦ by rw [map_sub, sub_eq_zero]; exact AlgHom.congr_fun h x⟩
   simpa [sub_eq_zero] using h x hx
 
-private lemma ideal_le_ker_iff (g : Ambient R H G →ₐ[R] T) :
-    ideal R H G ≤ RingHom.ker g ↔ g.comp (comulLeft R H G) = g.comp (comulRight R H G) ∧
-      g.comp (counitLeft R H G) = g.comp (counitRight R H G) := by
-  simp only [ideal, Ideal.span_le, Set.union_subset_iff, Set.image_subset_iff]
-  simp only [Set.subset_def, Set.mem_preimage, SetLike.mem_coe, RingHom.mem_ker]
-  rw [← comp_eq_comp_iff, ← comp_eq_comp_iff]
+variable {T : Type*} [CommRing T] [Algebra R T]
 
 -- The `T`-algebra homomorphism `T ⊗[R] H → T ⊗[R] G` classified by `g`.
 private def toAlgHom (g : Ambient R H G →ₐ[R] T) : T ⊗[R] H →ₐ[T] T ⊗[R] G :=
@@ -237,6 +215,31 @@ private lemma tensorHomEquiv_eq (g : Ambient R H G →ₐ[R] T) :
       (map g (AlgHom.id R G)).comp (univ R H G) := by
   rw [univ, ← TauCeti.Algebra.WeilRestriction.tensorHomEquiv_comp, AlgHom.comp_id]
 
+private lemma toAlgHom_symm (F : T ⊗[R] H →ₐ[T] T ⊗[R] G) :
+    toAlgHom ((TauCeti.Algebra.WeilRestriction.tensorHomEquiv R G H T).symm
+      ((AlgHom.liftEquiv R T H _).symm F)) = F := by
+  simp [toAlgHom]
+
+end Classifying
+
+section LeftSides
+
+variable [Algebra R H] [_root_.Bialgebra R G]
+  [Algebra.FinitePresentation R H] [Module.Finite R G] [Module.Projective R G]
+
+-- The left side of the compatibility with the comultiplications, as a map classifying points of
+-- `Ambient₂` with values in `Ambient`.
+private def comulLeft : Ambient₂ R H G →ₐ[R] Ambient R H G :=
+  (TauCeti.Algebra.WeilRestriction.tensorHomEquiv R (G ⊗[R] G) H _).symm
+    ((map (AlgHom.id R _) (_root_.Bialgebra.comulAlgHom R G)).comp (univ R H G))
+
+-- The left side of the compatibility with the counits, as a point of `H` with values in `Ambient`.
+private def counitLeft : H →ₐ[R] Ambient R H G :=
+  ((_root_.Bialgebra.counitAlgHom (Ambient R H G) (Ambient R H G ⊗[R] G)).restrictScalars R).comp
+    (univ R H G)
+
+variable {R H G} {T : Type*} [CommRing T] [Algebra R T]
+
 private lemma tensorHomEquiv_comp_comulLeft (g : Ambient R H G →ₐ[R] T) :
     TauCeti.Algebra.WeilRestriction.tensorHomEquiv R (G ⊗[R] G) H T (g.comp (comulLeft R H G)) =
       (map (AlgHom.id R T) (_root_.Bialgebra.comulAlgHom R G)).comp
@@ -245,14 +248,6 @@ private lemma tensorHomEquiv_comp_comulLeft (g : Ambient R H G →ₐ[R] T) :
     ← AlgHom.comp_assoc, ← AlgHom.comp_assoc, ← Algebra.TensorProduct.map_comp,
     ← Algebra.TensorProduct.map_comp, AlgHom.comp_id, AlgHom.id_comp, AlgHom.comp_id,
     AlgHom.id_comp]
-
-private lemma tensorHomEquiv_comp_comulRight (g : Ambient R H G →ₐ[R] T) :
-    TauCeti.Algebra.WeilRestriction.tensorHomEquiv R (G ⊗[R] G) H T (g.comp (comulRight R H G)) =
-      (mulBase R T G).comp ((map ((map g (AlgHom.id R G)).comp (univ R H G))
-        ((map g (AlgHom.id R G)).comp (univ R H G))).comp (_root_.Bialgebra.comulAlgHom R H)) := by
-  rw [comulRight, TauCeti.Algebra.WeilRestriction.tensorHomEquiv_comp, Equiv.apply_symm_apply,
-    ← AlgHom.comp_assoc, map_comp_mulBase, Algebra.TensorProduct.map_comp]
-  simp only [AlgHom.comp_assoc]
 
 private lemma comp_counitLeft (g : Ambient R H G →ₐ[R] T) :
     g.comp (counitLeft R H G) =
@@ -265,9 +260,66 @@ private lemma comp_counitLeft (g : Ambient R H G →ₐ[R] T) :
     Algebra.TensorProduct.ext' fun a x ↦ by simp [Algebra.smul_def]
   rw [counitLeft, ← AlgHom.comp_assoc, hg, AlgHom.comp_assoc]
 
-private lemma comp_counitRight (g : Ambient R H G →ₐ[R] T) :
+end LeftSides
+
+section RightSides
+
+variable [_root_.Bialgebra R H] [Algebra R G]
+  [Algebra.FinitePresentation R H] [Module.Finite R G] [Module.Projective R G]
+
+-- The right side of the compatibility with the comultiplications, as a map classifying points of
+-- `Ambient₂` with values in `Ambient`.
+private def comulRight : Ambient₂ R H G →ₐ[R] Ambient R H G :=
+  (TauCeti.Algebra.WeilRestriction.tensorHomEquiv R (G ⊗[R] G) H _).symm
+    ((mulBase R _ G).comp
+      ((map (univ R H G) (univ R H G)).comp (_root_.Bialgebra.comulAlgHom R H)))
+
+-- The right side of the compatibility with the counits, as a point of `H` with values in `Ambient`.
+private def counitRight : H →ₐ[R] Ambient R H G :=
+  (Algebra.ofId R _).comp (_root_.Bialgebra.counitAlgHom R H)
+
+variable {R H G}
+
+private lemma comp_counitRight {T : Type*} [Semiring T] [Algebra R T] (g : Ambient R H G →ₐ[R] T) :
     g.comp (counitRight R H G) = (Algebra.ofId R T).comp (_root_.Bialgebra.counitAlgHom R H) := by
   ext; simp [counitRight]
+
+variable {T : Type*} [CommRing T] [Algebra R T]
+
+private lemma tensorHomEquiv_comp_comulRight (g : Ambient R H G →ₐ[R] T) :
+    TauCeti.Algebra.WeilRestriction.tensorHomEquiv R (G ⊗[R] G) H T (g.comp (comulRight R H G)) =
+      (mulBase R T G).comp ((map ((map g (AlgHom.id R G)).comp (univ R H G))
+        ((map g (AlgHom.id R G)).comp (univ R H G))).comp (_root_.Bialgebra.comulAlgHom R H)) := by
+  rw [comulRight, TauCeti.Algebra.WeilRestriction.tensorHomEquiv_comp, Equiv.apply_symm_apply,
+    ← AlgHom.comp_assoc, map_comp_mulBase, Algebra.TensorProduct.map_comp]
+  simp only [AlgHom.comp_assoc]
+
+end RightSides
+
+section Representing
+
+variable [_root_.Bialgebra R H] [_root_.Bialgebra R G]
+  [Algebra.FinitePresentation R H] [Module.Finite R G] [Module.Projective R G]
+
+-- The ideal of `Ambient` cut out by the two compatibilities, imposed on finite sets of generators.
+private def ideal : Ideal (Ambient R H G) :=
+  Ideal.span ((fun x ↦ comulLeft R H G x - comulRight R H G x) '' ↑(out (R := R)
+      (A := Ambient₂ R H G)).choose ∪
+    (fun h ↦ counitLeft R H G h - counitRight R H G h) '' ↑(out (R := R) (A := H)).choose)
+
+private lemma ideal_fg : (ideal R H G).FG :=
+  Submodule.fg_span <| ((Finset.finite_toSet _).image _).union ((Finset.finite_toSet _).image _)
+
+variable {R H G}
+
+private lemma ideal_le_ker_iff {T : Type*} [Ring T] [Algebra R T] (g : Ambient R H G →ₐ[R] T) :
+    ideal R H G ≤ RingHom.ker g ↔ g.comp (comulLeft R H G) = g.comp (comulRight R H G) ∧
+      g.comp (counitLeft R H G) = g.comp (counitRight R H G) := by
+  simp only [ideal, Ideal.span_le, Set.union_subset_iff, Set.image_subset_iff]
+  simp only [Set.subset_def, Set.mem_preimage, SetLike.mem_coe, RingHom.mem_ker]
+  rw [← comp_eq_comp_iff, ← comp_eq_comp_iff]
+
+variable {T : Type*} [CommRing T] [Algebra R T]
 
 -- `g` kills the ideal exactly when the homomorphism it classifies is a bialgebra homomorphism.
 private lemma ideal_le_ker_iff_toAlgHom (g : Ambient R H G →ₐ[R] T) :
@@ -282,11 +334,6 @@ private lemma ideal_le_ker_iff_toAlgHom (g : Ambient R H G →ₐ[R] T) :
     comp_counitRight]
   simp only [toAlgHom, Equiv.symm_apply_apply, tensorHomEquiv_eq,
     eq_comm (a := map (AlgHom.id R T) _ |>.comp _)]
-
-private lemma toAlgHom_symm (F : T ⊗[R] H →ₐ[T] T ⊗[R] G) :
-    toAlgHom ((TauCeti.Algebra.WeilRestriction.tensorHomEquiv R G H T).symm
-      ((AlgHom.liftEquiv R T H _).symm F)) = F := by
-  simp [toAlgHom]
 
 variable (R H G) in
 -- The representing algebra, before it is wrapped in the irreducible `HomAlgebra`.
@@ -323,6 +370,8 @@ private lemma quotEquiv_comp_one_tmul {T' : Type*} [CommRing T'] [Algebra R T']
     AlgHom.liftEquiv_tmul, one_smul, TauCeti.Algebra.WeilRestriction.tensorHomEquiv_comp,
     AlgHom.comp_apply]
   rw [← AlgHom.comp_apply (map k _), ← Algebra.TensorProduct.map_comp, AlgHom.comp_id]
+
+end Representing
 
 end Construction
 

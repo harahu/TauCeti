@@ -81,6 +81,18 @@ theorem typeBDifferenceRootMatrix_def (i j : ι) (hij : i ≠ j) :
 
 end AddGroupWithOne
 
+section NonAssocRing
+
+variable [NonAssocRing K] [Fintype ι]
+
+/-- Every difference-root matrix is square-zero. -/
+theorem typeBDifferenceRootMatrix_mul_self (i j : ι) (hij : i ≠ j) :
+    typeBDifferenceRootMatrix (K := K) i j hij * typeBDifferenceRootMatrix i j hij = 0 := by
+  simp [typeBDifferenceRootMatrix, mul_sub, sub_mul, Matrix.single_mul_single_of_ne, hij,
+    hij.symm]
+
+end NonAssocRing
+
 section Ring
 
 variable [Ring K] [Fintype ι]
@@ -203,12 +215,6 @@ theorem typeBDifferenceRootGenerator_lie_chain (i j k : ι) (hij : i ≠ j) (hjk
   apply Subtype.ext
   simpa only [LieSubalgebra.coe_bracket, coe_typeBDifferenceRootGenerator] using
     typeBDifferenceRootMatrix_lie_differenceRootMatrix_chain (K := K) i j j k hij hjk rfl hik
-
-/-- Every difference-root matrix is square-zero. -/
-theorem typeBDifferenceRootMatrix_mul_self (i j : ι) (hij : i ≠ j) :
-    typeBDifferenceRootMatrix (K := K) i j hij * typeBDifferenceRootMatrix i j hij = 0 := by
-  simp [typeBDifferenceRootMatrix, mul_sub, sub_mul, Matrix.single_mul_single_of_ne, hij,
-    hij.symm]
 
 /-! ### Short roots -/
 

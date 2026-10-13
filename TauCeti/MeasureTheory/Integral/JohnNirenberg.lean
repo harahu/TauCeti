@@ -402,12 +402,15 @@ open Metric
 
 variable {c : ι → ℝ} {r : ℝ}
 
+omit [Fintype ι] in
 /-- The affine bijection `y ↦ 2r y + (c - r)` of `ι → ℝ`. -/
-private noncomputable def cubeEquiv (c : ι → ℝ) (hr : 0 < r) : (ι → ℝ) ≃ᵐ (ι → ℝ) :=
+private noncomputable def cubeEquiv [Countable ι] (c : ι → ℝ) (hr : 0 < r) :
+    (ι → ℝ) ≃ᵐ (ι → ℝ) :=
   ((Homeomorph.smulOfNeZero (2 * r) (by positivity)).trans
     (Homeomorph.addRight (c - fun _ => r))).toMeasurableEquiv
 
-private theorem cubeEquiv_apply (hr : 0 < r) (y : ι → ℝ) :
+omit [Fintype ι] in
+private theorem cubeEquiv_apply [Countable ι] (hr : 0 < r) (y : ι → ℝ) :
     cubeEquiv c hr y = (2 * r) • y + (c - fun _ => r) :=
   rfl
 

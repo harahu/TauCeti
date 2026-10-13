@@ -104,13 +104,13 @@ private theorem finiteDimensional_quotient_of_ne_bot
 
 /-- Replacing an invertible fractional ideal by its integral numerator does not change its ideal
 class. -/
-private theorem mk_num (I : (FractionalIdeal W.CoordinateRing⁰ W.FunctionField)ˣ) :
-    let hnum : IsUnit (I.1.num : FractionalIdeal W.CoordinateRing⁰ W.FunctionField) :=
+private theorem mk_num {R : Type*} [CommRing R] [IsDomain R]
+    (I : (FractionalIdeal R⁰ (FractionRing R))ˣ) :
+    let hnum : IsUnit (I.1.num : FractionalIdeal R⁰ (FractionRing R)) :=
       FractionalIdeal.isUnit_num.mpr I.isUnit
-    ClassGroup.mk W.FunctionField hnum.unit = ClassGroup.mk W.FunctionField I := by
+    ClassGroup.mk (FractionRing R) hnum.unit = ClassGroup.mk (FractionRing R) I := by
   dsimp only
-  let R := W.CoordinateRing
-  let K := W.FunctionField
+  let K := FractionRing R
   let hnum : IsUnit (I.1.num : FractionalIdeal R⁰ K) :=
     FractionalIdeal.isUnit_num.mpr I.isUnit
   have hden0 : algebraMap R K I.1.den ≠ 0 :=
@@ -121,10 +121,8 @@ private theorem mk_num (I : (FractionalIdeal W.CoordinateRing⁰ W.FunctionField
   rw [Units.val_mul, coe_toPrincipalIdeal, Units.val_mk0, hnum.unit_spec]
   simpa [mul_comm] using FractionalIdeal.den_mul_self_eq_num' R⁰ K I.1
 
-private theorem smul_top_eq_comap_mul (I J : Ideal W.CoordinateRing) :
-    J • (⊤ : Submodule W.CoordinateRing I) =
-      Submodule.comap I.subtype ((I * J : Ideal W.CoordinateRing) :
-        Submodule W.CoordinateRing W.CoordinateRing) := by
+private theorem smul_top_eq_comap_mul {R : Type*} [CommRing R] (I J : Ideal R) :
+    J • (⊤ : Submodule R I) = Submodule.comap I.subtype ((I * J : Ideal R) : Submodule R R) := by
   apply Submodule.map_injective_of_injective I.subtype_injective
   rw [Submodule.map_smul'', Submodule.map_top, Submodule.range_subtype,
     Submodule.map_comap_subtype, Ideal.smul_eq_mul, mul_comm J I,
@@ -393,7 +391,8 @@ private theorem two_nsmul_coe (n : ℕ) :
   push_cast
   ring
 
-private theorem two_nsmul_degree_le {p : F[X]} {n : ℕ} (hp : p.degree < (n : ℕ)) :
+private theorem two_nsmul_degree_le {R : Type*} [Semiring R] {p : R[X]} {n : ℕ}
+    (hp : p.degree < (n : ℕ)) :
     2 • p.degree ≤ ((2 * (n - 1) : ℕ) : WithBot ℕ) := by
   classical
   by_cases h0 : p = 0
@@ -414,9 +413,10 @@ private noncomputable def basisCombMap (W : WeierstrassCurve.Affine F) (a b : �
     (((LinearMap.toSpanSingleton F[X] W.CoordinateRing (CoordinateRing.basis W 1)).restrictScalars
       F).comp (Polynomial.degreeLT F b).subtype)
 
-private theorem natDegree_norm_basisComb_le {p q : F[X]} {da db : ℕ}
+private theorem natDegree_norm_basisComb_le {R : Type*} [CommRing R] [IsDomain R]
+    {W : WeierstrassCurve.Affine R} {p q : R[X]} {da db : ℕ}
     (hp : p.degree < (da : ℕ)) (hq : q.degree < (db : ℕ)) :
-    (Algebra.norm F[X]
+    (Algebra.norm R[X]
       (p • (1 : W.CoordinateRing) + q • CoordinateRing.basis W 1)).natDegree ≤
         max (2 * (da - 1)) (2 * db + 1) := by
   rw [CoordinateRing.basis_one, Polynomial.natDegree_le_iff_degree_le,

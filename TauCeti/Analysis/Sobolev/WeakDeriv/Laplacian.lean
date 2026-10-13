@@ -56,9 +56,13 @@ namespace TauCeti
 open InnerProductSpace Laplacian MeasureTheory TopologicalSpace
 open scoped Distributions Gradient
 
-variable {E F : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
-  [MeasurableSpace E] [BorelSpace E] [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
-  {μ : Measure E} [μ.IsAddHaarMeasure] {Ω : Opens E} {u : E → F}
+variable {E F : Type*} [NormedAddCommGroup E] [NormedAddCommGroup F] [NormedSpace ℝ F]
+  [CompleteSpace F] {Ω : Opens E} {u : E → F}
+
+section NormedSpace
+
+variable [NormedSpace ℝ E] [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E]
+  {μ : Measure E} [μ.IsAddHaarMeasure]
 
 omit [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E] in
 /-- The directional derivative of a test function, as a test function, is its classical
@@ -112,6 +116,11 @@ theorem _root_.ContDiffOn.integral_fderiv_fderiv_smul_eq_integral_smul_fderiv_fd
     (φ.contDiff.differentiable (by simp) y).lineDeriv_eq_fderiv
   simp_rw [hφ1] at e1 e2
   rw [e1, e2, neg_neg]
+
+end NormedSpace
+
+variable [InnerProductSpace ℝ E] [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E]
+  {μ : Measure E} [μ.IsAddHaarMeasure]
 
 /-- **Green's second identity against a test function.** For `u` of class `C²` on the open set
 `Ω` and a test function `φ` on `Ω`, `∫ Δφ • u ∂μ = ∫ φ • Δu ∂μ`: the classical Laplacian of a `C²`

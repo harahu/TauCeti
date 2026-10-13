@@ -146,18 +146,25 @@ theorem not_isRegularProjection_edge (p₀ : P) {i : Fin n} (hi : poly i ≠ pol
 
 end Defs
 
-section Dense
+section EdgeVector
 
-variable [NormedAddCommGroup V] [NormedSpace ℝ V] [AddTorsor V P]
+variable [AddCommGroup V] [AddTorsor V P]
 
 /-- The direction `poly (i + 1) -ᵥ poly i` of the edge `i` of a polygon. -/
 private def edgeVector (poly : Polygon P n) (i : Fin n) : V :=
   poly (finRotate n i) -ᵥ poly i
 
+variable [Module ℝ V] in
 private theorem exists_eq_smul_edgeVector_vadd {poly : Polygon P n} {x : P}
     (hx : x ∈ poly.boundary ℝ) : ∃ i : Fin n, ∃ t : ℝ, x = t • poly.edgeVector i +ᵥ poly i := by
   obtain ⟨i, t, -, rfl⟩ := mem_boundary_iff.1 hx
   exact ⟨i, t, AffineMap.lineMap_apply _ _ _⟩
+
+end EdgeVector
+
+section Dense
+
+variable [NormedAddCommGroup V] [NormedSpace ℝ V] [AddTorsor V P]
 
 /-- The `(i, j, k)` term of `irregularCover`: the directions of irregular projections coming from
 a vertex `poly i` and a point of edge `j`, or from three points of the edges `i`, `j`, `k`. -/

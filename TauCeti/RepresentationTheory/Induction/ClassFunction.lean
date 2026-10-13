@@ -171,6 +171,17 @@ private theorem _root_.Function.indTerm_zero (g x : G) :
 
 end Zero
 
+section AddZeroClass
+
+variable [AddZeroClass k]
+
+private theorem _root_.Function.indTerm_add (f₁ f₂ : S → k) (g x : G) :
+    Function.indTerm (f₁ + f₂) g x = Function.indTerm f₁ g x + Function.indTerm f₂ g x := by
+  classical
+  by_cases h : x⁻¹ * g * x ∈ S <;> simp [Function.indTerm, h]
+
+end AddZeroClass
+
 section AddCommMonoid
 
 variable [AddCommMonoid k]
@@ -217,11 +228,6 @@ theorem _root_.Subgroup.indClassFun_eq_sum_of_smul_eq_self_mem (S : Subgroup G) 
   rwa [QuotientGroup.out_eq'] at hfix
 
 /-! ### Additivity -/
-
-private theorem _root_.Function.indTerm_add (f₁ f₂ : S → k) (g x : G) :
-    Function.indTerm (f₁ + f₂) g x = Function.indTerm f₁ g x + Function.indTerm f₂ g x := by
-  classical
-  by_cases h : x⁻¹ * g * x ∈ S <;> simp [Function.indTerm, h]
 
 /-- Induction of functions commutes with every additive map of coefficients. The coset formula
 uses only addition and zero, so no characteristic or invertibility hypothesis is needed. -/

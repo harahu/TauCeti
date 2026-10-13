@@ -48,14 +48,26 @@ namespace TauCeti.TitsSystem
 
 universe u v
 
-variable {G : Type u} [Group G] (T : TitsSystem G) {H : Type v} [Group H] (f : H →* G)
+variable {G : Type u} [Group G] (T : TitsSystem G) {H : Type v}
 
 /-- Conjugation by an element of `N` preserves `B ∩ N`, read in `G`. -/
 private theorem conj_mem_subgroupB {n t : G} (hn : n ∈ T.subgroupN)
     (ht : t ∈ T.subgroupB ⊓ T.subgroupN) : n * t * n⁻¹ ∈ T.subgroupB :=
   Subgroup.mem_subgroupOf.mp (T.intersection_normal.conj_mem ⟨t, ht.2⟩ ht.1 ⟨n, hn⟩)
 
-variable {f}
+variable [MulOne H] {f : H →* G} in
+/-- An element of `N` differs from the image of an element of `f⁻¹(N)` by an element of
+`B ∩ N`. -/
+private theorem exists_mem_subgroupN_mul_eq
+    (hf : ∀ g : G, ∃ x : H, ∃ t ∈ T.subgroupB ⊓ T.subgroupN, f x * t = g)
+    {n : G} (hn : n ∈ T.subgroupN) :
+    ∃ x : H, f x ∈ T.subgroupN ∧ ∃ t ∈ T.subgroupB ⊓ T.subgroupN, f x * t = n := by
+  obtain ⟨x, t, ht, hxt⟩ := hf n
+  refine ⟨x, ?_, t, ht, hxt⟩
+  rw [eq_mul_inv_of_mul_eq hxt]
+  exact mul_mem hn (inv_mem ht.2)
+
+variable [Group H] {f : H →* G}
 
 /-- **Bruhat cells pull back to Bruhat cells.** If `B ⊆ f(H) (B ∩ N)`, then for every `w : H`
 with `f w ∈ N`, the preimage of the double coset `B f(w) B` is the double coset
@@ -83,17 +95,6 @@ theorem preimage_doubleCoset
     exact mul_mem hconj hb'
   · rintro ⟨x, hx, y, hy, rfl⟩
     exact ⟨f x, hx, f y, hy, by rw [map_mul, map_mul]⟩
-
-/-- An element of `N` differs from the image of an element of `f⁻¹(N)` by an element of
-`B ∩ N`. -/
-private theorem exists_mem_subgroupN_mul_eq
-    (hf : ∀ g : G, ∃ x : H, ∃ t ∈ T.subgroupB ⊓ T.subgroupN, f x * t = g)
-    {n : G} (hn : n ∈ T.subgroupN) :
-    ∃ x : H, f x ∈ T.subgroupN ∧ ∃ t ∈ T.subgroupB ⊓ T.subgroupN, f x * t = n := by
-  obtain ⟨x, t, ht, hxt⟩ := hf n
-  refine ⟨x, ?_, t, ht, hxt⟩
-  rw [eq_mul_inv_of_mul_eq hxt]
-  exact mul_mem hn (inv_mem ht.2)
 
 /-- The intersection `f⁻¹(B) ∩ f⁻¹(N)`, read inside `f⁻¹(N)`, is the preimage of `B ∩ N`. -/
 private theorem comap_subgroupOf_eq :

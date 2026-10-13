@@ -89,7 +89,7 @@ theorem eLpNorm_le_eLpNorm_rpow {f : α → E} {u : α → F} {p s : ℝ≥0∞}
 
 /-- **Hölder's inequality** for the integral of a product: `‖∫ u v‖ ≤ ‖u‖_p ‖v‖_q` for Hölder
 conjugate exponents `p` and `q`. -/
-theorem enorm_integral_mul_le {𝕜 : Type*} [NormedRing 𝕜] [NormedSpace ℝ 𝕜] {p q : ℝ≥0∞}
+theorem enorm_integral_mul_le {𝕜 : Type*} [NonUnitalNormedRing 𝕜] [NormedSpace ℝ 𝕜] {p q : ℝ≥0∞}
     [p.HolderConjugate q] {u v : α → 𝕜} (hu : AEStronglyMeasurable u μ)
     (hv : AEStronglyMeasurable v μ) :
     ‖∫ x, u x * v x ∂μ‖ₑ ≤ eLpNorm u p μ * eLpNorm v q μ := by

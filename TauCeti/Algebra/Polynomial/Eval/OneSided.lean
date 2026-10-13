@@ -76,6 +76,20 @@ theorem signRight_C (c a : R) : (C c).signRight a = sign c := by
 theorem signLeft_C (c a : R) : (C c).signLeft a = sign c := by
   simp [signLeft_def]
 
+section One
+
+variable [ZeroLEOneClass R] [NeZero (1 : R)]
+
+@[simp]
+theorem signRight_one (a : R) : (1 : R[X]).signRight a = 1 := by
+  simpa [sign_pos zero_lt_one] using signRight_C (1 : R) a
+
+@[simp]
+theorem signLeft_one (a : R) : (1 : R[X]).signLeft a = 1 := by
+  simpa [sign_pos zero_lt_one] using signLeft_C (1 : R) a
+
+end One
+
 /-- Away from a root, the right-hand sign is the sign of the value itself. -/
 theorem signRight_eq_sign_eval (p : R[X]) {a : R} (ha : p.eval a ≠ 0) :
     p.signRight a = sign (p.eval a) := by
@@ -198,14 +212,6 @@ theorem signLeft_mul (p q : R[X]) (a : R) :
   · simp [hq]
   simp only [signLeft_def, rootMultiplicity_mul (mul_ne_zero hp hq), pow_add, signRight_mul]
   ac_rfl
-
-@[simp]
-theorem signRight_one (a : R) : (1 : R[X]).signRight a = 1 := by
-  simpa using signRight_C (1 : R) a
-
-@[simp]
-theorem signLeft_one (a : R) : (1 : R[X]).signLeft a = 1 := by
-  simpa using signLeft_C (1 : R) a
 
 /-- Negation reverses the right-hand sign. -/
 @[simp]

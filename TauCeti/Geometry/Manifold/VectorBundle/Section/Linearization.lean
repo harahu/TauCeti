@@ -127,7 +127,7 @@ theorem sectionLinearization_eq_symmL_comp
 /-- At a zero, the kernel inclusion composed with the inverse of a kernel-model equivalence
 has range equal to the kernel of the intrinsic section linearization. -/
 theorem range_subtypeL_comp_eq_ker_sectionLinearization {T : TangentSpace IM x →L[𝕜] F}
-    {G : Type*} [NormedAddCommGroup G] [NormedSpace 𝕜 G]
+    {G : Type*} [AddCommGroup G] [Module 𝕜 G] [TopologicalSpace G]
     (hb : ContinuousAt b x) (he : b x ∈ e.baseSet)
     (hf : HasMFDerivAt IM 𝓘(𝕜, F) (fun y ↦ (e ⟨b y, s y⟩).2) x T) (hz : s x = 0)
     (K : T.ker ≃L[𝕜] G) :

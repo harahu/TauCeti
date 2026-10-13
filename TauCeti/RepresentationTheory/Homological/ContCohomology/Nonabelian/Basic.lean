@@ -303,8 +303,9 @@ end Map
 
 section Res
 
+omit [Group A] [MulDistribMulAction G A] in
 /-- The inclusion of a subgroup and the identity of `A` form a compatible pair. -/
-theorem id_subgroupSubtype_smul (S : Subgroup G) (s : S) (a : A) :
+theorem id_subgroupSubtype_smul [Monoid A] [MulAction G A] (S : Subgroup G) (s : S) (a : A) :
     ContinuousMonoidHom.id A (ContinuousMonoidHom.subgroupSubtype S s • a) =
       s • ContinuousMonoidHom.id A a :=
   (rfl)

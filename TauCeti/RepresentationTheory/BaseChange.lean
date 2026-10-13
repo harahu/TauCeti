@@ -468,9 +468,10 @@ section Intertwiner
 
 open TensorProduct
 
-variable {K : Type*} {L : Type*} [CommRing K] [CommRing L] [Algebra K L]
-variable {G : Type*} [Monoid G]
-variable {V : Type*} [AddCommGroup V] [Module K V]
+section Defect
+
+variable {K : Type*} [CommSemiring K] {G : Type*} [Monoid G]
+variable {V : Type*} [AddCommMonoid V] [Module K V]
 variable {W : Type*} [AddCommGroup W] [Module K W]
 
 /-- The **intertwining defect** of a linear map `f : V →ₗ[K] W`: the family
@@ -503,6 +504,13 @@ private def intertwiningMapEquivKerDefect (ρ : _root_.Representation K G V)
   invFun f := ⟨f.1, mem_ker_intertwiningDefect.mp f.2⟩
   left_inv _ := rfl
   right_inv _ := rfl
+
+end Defect
+
+variable {K : Type*} {L : Type*} [CommRing K] [CommRing L] [Algebra K L]
+variable {G : Type*} [Monoid G]
+variable {V : Type*} [AddCommGroup V] [Module K V]
+variable {W : Type*} [AddCommGroup W] [Module K W]
 
 /-- **The intertwining defect of a base-changed map is the base change of its defect**,
 componentwise: base change is compatible with composition and subtraction, and the base-changed

@@ -282,11 +282,12 @@ section Restrict
 
 variable (k F) (P' : Place k' F')
 
-/-- The valuation of `P'` restricted to `F` is trivial on the constants of `F`. -/
-private theorem isTrivialOn_comap : (P'.valuation.comap (algebraMap F F')).IsTrivialOn k where
+/-- The valuation of `P'` restricted to a `k`-algebra `A` below `F'` is trivial on `k`. -/
+private theorem isTrivialOn_comap (A : Type*) [CommRing A] [Algebra k A] [Algebra A F']
+    [IsScalarTower k A F'] : (P'.valuation.comap (algebraMap A F')).IsTrivialOn k where
   eq_one c hc := by
-    have hmap : algebraMap F F' (algebraMap k F c) = algebraMap k' F' (algebraMap k k' c) := by
-      rw [← IsScalarTower.algebraMap_apply k F F', IsScalarTower.algebraMap_apply k k' F']
+    have hmap : algebraMap A F' (algebraMap k A c) = algebraMap k' F' (algebraMap k k' c) := by
+      rw [← IsScalarTower.algebraMap_apply k A F', IsScalarTower.algebraMap_apply k k' F']
     have hc' : algebraMap k k' c ≠ 0 := fun h ↦ hc
       ((algebraMap k k').injective (by rw [h, map_zero]))
     simpa only [Valuation.comap_apply, hmap] using P'.isTrivialOn.eq_one _ hc'
@@ -317,7 +318,7 @@ noncomputable def restrict : Place k F where
   valuation_surjective :=
     Valuation.normalization_surjective _ (ordIndex_comap_ne_zero F P')
   isTrivialOn := by
-    have := isTrivialOn_comap k F P'
+    have := isTrivialOn_comap k P' F
     exact Valuation.IsTrivialOn.normalization _
 
 /-- **The ramification index** `e(P' ∣ P)` of a place `P'` of `F' / k'` over the place `P` of

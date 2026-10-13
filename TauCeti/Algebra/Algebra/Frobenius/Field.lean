@@ -25,10 +25,14 @@ noncomputable section
 
 namespace TauCeti
 
-variable {K L : Type*} [Field K] [Field L] [Algebra K L]
+variable {K L : Type*} [Field L]
 
-/-- On a field extension, a `K`-linear functional is Frobenius exactly when it
-is nonzero. Separability is unnecessary. -/
+section CommRing
+
+variable [CommRing K] [Algebra K L]
+
+/-- On a field `L` that is an algebra over a commutative ring `K`, a `K`-linear functional is
+Frobenius exactly when it is nonzero. -/
 @[simp]
 theorem _root_.LinearMap.isFrobeniusFunctional_iff_ne_zero (s : L →ₗ[K] K) :
     s.IsFrobeniusFunctional ↔ s ≠ 0 := by
@@ -51,6 +55,9 @@ theorem _root_.LinearMap.isFrobeniusFunctional_iff_ne_zero (s : L →ₗ[K] K) :
     exact LinearMap.isFrobeniusFunctional_iff.mpr
       ⟨hleft, fun b hb => hleft b (fun a => by simpa [mul_comm] using hb a)⟩
 
+end CommRing
+
+variable [Field K] [Algebra K L] in
 /-- Two nonzero `K`-linear functionals on a finite extension differ by multiplication
 by a unique unit of the extension. -/
 theorem _root_.LinearMap.existsUnique_unit_apply_eq_apply_mul (s t : L →ₗ[K] K)
@@ -80,11 +87,12 @@ theorem _root_.LinearMap.existsUnique_unit_apply_eq_apply_mul (s t : L →ₗ[K]
         exact (hu x).symm
       _ = e a := hta.symm
 
-variable {E : Type*} [AddCommGroup E] [Module L E] [Module K E] [IsScalarTower K L E]
+variable [CommSemiring K] [Algebra K L]
+  {E : Type*} [AddCommGroup E] [Module L E] [Module K E] [IsScalarTower K L E]
 
-/-- The composite of a nonzero linear functional on a field extension with a nonzero linear
+/-- The composite of a nonzero `K`-linear functional on a field `L` with a nonzero linear
 functional on an `L`-module is nonzero. The restriction of scalars is needed so that the inner
-functional can be composed over the base field. -/
+functional can be composed over `K`. -/
 theorem _root_.LinearMap.comp_restrictScalars_ne_zero (s : L →ₗ[K] K) (t : E →ₗ[L] L)
     (hs : s ≠ 0) (ht : t ≠ 0) : s.comp (t.restrictScalars K) ≠ 0 := by
   have ht_surjective : Function.Surjective t :=

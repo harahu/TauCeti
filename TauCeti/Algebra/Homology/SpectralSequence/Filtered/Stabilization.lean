@@ -36,8 +36,29 @@ open CategoryTheory Limits ComposableArrows
 
 namespace CochainComplex
 
-variable {C : Type*} [Category* C] [Abelian C] {K : CochainComplex C ℤ} (F : ℤ → Subobject K)
-  (hF : Monotone F)
+variable {C : Type*} [Category* C]
+
+section
+
+variable [HasZeroMorphisms C] [CategoryWithHomology C] {K : CochainComplex C ℤ}
+  (F : ℤ → Subobject K)
+
+/-- The homology of the zero subcomplex vanishes. -/
+lemma isZero_homology_of_eq_bot [HasZeroObject C] {a : ℤ} (ha : F a = ⊥) (m : ℤ) :
+    IsZero ((F a : CochainComplex C ℤ).homology m) := by
+  rw [ha]
+  exact (HomologicalComplex.homologyFunctor C _ m).map_isZero
+    (IsZero.of_iso (isZero_zero _) Subobject.botCoeIsoZero)
+
+/-- The quotient of `K` by the whole complex has vanishing homology. -/
+lemma isZero_homology_cokernel_of_eq_top [HasCoequalizers C] {b : ℤ} (hb : F b = ⊤) (m : ℤ) :
+    IsZero ((cokernel (F b).arrow).homology m) := by
+  rw [hb]
+  exact (HomologicalComplex.homologyFunctor C _ m).map_isZero (isZero_cokernel_of_epi _)
+
+end
+
+variable [Abelian C] {K : CochainComplex C ℤ} (F : ℤ → Subobject K) (hF : Monotone F)
 
 /-- `H^m(⊥ ≤ a)` vanishes for the spectral object of a filtration when `H^m(F_a)` does. -/
 lemma isZero_spectralObject_H_bot (a m : ℤ)
@@ -89,19 +110,6 @@ noncomputable def filtrationSpectralSequencePageXIsoEInfty (r : ℤ) (hr : 2 ≤
       (spectralObject (filtrationFunctor F hF)).EInfty pq.2 n :=
   (spectralObject _).spectralSequencePageXIsoEInfty r hr pq n hn
     (isZero_spectralObject_H_bot F hF _ _ h₀) (isZero_spectralObject_H_top F hF _ _ h₃)
-
-/-- The homology of the zero subcomplex vanishes. -/
-lemma isZero_homology_of_eq_bot {a : ℤ} (ha : F a = ⊥) (m : ℤ) :
-    IsZero ((F a : CochainComplex C ℤ).homology m) := by
-  rw [ha]
-  exact (HomologicalComplex.homologyFunctor C _ m).map_isZero
-    (IsZero.of_iso (isZero_zero _) Subobject.botCoeIsoZero)
-
-/-- The quotient of `K` by the whole complex has vanishing homology. -/
-lemma isZero_homology_cokernel_of_eq_top {b : ℤ} (hb : F b = ⊤) (m : ℤ) :
-    IsZero ((cokernel (F b).arrow).homology m) := by
-  rw [hb]
-  exact (HomologicalComplex.homologyFunctor C _ m).map_isZero (isZero_cokernel_of_epi _)
 
 /-- **Stabilization for a finite filtration.** If `F_a = ⊥` and `F_b = ⊤`, then the object at
 `pq = (p, q)` on every page `r ≥ 2` with `q - r + 2 ≤ a` and `b ≤ q + r - 1` is

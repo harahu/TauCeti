@@ -1156,6 +1156,12 @@ theorem pathAlgebraBasis_repr_ofPath_toPath_mul_cons_of_ne {i i' j s : Q} (b : i
     (pathAlgebraBasis k Q).repr (ofPath ⟨i', j, b'.toPath⟩ * f) ⟨s, j, q.cons b⟩ = 0 :=
   pathAlgebraBasis_repr_ofArrow_mul_cons_of_ne b b' hb q f
 
+end ArrowCoordinates
+
+section ArrowCoordinatesRight
+
+variable {k : Type w} {Q : Type u} [Semiring k] [Quiver.{v} Q]
+
 /-- The coordinates of a basis path times an arrow: the arrow followed by the basis path. This is
 not a `simp` lemma, since `TauCeti.PathAlgebra.ofArrow_eq_ofPath` rewrites its left-hand side. -/
 theorem pathAlgebraBasis_repr_single_mul_ofArrow {i j t : Q} (a : i ⟶ j)
@@ -1264,7 +1270,7 @@ theorem sum_mul_ofArrow_eq_zero_iff {i : Q} [Fintype ((j : Q) × (i ⟶ j))]
     refine Finset.sum_eq_zero fun a _ => ?_
     rw [ofArrow_eq_ofPath, ← vertexIdempotent_mul_ofPath, ← mul_assoc, h, zero_mul]
 
-end ArrowCoordinates
+end ArrowCoordinatesRight
 
 section Generate
 

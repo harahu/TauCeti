@@ -128,7 +128,7 @@ end IsSimple
 
 section ThreeLE
 
-variable [Field R] [LinearOrder R] [IsStrictOrderedRing R] [AddCommGroup V] [Module R V]
+variable [DivisionRing R] [LinearOrder R] [IsStrictOrderedRing R] [AddCommGroup V] [Module R V]
   [AddTorsor V P] {poly : Polygon P n}
 
 /-- **A simple polygon has at least three vertices.** A polygon with one vertex has a degenerate
@@ -138,7 +138,7 @@ theorem IsSimple.three_le [NeZero n] (h : poly.IsSimple R) : 3 ≤ n := by
   by_contra hn
   obtain rfl : n = 2 := by omega
   have h01 : poly 0 ≠ poly 1 := h.hasNondegenerateEdges 0
-  have hhalf : (2⁻¹ : R) ∈ Icc (0 : R) 1 := ⟨by positivity, by norm_num⟩
+  have hhalf : (2⁻¹ : R) ∈ Icc (0 : R) 1 := ⟨by positivity, inv_le_one_of_one_le₀ one_le_two⟩
   have hrot0 : finRotate 2 0 = 1 := by simp [finRotate_apply]
   have hrot1 : finRotate 2 1 = 0 := by simp [finRotate_apply]
   have hm0 : AffineMap.lineMap (poly 0) (poly 1) (2⁻¹ : R) ∈ poly.edgeSet R 0 := by

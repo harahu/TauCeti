@@ -7,8 +7,6 @@ module
 
 public import TauCeti.RingTheory.DividedPowers.Associative
 import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Abel
-import Mathlib.Tactic.Module
 
 /-!
 # Normal ordering divided powers with a central commutator
@@ -68,9 +66,23 @@ namespace TauCeti.Associative
 
 open Finset
 
-variable {A : Type*} [Semiring A]
+variable {A : Type*}
 
-variable [Algebra ℚ A]
+-- This weighted-sum identity is the bookkeeping behind the induction in the normal-ordering
+-- theorem. The first sum records the term in which `x` passes through `y`; the second records the
+-- commutator term and is shifted by one.
+private theorem sum_sub_nsmul_add_succ_nsmul [AddCommMonoid A] (u : ℕ → A) {M C : ℕ}
+    (hMC : M ≤ C) :
+    (∑ k ∈ range (M + 1), (C - k) • u k) +
+        ∑ k ∈ range M, (k + 1) • u (k + 1) =
+      C • ∑ k ∈ range (M + 1), u k := by
+  induction M with
+  | zero => simp
+  | succ M ih =>
+      rw [sum_range_succ, sum_range_succ (fun k ↦ (k + 1) • u (k + 1)), add_add_add_comm,
+        ih (by omega), ← add_nsmul, Nat.sub_add_cancel hMC, sum_range_succ _ (M + 1), nsmul_add]
+
+variable [Semiring A] [Algebra ℚ A]
 
 /-- **First-order divided-power normal ordering.** If `x * y = y * x + z` and `z` commutes
 with `y`, then
@@ -130,34 +142,6 @@ theorem mul_dividedPower_mul_dividedPower_mul_of_commutator_eq_nsmul {x z w t : 
   -- The released `w` is absorbed by `w⁽ᶜ⁾`, as `w w⁽ᶜ⁾ = (c + 1) w⁽ᶜ⁺¹⁾`.
   rw [mul_assoc (dividedPower (b - 1) z), smul_mul_assoc, ← succ_nsmul_dividedPower_succ_mul,
     smul_smul, mul_smul_comm]
-
--- This weighted-sum identity is the bookkeeping behind the induction in the normal-ordering
--- theorem. The first sum records the term in which `x` passes through `y`; the second records the
--- commutator term and is shifted by one.
-private theorem sum_sub_nsmul_add_succ_nsmul (u : ℕ → A) {M C : ℕ} (hMC : M ≤ C) :
-    (∑ k ∈ range (M + 1), (C - k) • u k) +
-        ∑ k ∈ range M, (k + 1) • u (k + 1) =
-      C • ∑ k ∈ range (M + 1), u k := by
-  induction M with
-  | zero => simp
-  | succ M ih =>
-      have hM : M ≤ C := le_trans (Nat.le_succ M) hMC
-      have hih := ih hM
-      have hcoeff := Nat.sub_add_cancel hMC
-      have hcoeffQ : ((C - (M + 1) : ℕ) : ℚ) + (M + 1 : ℕ) = C := by
-        exact_mod_cast hcoeff
-      simp only [Finset.sum_range_succ] at hih ⊢
-      simp_rw [← Nat.cast_smul_eq_nsmul ℚ] at hih ⊢
-      calc
-        _ = ((∑ k ∈ range M, ((C - k : ℕ) : ℚ) • u k) + ((C - M : ℕ) : ℚ) • u M +
-              ∑ k ∈ range M, ((k + 1 : ℕ) : ℚ) • u (k + 1)) +
-            (((C - (M + 1) : ℕ) : ℚ) • u (M + 1) +
-              ((M + 1 : ℕ) : ℚ) • u (M + 1)) := by
-              module
-        _ = (C : ℚ) • (∑ k ∈ range M, u k + u M) + (C : ℚ) • u (M + 1) := by
-              rw [hih]
-              rw [← add_smul, hcoeffQ]
-        _ = _ := by rw [← smul_add]
 
 /-! ## Normal ordering against a divided-power series for the inner derivation -/
 

@@ -42,16 +42,17 @@ universe w v u
 
 namespace SSetPair
 
-variable {C : Type u} [Category.{v} C] [HasCoproducts.{w} C] [Abelian C] (R : C)
-  (Q : SSetPair.{w}) (s : Q.right _⦋1⦌) (v₀ v₁ : Q.left _⦋0⦌)
-  (h₀ : Q.right.δ 1 s = Q.hom.app _ v₀) (h₁ : Q.right.δ 0 s = Q.hom.app _ v₁)
+variable {C : Type u} [Category.{v} C] [HasCoproducts.{w} C] (R : C) (Q : SSetPair.{w})
 
-lemma ιChainComplex_hom_app_comp_chainComplexπ (v : Q.left _⦋0⦌) :
+lemma ιChainComplex_hom_app_comp_chainComplexπ [Preadditive C] (v : Q.left _⦋0⦌) :
     Q.right.ιChainComplex (R := R) (Q.hom.app _ v) ≫ (Q.chainComplexπ R).f 0 = 0 := by
   have h : Q.right.ιChainComplex (R := R) (Q.hom.app _ v) =
       Q.left.ιChainComplex v ≫ (SSet.chainComplexMap Q.hom R).f 0 :=
     (SSet.ι_chainComplexMap_f _ _ Q.hom R v).symm
   rw [h, Category.assoc, chainComplex_condition_f, Limits.comp_zero]
+
+variable [Abelian C] (s : Q.right _⦋1⦌) (v₀ v₁ : Q.left _⦋0⦌)
+  (h₀ : Q.right.δ 1 s = Q.hom.app _ v₀) (h₁ : Q.right.δ 0 s = Q.hom.app _ v₁)
 
 include h₀ h₁ in
 lemma relClass₁_cycle :

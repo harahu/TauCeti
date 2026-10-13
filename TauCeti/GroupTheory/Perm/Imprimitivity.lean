@@ -59,7 +59,9 @@ namespace TauCeti
 open MulAction
 open scoped Pointwise
 
-variable {G α : Type*} [Group G] [MulAction G α] {B : Set α}
+section Transversal
+
+variable {G α : Type*} [SMul G α] {B : Set α}
 
 /-- An element of `G` carrying `B` onto the translate `C`. -/
 private noncomputable def blockTransversal (C : orbit G B) : G :=
@@ -68,7 +70,9 @@ private noncomputable def blockTransversal (C : orbit G B) : G :=
 private theorem blockTransversal_smul (C : orbit G B) : blockTransversal C • B = C :=
   (mem_orbit_iff.1 C.2).choose_spec
 
-variable [IsPretransitive G α]
+end Transversal
+
+variable {G α : Type*} [Group G] [MulAction G α] {B : Set α} [IsPretransitive G α]
 
 /-- The translate of the block `B` containing `x`. -/
 private noncomputable def blockOf (hB : IsBlock G B) (hBne : B.Nonempty) (x : α) : orbit G B :=

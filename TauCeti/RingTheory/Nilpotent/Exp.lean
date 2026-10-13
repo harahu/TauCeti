@@ -74,8 +74,9 @@ theorem unop_exp_op {x : A} (hx : IsNilpotent x) :
   rw [exp_eq_sum hk, exp_eq_sum hk_op]
   simp
 
-variable {R : Type*} [CommRing R] [Algebra R A]
+variable {R : Type*} [Semiring R] [Module R A]
 
+variable [SMulCommClass R A A] in
 /-- The exponential of left multiplication is left multiplication by the exponential. -/
 @[simp]
 theorem exp_mulLeft_apply {x : A} (hx : IsNilpotent x) (a : A) :
@@ -85,6 +86,7 @@ theorem exp_mulLeft_apply {x : A} (hx : IsNilpotent x) (a : A) :
     simp [LinearMap.pow_mulLeft, hk]
   simp [exp_eq_sum hk_left, exp_eq_sum hk, sum_mul, smul_mul_assoc]
 
+variable [IsScalarTower R A A] in
 /-- The exponential of right multiplication is right multiplication by the exponential. -/
 @[simp]
 theorem exp_mulRight_apply {x : A} (hx : IsNilpotent x) (a : A) :

@@ -586,9 +586,9 @@ open Filter in
 open scoped Topology in
 /-- A homomorphism has nondiscrete range if the images of a family converge to the
 identity along a nontrivial filter while those images are eventually nonidentity. No topology on
-the source monoid or continuity of the homomorphism is required. -/
-theorem _root_.MonoidHom.not_discreteTopology_range_of_tendsto_one {G H X : Type*} [Monoid G]
-    [Monoid H] [TopologicalSpace H] (f : G →* H)
+the source or continuity of the homomorphism is required. -/
+theorem _root_.MonoidHom.not_discreteTopology_range_of_tendsto_one {G H X : Type*} [MulOneClass G]
+    [MulOneClass H] [TopologicalSpace H] (f : G →* H)
     {l : Filter X} [NeBot l] {s : X → G} (hs : Tendsto (fun x ↦ f (s x)) l (𝓝 1))
     (hne : ∀ᶠ x in l, f (s x) ≠ 1) : ¬ DiscreteTopology (Set.range f) := by
   intro hD

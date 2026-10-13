@@ -58,7 +58,7 @@ open scoped ContDiff Distributions ENNReal
 
 variable {E F X : Type*} [MeasurableSpace E] [NormedAddCommGroup E] [NormedSpace ℝ E]
   [OpensMeasurableSpace E] [NormedAddCommGroup F] [NormedSpace ℝ F]
-  [CompleteSpace F] [SeminormedAddCommGroup X] [NormedSpace ℝ X]
+  [CompleteSpace F]
   {mu : Measure E} [IsFiniteMeasureOnCompacts mu] {Omega : Opens E} {p : ENNReal}
   [Fact (1 <= p)]
 
@@ -68,6 +68,10 @@ by `WithLp.fst` and `WithLp.snd`. -/
 abbrev WeakDerivStepJetLp (mu : Measure E) (Omega : Opens E) (p : ENNReal) (X F : Type*)
     [NormedAddCommGroup F] [NormedSpace ℝ F] :=
   WithLp 2 (X × Lp (E →L[ℝ] F) p (mu.restrict Omega))
+
+section TopologicalModule
+
+variable [AddCommGroup X] [Module ℝ X] [TopologicalSpace X]
 
 private def weakDerivStepBaseL
     (base : X →L[ℝ] Lp F p (mu.restrict Omega)) :
@@ -151,6 +155,10 @@ private theorem weakDerivStepTestFunctional_apply
     rw [hphi, weakDerivStepDirectionL_apply, hx, ContinuousLinearMap.apply_apply]
   rw [hfirst, hsecond, setIntegral_lineDeriv_smul_eq_integral_lineDeriv_smul,
     setIntegral_smul_eq_integral_smul]
+
+end TopologicalModule
+
+variable [SeminormedAddCommGroup X] [NormedSpace ℝ X]
 
 /-- The closed subspace in which the adjoined field is the weak derivative of `base x`. -/
 def weakDerivStepSubmodule (mu : Measure E) [IsFiniteMeasureOnCompacts mu] (Omega : Opens E)

@@ -35,7 +35,7 @@ largest `s 0 + s 1` over its support.  These are the forms in which a plane curv
   possible monomial with exponent `n` in `X₁` is `X₁ ^ n`.
 * `MvPolynomial.totalDegree_pos_of_aeval_eq_zero`: if the coefficient of `X₁ ^ n` in `φ` is `1`,
   where `n` is the total degree of `φ`, and `φ` has a zero, then `n` is positive.
-* `MvPolynomial.exists_sum_coeff_mul_pow_ne_zero`: over a field with more than `deg φ` elements,
+* `MvPolynomial.exists_sum_coeff_mul_pow_ne_zero`: over a domain with more than `deg φ` elements,
   the leading form `φ_n` of `φ` satisfies `φ_n(c, 1) ≠ 0` for some `c`.
 * `MvPolynomial.natDegree_minpoly_le_totalDegree`: if `φ(u + c y, y) = 0` with `u ∈ K` and
   `φ_n(c, 1) ≠ 0`, then `y` has degree at most `deg φ` over `K`.
@@ -273,14 +273,14 @@ end Field
 
 section Field
 
-variable {k : Type*} [Field k]
+variable {k : Type*}
 
 open scoped Polynomial
 
-/-- Over a field with more than `n` elements, the leading form `φ_n` of a nonzero polynomial `φ`
+/-- Over a domain with more than `n` elements, the leading form `φ_n` of a nonzero polynomial `φ`
 of total degree `n` satisfies `φ_n(c, 1) ≠ 0` for some `c`. -/
-theorem exists_sum_coeff_mul_pow_ne_zero {φ : MvPolynomial (Fin 2) k} (hφ : φ ≠ 0)
-    (hcard : (φ.totalDegree : ℕ∞) < ENat.card k) :
+theorem exists_sum_coeff_mul_pow_ne_zero [CommRing k] [IsDomain k] {φ : MvPolynomial (Fin 2) k}
+    (hφ : φ ≠ 0) (hcard : (φ.totalDegree : ℕ∞) < ENat.card k) :
     ∃ c : k, ∑ s ∈ φ.support with s 0 + s 1 = φ.totalDegree, φ.coeff s * c ^ s 0 ≠ 0 := by
   classical
   set n := φ.totalDegree
@@ -310,7 +310,8 @@ theorem exists_sum_coeff_mul_pow_ne_zero {φ : MvPolynomial (Fin 2) k} (hφ : φ
 /-- If `φ(u + c y, y) = 0` with `u ∈ K` and the leading form of `φ` does not vanish at `(c, 1)`,
 then `y` has degree at most `deg φ` over `K`: it is a root of `φ(u + c Y, Y)`, whose coefficient of
 `Y ^ n` is `φ_n(c, 1)`. -/
-theorem natDegree_minpoly_le_totalDegree {K F : Type*} [Field K] [Field F] [Algebra k K]
+theorem natDegree_minpoly_le_totalDegree [Field k] {K F : Type*} [Field K] [CommRing F]
+    [Algebra k K]
     [Algebra K F] [Algebra k F] [IsScalarTower k K F] {φ : MvPolynomial (Fin 2) k} {u : K} {y : F}
     {c : k} (hφ : aeval ![algebraMap K F u + algebraMap k F c * y, y] φ = 0)
     (hc : ∑ s ∈ φ.support with s 0 + s 1 = φ.totalDegree, φ.coeff s * c ^ s 0 ≠ 0) :
@@ -447,8 +448,8 @@ end MvPolynomial
 /-- If `φ ∈ k[X₀, X₁]` and `a ∈ k` are such that `φ(a, T) ≠ 0` and `φ(a, y) = 0`, then `y` is
 algebraic over `k`: it is a root of the nonzero polynomial `φ(a, T)`. This applies in particular
 when `φ` is monic in `X₁` over `k[X₀]`. -/
-theorem isAlgebraic_of_aeval_algebraMap_eq_zero {k F : Type*} [Field k] [Field F] [Algebra k F]
-    {φ : MvPolynomial (Fin 2) k} {a : k}
+theorem isAlgebraic_of_aeval_algebraMap_eq_zero {k F : Type*} [Field k] [CommRing F]
+    [Algebra k F] {φ : MvPolynomial (Fin 2) k} {a : k}
     (hq : ((equivMvPolynomial k).symm φ).map (evalRingHom a) ≠ 0) {y : F}
     (hy : MvPolynomial.aeval ![algebraMap k F a, y] φ = 0) : IsAlgebraic k y := by
   set q := (equivMvPolynomial k).symm φ

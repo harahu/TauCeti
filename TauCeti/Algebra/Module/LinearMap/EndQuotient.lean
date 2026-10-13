@@ -124,7 +124,7 @@ theorem isNilpotent_of_mem_ker_endMapQ (hI : IsNilpotent I) {f : Module.End R M}
 
 section Principal
 
-variable {R A : Type*} [CommRing R] [Ring A] [Algebra R A] (r : R) {N : Type*} [AddCommGroup N]
+variable {R A : Type*} [CommSemiring R] [Ring A] [Algebra R A] (r : R) {N : Type*} [AddCommGroup N]
   [Module A N] [Module R N] [IsScalarTower R A N] [Module.Projective A N]
 
 /-- **The kernel of reduction modulo `r`.** An endomorphism of a projective `A`-module `N` reduces

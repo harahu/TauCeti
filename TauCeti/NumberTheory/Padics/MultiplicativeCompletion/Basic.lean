@@ -432,10 +432,11 @@ section Congr
 
 variable {L} {L' : Type*} [Field L']
 
-private theorem congrRangePowMonoidHom_units_mk (e : L ≃+* L') (m : ℕ) (x : Lˣ) :
-    QuotientGroup.congrRangePowMonoidHom (Units.mapEquiv e.toMulEquiv) (p ^ m)
-        (x : Lˣ ⧸ (powMonoidHom (p ^ m) : Lˣ →* Lˣ).range) =
-      (Units.mapEquiv e.toMulEquiv x : L'ˣ ⧸ (powMonoidHom (p ^ m) : L'ˣ →* L'ˣ).range) :=
+private theorem congrRangePowMonoidHom_units_mk {M M' : Type*} [CommMonoid M] [CommMonoid M']
+    (e : M ≃* M') (m : ℕ) (x : Mˣ) :
+    QuotientGroup.congrRangePowMonoidHom (Units.mapEquiv e) (p ^ m)
+        (x : Mˣ ⧸ (powMonoidHom (p ^ m) : Mˣ →* Mˣ).range) =
+      (Units.mapEquiv e x : M'ˣ ⧸ (powMonoidHom (p ^ m) : M'ˣ →* M'ˣ).range) :=
   QuotientGroup.congrRangePowMonoidHom_mk _ _ x
 
 private theorem congrRangePowMonoidHom_transition (e : L ≃+* L') (m : ℕ)

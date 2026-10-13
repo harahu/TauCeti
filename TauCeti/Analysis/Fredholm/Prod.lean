@@ -32,16 +32,39 @@ namespace TauCeti
 open Module
 
 variable {K E₁ E₂ F₁ F₂ : Type*}
+variable [AddCommGroup E₁] [TopologicalSpace E₁]
+variable [AddCommGroup E₂] [TopologicalSpace E₂]
+variable [AddCommGroup F₁] [TopologicalSpace F₁]
+variable [AddCommGroup F₂] [TopologicalSpace F₂]
+
+section DivisionRing
+
+variable [DivisionRing K] [Module K E₁] [Module K E₂] [Module K F₁] [Module K F₂]
+
+/-- The index is additive under Cartesian products when both kernels and cokernels are finite
+dimensional. -/
+private lemma _root_.ContinuousLinearMap.index_prodMap_of_finiteDimensional (T : E₁ →L[K] F₁)
+    (S : E₂ →L[K] F₂)
+    [FiniteDimensional K (LinearMap.ker (T : E₁ →ₗ[K] F₁))]
+    [FiniteDimensional K (LinearMap.ker (S : E₂ →ₗ[K] F₂))]
+    [FiniteDimensional K (F₁ ⧸ LinearMap.range (T : E₁ →ₗ[K] F₁))]
+    [FiniteDimensional K (F₂ ⧸ LinearMap.range (S : E₂ →ₗ[K] F₂))] :
+    ContinuousLinearMap.index (T.prodMap S) = ContinuousLinearMap.index T +
+      ContinuousLinearMap.index S := by
+  simp only [ContinuousLinearMap.index_eq_finrank_sub]
+  rw [ContinuousLinearMap.coe_prodMap T S, LinearMap.ker_prodMap, LinearMap.range_prodMap]
+  simp only [(Submodule.prodEquiv _ _).finrank_eq,
+    Submodule.finrank_quotient_prod, finrank_prod]
+  omega
+
+end DivisionRing
+
 variable [NontriviallyNormedField K]
-variable [NormedAddCommGroup E₁] [NormedSpace K E₁]
-variable [NormedAddCommGroup E₂] [NormedSpace K E₂]
-variable [NormedAddCommGroup F₁] [NormedSpace K F₁]
-variable [NormedAddCommGroup F₂] [NormedSpace K F₂]
+variable [Module K E₁] [Module K E₂] [Module K F₁] [Module K F₂]
 
-variable {T : E₁ →L[K] F₁} {S : E₂ →L[K] F₂}
-
+variable [IsTopologicalAddGroup E₁] [IsTopologicalAddGroup E₂] in
 /-- The Cartesian product of two Fredholm operators is Fredholm. -/
-lemma _root_.ContinuousLinearMap.IsFredholm.prodMap
+lemma _root_.ContinuousLinearMap.IsFredholm.prodMap {T : E₁ →L[K] F₁} {S : E₂ →L[K] F₂}
     (hT : ContinuousLinearMap.IsFredholm T) (hS : ContinuousLinearMap.IsFredholm S) :
     ContinuousLinearMap.IsFredholm (T.prodMap S) := by
   have := hT.finite_ker
@@ -74,23 +97,6 @@ lemma _root_.ContinuousLinearMap.IsFredholm.prodMap
         Prod.map_apply, Submodule.subtypeL_apply, Submodule.subtypeL_apply, hPT ⟨x, hx⟩,
         hPS ⟨y, hy⟩]
 
-
-/-- The index is additive under Cartesian products when both kernels and cokernels are finite
-dimensional. -/
-private lemma _root_.ContinuousLinearMap.index_prodMap_of_finiteDimensional (T : E₁ →L[K] F₁)
-    (S : E₂ →L[K] F₂)
-    [FiniteDimensional K (LinearMap.ker (T : E₁ →ₗ[K] F₁))]
-    [FiniteDimensional K (LinearMap.ker (S : E₂ →ₗ[K] F₂))]
-    [FiniteDimensional K (F₁ ⧸ LinearMap.range (T : E₁ →ₗ[K] F₁))]
-    [FiniteDimensional K (F₂ ⧸ LinearMap.range (S : E₂ →ₗ[K] F₂))] :
-    ContinuousLinearMap.index (T.prodMap S) = ContinuousLinearMap.index T +
-      ContinuousLinearMap.index S := by
-  simp only [ContinuousLinearMap.index_eq_finrank_sub]
-  rw [ContinuousLinearMap.coe_prodMap T S, LinearMap.ker_prodMap, LinearMap.range_prodMap]
-  simp only [(Submodule.prodEquiv _ _).finrank_eq,
-    Submodule.finrank_quotient_prod, finrank_prod]
-  omega
-
 /-- The Fredholm index is additive under Cartesian products of Fredholm operators. -/
 @[simp]
 lemma _root_.ContinuousLinearMap.index_prodMap (T : E₁ →L[K] F₁) (S : E₂ →L[K] F₂)
@@ -102,6 +108,5 @@ lemma _root_.ContinuousLinearMap.index_prodMap (T : E₁ →L[K] F₁) (S : E₂
   let := hT.finite_coker
   let := hS.finite_coker
   exact ContinuousLinearMap.index_prodMap_of_finiteDimensional T S
-
 
 end TauCeti

@@ -239,9 +239,9 @@ theorem _root_.BoundedVariationOn.ae_metricDerivative_le_enorm_deriv_variationOn
 
 end BoundedVariation
 
-section AbsolutelyContinuous
+section ProfileSpeed
 
-variable {X : Type*} [PseudoMetricSpace X] {γ : ℝ → X} {a b : ℝ}
+variable {X : Type*} [Dist X] {γ : ℝ → X}
 
 /-- The supremum, over the points `x` of a set `c`, of the absolute derivatives of the distance
 profiles `r ↦ dist (γ r) x`. For a countable set `c` dense in the image of an absolutely continuous
@@ -252,6 +252,12 @@ private noncomputable def profileSpeed (γ : ℝ → X) (c : Set X) (r : ℝ) : 
 private lemma measurable_profileSpeed (c : Set X) [Countable c] :
     Measurable (profileSpeed γ c) :=
   Measurable.iSup fun _ ↦ (measurable_deriv _).enorm
+
+end ProfileSpeed
+
+section AbsolutelyContinuous
+
+variable {X : Type*} [PseudoMetricSpace X] {γ : ℝ → X} {a b : ℝ}
 
 /-- If `c` is dense in the image of `[a, b]`, the distances along `γ` are bounded by the integrals
 of `profileSpeed γ c`. Each distance profile is the integral of its derivative, and the profile of
@@ -519,8 +525,9 @@ theorem measurable_metricDerivative_IccExtend_apply {a b : ℝ} (hab : a ≤ b) 
 
 /-- On the space `C([a, b], X)` of continuous paths, evaluating the path extended by constants
 outside `[a, b]` at a fixed time is measurable. -/
-theorem measurable_IccExtend_apply [MeasurableSpace X] [BorelSpace X] {a b : ℝ} (hab : a ≤ b)
-    (t : ℝ) : Measurable fun γ : C(Icc a b, X) ↦ IccExtend hab γ t := by
+theorem measurable_IccExtend_apply {X : Type*} [TopologicalSpace X] [MeasurableSpace X]
+    [BorelSpace X] {a b : ℝ} (hab : a ≤ b) (t : ℝ) :
+    Measurable fun γ : C(Icc a b, X) ↦ IccExtend hab γ t := by
   simp only [IccExtend_apply]
   exact (continuous_eval_const _).measurable
 

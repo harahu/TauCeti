@@ -106,13 +106,14 @@ theorem graphFlattening_image_eq (γ : E → ℝ) (hγ : Continuous γ) :
 
 section Differential
 
-variable [NormedSpace ℝ E]
-
+variable [Module ℝ E] in
 private theorem coe_graphFlattening_eq_comp (γ : E → ℝ) (hγ : Continuous γ) :
     ⇑(graphFlattening γ hγ) = (WithLp.prodContinuousLinearEquiv 2 ℝ ℝ E).symm ∘
       (fun x : WithLp 2 (ℝ × E) => (x.fst - γ x.snd, x.snd)) := by
   funext x
   simp
+
+variable [NormedSpace ℝ E]
 
 /-- The linear shear subtracting `L z` from the normal coordinate. This is the derivative of
 `graphFlattening` when the graph height has derivative `L`. -/

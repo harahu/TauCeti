@@ -749,7 +749,7 @@ theorem mem_Z2_of_injective_comp_mem_Z2 (hφ : Function.Injective φ)
 
 end Mul
 
-variable [Monoid G] [DistribMulAction G A] [DistribMulAction G B] [ContinuousSMul G B]
+variable [Monoid G] [DistribSMul G A] [DistribMulAction G B] [ContinuousSMul G B]
 
 /-- **A cochain on `A` lying over a coboundary of `B` along an injective equivariant map is a
 continuous `1`-cocycle**: the case `e = d⁰ b` of

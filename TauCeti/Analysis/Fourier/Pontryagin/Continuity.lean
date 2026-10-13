@@ -29,7 +29,7 @@ open MeasureTheory
 
 namespace TauCeti
 
-variable {G : Type*} [AddCommGroup G] [TopologicalSpace G] [LocallyCompactSpace G]
+variable {G : Type*} [AddCommGroup G] [TopologicalSpace G] [WeaklyLocallyCompactSpace G]
   [MeasurableSpace (PontryaginDual (Multiplicative G))]
   [OpensMeasurableSpace (PontryaginDual (Multiplicative G))]
 

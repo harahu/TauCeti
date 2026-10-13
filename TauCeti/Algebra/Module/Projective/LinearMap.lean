@@ -82,8 +82,12 @@ section Reduction
 
 open Pointwise
 
-variable {R A P V : Type*} [CommRing R] [Ring A] [Algebra R A] [AddCommGroup P] [Module A P]
-  [AddCommGroup V] [Module R V] [Module A V] [IsScalarTower R A V] {x : R}
+variable {R A P V : Type*} [Ring A] [AddCommGroup P] [Module A P] [AddCommGroup V] [Module A V]
+  {x : R}
+
+section CommSemiring
+
+variable [CommSemiring R] [Algebra R A] [Module R V] [IsScalarTower R A V]
 
 variable (P) in
 /-- **Maps into `x • V` are multiples of `x`.** For `x : R` a non-zero-divisor on the `A`-module
@@ -112,14 +116,18 @@ theorem ker_compRight_mkQ_eq_smul_top (hx : IsSMulRegular V x) :
       Submodule.mkQ_apply, LinearMap.zero_apply, Submodule.Quotient.mk_eq_zero]
     exact (Submodule.mem_span_algebraMap_smul_top_iff x).mpr ⟨g p, rfl⟩
 
-variable [Module.Projective A P]
-
-variable (R P) in
+variable (R P) [Module.Projective A P] in
 /-- **Maps from a projective module into a quotient lift.** For `P` projective, every map
 `P → V ⧸ N` is the reduction of a map `P → V`. -/
 theorem compRight_mkQ_surjective (N : Submodule A V) :
     Function.Surjective (LinearMap.compRight (M := P) R N.mkQ) := fun g ↦
   Module.projective_lifting_property N.mkQ g N.mkQ_surjective
+
+end CommSemiring
+
+section CommRing
+
+variable [CommRing R] [Algebra R A] [Module R V] [IsScalarTower R A V] [Module.Projective A P]
 
 variable (P) in
 /-- **Maps from a projective module into a reduction.** Let `A` be an algebra over a commutative
@@ -139,6 +147,8 @@ theorem quotientSMulTopLinearMapEquiv_mk (hx : IsSMulRegular V x) (f : P →ₗ[
       (Ideal.span {algebraMap R A x} • (⊤ : Submodule A V)).mkQ ∘ₗ f := by
   rw [quotientSMulTopLinearMapEquiv, LinearEquiv.trans_apply, Submodule.quotEquivOfEq_mk,
     LinearMap.quotKerEquivOfSurjective_apply_mk, LinearMap.compRight_apply]
+
+end CommRing
 
 end Reduction
 

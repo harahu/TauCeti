@@ -105,14 +105,15 @@ private theorem image_closedBall_prodCellMap {n : ℕ} (c : ProdCell C D n) :
 
 /-- The product cells of a given dimension form a finite type when `C` and `D` have finitely
 many cells in every dimension. -/
-private theorem finite_prodCell [RelCWComplex.Finite C] [RelCWComplex.Finite D] (n : ℕ) :
+private theorem finite_prodCell [RelCWComplex.FiniteType C] [RelCWComplex.FiniteType D] (n : ℕ) :
     _root_.Finite (ProdCell C D n) :=
   have (p : ℕ) : _root_.Finite (cell C p) := FiniteType.finite_cell p
   have (q : ℕ) : _root_.Finite (cell D q) := FiniteType.finite_cell q
   inferInstance
 
 /-- There are no product cells in dimensions where every splitting has an empty factor. -/
-private theorem eventually_isEmpty_prodCell [RelCWComplex.Finite C] [RelCWComplex.Finite D] :
+private theorem eventually_isEmpty_prodCell [RelCWComplex.FiniteDimensional C]
+    [RelCWComplex.FiniteDimensional D] :
     ∀ᶠ n in Filter.atTop, IsEmpty (ProdCell C D n) := by
   obtain ⟨N, hN⟩ := Filter.eventually_atTop.1
     ((FiniteDimensional.eventually_isEmpty_cell (C := C) (D := ∅)).and

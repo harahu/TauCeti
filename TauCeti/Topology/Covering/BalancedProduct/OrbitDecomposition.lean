@@ -27,7 +27,7 @@ namespace TauCeti.BalancedProduct
 
 open Topology
 
-variable {G E A : Type*} [Group G] [MulAction G E] [MulAction G A]
+variable {G E A : Type*} [Group G] [MulAction G A]
 
 /-- Forget the orbit index of a label, retaining the point of `E`. -/
 private def orbitPairsEquiv :
@@ -38,17 +38,18 @@ private def orbitPairsEquiv :
     ((Equiv.prodCongr (MulAction.selfEquivSigmaOrbits' G A).symm (Equiv.refl E)).trans
       (Equiv.prodComm A E))
 
-omit [MulAction G E] in
 @[simp]
 private theorem orbitPairsEquiv_apply (o : MulAction.orbitRel.Quotient G A)
     (e : E) (a : o.orbit) : orbitPairsEquiv (G := G) ⟨o, e, a⟩ = (e, (a : A)) :=
   (rfl)
 
-private theorem orbitPairsEquiv_smul (g : G)
+private theorem orbitPairsEquiv_smul [SMul G E] (g : G)
     (p : Σ o : MulAction.orbitRel.Quotient G A, E × o.orbit) :
     orbitPairsEquiv (g • p) = (MulEquiv.refl G) g • orbitPairsEquiv p := by
   obtain ⟨o, e, a⟩ := p
   rfl
+
+variable [MulAction G E]
 
 /-- A balanced product is the disjoint union of the balanced products of its label orbits.
 The map on each summand is induced by inclusion of the orbit into `A`. -/

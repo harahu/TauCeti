@@ -26,7 +26,7 @@ namespace TauCeti
 open scoped SchwartzMap
 
 variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
-  [FiniteDimensional ℝ E] [NormedAddCommGroup F] [NormedSpace ℂ F]
+  [FiniteDimensional ℝ E] [AddCommGroup F] [Module ℂ F] [TopologicalSpace F] [T2Space F]
 
 /-- Real-valued compactly supported Schwartz functions determine a complex-linear tempered
 distribution. The real functions are embedded in complex Schwartz space by `Complex.ofRealCLM`.

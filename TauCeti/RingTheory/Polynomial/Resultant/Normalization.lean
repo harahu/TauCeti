@@ -50,7 +50,7 @@ private theorem discr_prod_scaled_roots {n : ℕ} (r : Fin n → R) (a : R) :
   rw [hcard, ← pow_mul, mul_comm 2, Nat.div_mul_cancel (Nat.even_mul_pred_self n).two_dvd]
   ring
 
-private theorem discr_scaleRoots_of_splits {K : Type*} [Field K] {f : K[X]}
+private theorem discr_scaleRoots_of_splits {K : Type*} [CommRing K] [IsDomain K] {f : K[X]}
     (hs : f.Splits) (a : K) :
     (f.scaleRoots a).discr = a ^ (f.natDegree * (f.natDegree - 1)) * f.discr := by
   classical

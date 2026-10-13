@@ -29,7 +29,7 @@ open Topology
 
 namespace Flow
 
-variable {E : Type*} [TopologicalSpace E] [AddCommGroup E] [IsTopologicalAddGroup E] [Module ℝ E]
+variable {E : Type*} [TopologicalSpace E] [AddCommGroup E] [ContinuousAdd E] [Module ℝ E]
 
 /-- A graph over the range of an idempotent continuous linear map remains embedded after
 translation and transport by any fixed time of a flow. -/

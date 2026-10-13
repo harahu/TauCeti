@@ -111,7 +111,7 @@ namespace IsIrreducibleBasis
 /-- Roots of a specialized member of the family are the roots of the specialized members of
 the basis dividing it, provided the specialization of the member does not vanish. -/
 theorem isRoot_map_iff (hB : F.IsIrreducibleBasis B) {f : D[X]} (hf : f ∈ F) {A : Type*}
-    [CommRing A] [IsDomain A] (φ : D →+* A) (hφ : f.map φ ≠ 0) (t : A) :
+    [CommSemiring A] [IsDomain A] (φ : D →+* A) (hφ : f.map φ ≠ 0) (t : A) :
     (f.map φ).IsRoot t ↔ ∃ b ∈ B, b ∣ f ∧ (b.map φ).IsRoot t := by
   refine ⟨fun ht ↦ ?_, fun ⟨b, _, hbf, hbt⟩ ↦ hbt.dvd (Polynomial.map_dvd φ hbf)⟩
   obtain ⟨c, e, rfl⟩ := hB.exists_eq_C_mul_prod f hf
@@ -123,19 +123,18 @@ theorem isRoot_map_iff (hB : F.IsIrreducibleBasis B) {f : D[X]} (hf : f ∈ F) {
   exact ⟨b, hb, ((dvd_pow_self b he).trans
     (dvd_prod_of_mem (fun b ↦ b ^ e b) hb)).mul_left _, hbt⟩
 
+section IsDomain
+
 variable [IsDomain D]
 
 /-- The members of an irreducible basis are primitive. -/
 theorem isPrimitive (hB : F.IsIrreducibleBasis B) (hb : b ∈ B) : b.IsPrimitive :=
   (hB.irreducible b hb).isPrimitive (hB.natDegree_pos b hb).ne'
 
-variable [UniqueFactorizationMonoid D]
-
 /-- Every product of powers of the members of an irreducible basis is primitive, so the
 constant in `exists_eq_C_mul_prod` is the content of the member up to a unit. -/
-theorem isPrimitive_prod (hB : F.IsIrreducibleBasis B) (e : D[X] → ℕ) :
+theorem isPrimitive_prod [NormalizedGCDMonoid D] (hB : F.IsIrreducibleBasis B) (e : D[X] → ℕ) :
     (∏ b ∈ B, b ^ e b).IsPrimitive := by
-  let := Classical.arbitrary (NormalizedGCDMonoid D)
   refine Finset.prod_induction _ IsPrimitive (fun _ _ ↦ IsPrimitive.mul) isPrimitive_one
     fun b hb ↦ ?_
   induction e b with
@@ -152,6 +151,10 @@ theorem exists_eq_C_content_mul_unit_mul_prod [NormalizedGCDMonoid D]
   rw [(hB.isPrimitive_prod e).content_eq_one, mul_one] at hc
   obtain ⟨u, hu⟩ := hc.symm
   exact ⟨u⁻¹, e, by rw [← hu, Units.mul_inv_cancel_right]⟩
+
+end IsDomain
+
+variable [UniqueFactorizationMonoid D]
 
 /-- The product of the members of an irreducible basis is squarefree. -/
 theorem squarefree_prod (hB : F.IsIrreducibleBasis B) : Squarefree (∏ b ∈ B, b) :=
@@ -184,15 +187,6 @@ theorem exists_associated (hB : F.IsIrreducibleBasis B) (hB' : F.IsIrreducibleBa
   (hB'.exists_associated_iff (hB.irreducible b hb) (hB.natDegree_pos b hb)).2
     (hB.exists_dvd b hb)
 
-/-- Each member of an irreducible basis is a unit multiple of a member of any other irreducible
-basis of the same family. -/
-theorem exists_eq_C_mul (hB : F.IsIrreducibleBasis B) (hB' : F.IsIrreducibleBasis B')
-    (hb : b ∈ B) : ∃ b' ∈ B', ∃ r : D, IsUnit r ∧ b = C r * b' := by
-  obtain ⟨b', hb', hbb'⟩ := hB.exists_associated hB' hb
-  obtain ⟨u, hu⟩ := hbb'.symm
-  obtain ⟨r, hr, hru⟩ := Polynomial.isUnit_iff.1 u.isUnit
-  exact ⟨b', hb', r, hr, by rw [← hu, ← hru, mul_comm]⟩
-
 /-- Irreducible bases of the same family have the same number of members. -/
 theorem card_eq (hB : F.IsIrreducibleBasis B) (hB' : F.IsIrreducibleBasis B') :
     B.card = B'.card := by
@@ -210,6 +204,17 @@ theorem card_eq (hB : F.IsIrreducibleBasis B) (hB' : F.IsIrreducibleBasis B') :
       obtain ⟨b, hb, h⟩ := hB'.exists_associated hB hb'
       exact ⟨b, hb, (Associates.mk_eq_mk_iff_associated.2 h).symm⟩
   rw [← card_image_of_injOn (hinj hB), ← card_image_of_injOn (hinj hB'), himage]
+
+variable [IsDomain D]
+
+/-- Each member of an irreducible basis is a unit multiple of a member of any other irreducible
+basis of the same family. -/
+theorem exists_eq_C_mul (hB : F.IsIrreducibleBasis B) (hB' : F.IsIrreducibleBasis B')
+    (hb : b ∈ B) : ∃ b' ∈ B', ∃ r : D, IsUnit r ∧ b = C r * b' := by
+  obtain ⟨b', hb', hbb'⟩ := hB.exists_associated hB' hb
+  obtain ⟨u, hu⟩ := hbb'.symm
+  obtain ⟨r, hr, hru⟩ := Polynomial.isUnit_iff.1 u.isUnit
+  exact ⟨b', hb', r, hr, by rw [← hu, ← hru, mul_comm]⟩
 
 /-- The discriminant of a member of an irreducible basis is associated to the discriminant of a
 member of any other irreducible basis of the same family. -/
@@ -305,7 +310,7 @@ end Finset
 
 namespace Polynomial
 
-variable {D : Type*} [CommRing D] [IsDomain D] [UniqueFactorizationMonoid D]
+variable {D : Type*} [CommRing D] [UniqueFactorizationMonoid D]
 
 /-- Over a unique factorization domain, a nonzero polynomial is a constant times the product of
 its irreducible factors of positive degree. -/

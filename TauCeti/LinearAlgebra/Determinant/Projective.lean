@@ -65,11 +65,13 @@ open Module
 
 namespace LinearMap
 
-variable {R M N : Type*} [CommRing R] [AddCommGroup M] [Module R M] [AddCommGroup N] [Module R N]
+variable {R M N : Type*}
 
 section Split
 
-variable {F : Type*} [AddCommGroup F] [Module R F]
+section Semiring
+
+variable [Semiring R] [AddCommGroup M] [Module R M] {F : Type*} [AddCommGroup F] [Module R F]
 
 -- The endomorphism of `F` which is `f` on `σ(M)` and the identity on `ker π`, as a monoid
 -- homomorphism in `f`.
@@ -94,6 +96,10 @@ private theorem splitEnd_eq_one_add (π : F →ₗ[R] M) (σ : M →ₗ[R] F) (h
   simp only [splitEnd_apply, add_apply, comp_apply, sub_apply, Module.End.one_apply, map_sub]
   abel
 
+end Semiring
+
+variable [CommRing R] [AddCommGroup M] [Module R M] {F : Type*} [AddCommGroup F] [Module R F]
+
 -- The determinant of `splitEnd π σ h f` does not depend on the splitting.
 private theorem det_splitEnd_eq {F' : Type*} [AddCommGroup F'] [Module R F'] [Module.Free R F]
     [Module.Finite R F] [Module.Free R F'] [Module.Finite R F'] (π : F →ₗ[R] M)
@@ -114,7 +120,8 @@ private theorem det_splitEnd_eq {F' : Type*} [AddCommGroup F'] [Module R F'] [Mo
 
 end Split
 
-variable [Module.Finite R M]
+variable [CommRing R] [AddCommGroup M] [Module R M] [AddCommGroup N] [Module R N]
+  [Module.Finite R M]
 
 section Projective
 

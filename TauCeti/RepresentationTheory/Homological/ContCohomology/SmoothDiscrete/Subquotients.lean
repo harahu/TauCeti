@@ -24,7 +24,10 @@ namespace TauCeti
 open TopRep
 
 variable {R : Type*} [Ring R] [TopologicalSpace R]
-  {G : Type*} [Group G] [TopologicalSpace G] {X : TopRep R G}
+
+section Monoid
+
+variable {G : Type*} [Monoid G] [TopologicalSpace G] {X : TopRep R G}
 
 /-- Smoothness is inherited by the representation on an invariant submodule. -/
 theorem IsSmoothDiscrete.subrepresentation (hX : IsSmoothDiscrete R X)
@@ -32,6 +35,12 @@ theorem IsSmoothDiscrete.subrepresentation (hX : IsSmoothDiscrete R X)
     IsSmoothDiscrete R (TopRep.subrepresentation X W hW) := by
   exact hX.of_injective (TopRep.subrepresentationι X W hW)
     (TopRep.subrepresentationι_injective X W hW)
+
+end Monoid
+
+section Group
+
+variable {G : Type*} [Group G] [TopologicalSpace G] {X : TopRep R G}
 
 /-- The quotient by an invariant submodule of a smooth discrete representation is smooth discrete.
 The quotient topology is discrete, and the descended action is continuous when multiplication in
@@ -61,5 +70,7 @@ theorem IsSmoothDiscrete.quotient [SeparatelyContinuousMul G]
     · simpa only [← TopRep.coe_stabilizer] using hX.stabilizer_isOpen x
   simpa only [← TopRep.coe_stabilizer (TopRep.quotient X W hW) (W.mkQ x),
     TopRep.quotient_ρ] using hstab
+
+end Group
 
 end TauCeti

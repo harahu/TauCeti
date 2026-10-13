@@ -17,8 +17,8 @@ public import TauCeti.Topology.Discrete
 # Quotients of topological groups by subgroups
 
 Generic facts about quotients by subgroups of topological groups. Most results use
-`[IsTopologicalGroup G]`; multiplication on a normal quotient needs only `[ContinuousMul G]`,
-and forward translation of a fixed coset needs only
+`[IsTopologicalGroup G]`; multiplication on a normal quotient and clopenness of the image of an
+open subgroup need only `[ContinuousMul G]`, and forward translation of a fixed coset needs only
 `[SeparatelyContinuousMul G]`. The inverse-translation results additionally require
 `[DiscreteTopology (G ⧸ U)]`. Neither compactness nor total disconnectedness is needed.
 
@@ -134,12 +134,14 @@ theorem continuous_mapOfLE (hVU : V ≤ U) : Continuous (mapOfLE hVU) :=
 
 end MapOfLE
 
-variable {G : Type*} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] {N : Subgroup G}
-  [N.Normal]
+variable {G : Type*} [Group G] [TopologicalSpace G] {N : Subgroup G} [N.Normal]
+
+section ContinuousMul
+
+variable [ContinuousMul G]
 
 /-- The image of an open subgroup of `G` in the quotient by a normal subgroup `N` is
-clopen: it is open because the quotient map is open, and closed because it is an open
-subgroup of the topological group `G ⧸ N`. -/
+clopen. -/
 theorem isClopen_image_mk (U : OpenSubgroup G) :
     IsClopen ((QuotientGroup.mk : G → G ⧸ N) '' (U : Set G)) := by
   have hopen : IsOpen ((QuotientGroup.mk : G → G ⧸ N) '' (U : Set G)) :=
@@ -154,6 +156,10 @@ theorem isClopen_image_mk (U : OpenSubgroup G) :
     exact (Subgroup.coe_map (QuotientGroup.mk' N) U.toSubgroup).symm
   rw [heq]
   exact ⟨Subgroup.isClosed_of_isOpen _ hopen, hopen⟩
+
+end ContinuousMul
+
+variable [IsTopologicalGroup G]
 
 /-- The correspondence theorem for open normal subgroups: the open normal subgroups of
 `G ⧸ N` correspond, as lattices, to the open normal subgroups of `G` containing `N`. -/

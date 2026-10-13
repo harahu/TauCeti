@@ -30,8 +30,8 @@ namespace TauCeti
 /-- A map piecewise linear on all of `E` has a locally flat graph `x ↦ (x, f x)` with
 complementary model `F`. -/
 theorem IsPLOn.isLocallyFlat_graph
-    {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [NormedAddCommGroup F] [NormedSpace ℝ F] {f : E → F}
+    {E F : Type*} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E]
+    [AddCommGroup F] [Module ℝ F] [TopologicalSpace F] [IsTopologicalAddGroup F] {f : E → F}
     (hf : IsPLOn f (Set.univ : Set E)) :
     IsLocallyFlat E F (fun x : E => (x, f x)) := by
   apply TauCeti.isLocallyFlat_graph f
@@ -39,8 +39,9 @@ theorem IsPLOn.isLocallyFlat_graph
 
 /-- The graph of a continuous affine map is locally flat, with complementary model `F`. -/
 theorem _root_.ContinuousAffineMap.isLocallyFlat_affineGraph
-    {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [NormedAddCommGroup F] [NormedSpace ℝ F] (A : E →ᴬ[ℝ] F) :
+    {E F : Type*} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E]
+    [AddCommGroup F] [Module ℝ F] [TopologicalSpace F] [IsTopologicalAddGroup F]
+    (A : E →ᴬ[ℝ] F) :
     IsLocallyFlat E F (fun x : E => (x, A x)) :=
   (isPLOn_continuousAffineMap A (Set.univ : Set E)).isLocallyFlat_graph
 
@@ -48,8 +49,9 @@ theorem _root_.ContinuousAffineMap.isLocallyFlat_affineGraph
 The section equation `(Φ (f x)).1 = x` identifies `f` with that graph, with complementary model
 `F`. -/
 theorem IsPLOn.isLocallyFlat_of_homeomorph_graph
-    {E M F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [NormedAddCommGroup M] [NormedSpace ℝ M] [NormedAddCommGroup F]
+    {E M F : Type*} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E]
+    [AddCommGroup M] [Module ℝ M] [TopologicalSpace M]
+    [AddGroup F] [TopologicalSpace F] [IsTopologicalAddGroup F]
     {f : E → M} (hf : IsPLOn f (Set.univ : Set E)) (Φ : M ≃ₜ E × F)
     (hΦ : ∀ x, (Φ (f x)).1 = x) :
     IsLocallyFlat E F f :=

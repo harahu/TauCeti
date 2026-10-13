@@ -47,11 +47,11 @@ open scoped MatrixGroups
 universe u v w
 
 variable {k : Type u} {G : Type v} {V : Type w} {ι : Type*}
-  [CommRing k] [Monoid G] [AddCommGroup V] [Module k V] [Fintype ι] [DecidableEq ι]
+  [CommRing k] [AddCommGroup V] [Module k V] [Fintype ι] [DecidableEq ι]
 
 section ToPGL
 
-variable {ρ : G → V ≃ₗ[k] V} {α : G → G → kˣ}
+variable [Monoid G] {ρ : G → V ≃ₗ[k] V} {α : G → G → kˣ}
 
 /-- A projective representation on a finite free module gives a homomorphism to Mathlib's matrix
 projective general linear group after a basis is chosen.  The quotient kills exactly the scalar
@@ -88,6 +88,8 @@ theorem IsProjectiveRep.toPGL_rescale (h : IsProjectiveRep ρ α) (b : Module.Ba
   simp only [toPGL_apply, ← LinearEquiv.mul_eq_trans, map_mul, Module.Basis.toGL_smulOfUnit,
     Matrix.ProjGenLinGroup.mk_scalar, one_mul]
 
+end ToPGL
+
 /-!
 ## Lifting a homomorphism from `PGL`
 
@@ -97,6 +99,8 @@ the representatives supplies the factor set.
 -/
 
 section FromPGL
+
+variable [MulOne G]
 
 private noncomputable def pglLift (q : G →* PGL(ι, k)) (g : G) : GL ι k :=
   by
@@ -162,8 +166,6 @@ private theorem pglLinearLift_mul_apply (q : G →* PGL(ι, k)) (b : Module.Basi
   exact DFunLike.congr_fun hmul x
 
 end FromPGL
-
-end ToPGL
 
 end TauCeti
 

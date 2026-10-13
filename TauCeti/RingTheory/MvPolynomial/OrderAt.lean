@@ -410,6 +410,25 @@ theorem _root_.Polynomial.orderAt_comp_X_add_C {n : ℕ} (p : Polynomial (MvPoly
   ext i
   cases i using Fin.cases <;> simp
 
+/-- Over a domain, the order of a product is the sum of the orders. -/
+theorem orderAt_mul [NoZeroDivisors R] (p q : MvPolynomial σ R) (a : σ → R) :
+    (p * q).orderAt a = p.orderAt a + q.orderAt a := by
+  simp [orderAt_def, MvPowerSeries.order_mul]
+
+/-- Over a domain, the order of `p ^ n` at `a` is `n` times the order of `p` at `a`. -/
+theorem orderAt_pow [NoZeroDivisors R] [Nontrivial R] (p : MvPolynomial σ R) (a : σ → R)
+    (n : ℕ) : (p ^ n).orderAt a = n • p.orderAt a := by
+  induction n with
+  | zero => simp
+  | succ n ih => rw [pow_succ, orderAt_mul, ih, succ_nsmul]
+
+/-- Over a domain, the order of a finite product is the sum of the orders of its factors. -/
+theorem orderAt_prod [NoZeroDivisors R] [Nontrivial R] {ι : Type*}
+    (p : ι → MvPolynomial σ R) (s : Finset ι) (a : σ → R) :
+    (∏ i ∈ s, p i).orderAt a = ∑ i ∈ s, (p i).orderAt a := by
+  simpa only [orderAt_def, ← coeToMvPowerSeries.ringHom_apply, map_prod] using
+    MvPowerSeries.order_prod (fun i ↦ (taylor a (p i) : MvPowerSeries σ R)) s
+
 end CommSemiring
 
 section CommRing
@@ -436,25 +455,6 @@ theorem orderAt_neg (p : MvPolynomial σ R) (a : σ → R) : (-p).orderAt a = p.
 theorem orderAt_X_sub_C [Nontrivial R] (a : σ → R) (i : σ) : (X i - C (a i)).orderAt a = 1 := by
   rw [orderAt_def, map_sub, taylor_X, taylor_C, add_sub_cancel_right, coe_X, MvPowerSeries.X_def,
     MvPowerSeries.order_monomial_of_ne_zero one_ne_zero, degree_single, Nat.cast_one]
-
-/-- Over a domain, the order of a product is the sum of the orders. -/
-theorem orderAt_mul [NoZeroDivisors R] (p q : MvPolynomial σ R) (a : σ → R) :
-    (p * q).orderAt a = p.orderAt a + q.orderAt a := by
-  simp [orderAt_def, MvPowerSeries.order_mul]
-
-/-- Over a domain, the order of `p ^ n` at `a` is `n` times the order of `p` at `a`. -/
-theorem orderAt_pow [NoZeroDivisors R] [Nontrivial R] (p : MvPolynomial σ R) (a : σ → R)
-    (n : ℕ) : (p ^ n).orderAt a = n • p.orderAt a := by
-  induction n with
-  | zero => simp
-  | succ n ih => rw [pow_succ, orderAt_mul, ih, succ_nsmul]
-
-/-- Over a domain, the order of a finite product is the sum of the orders of its factors. -/
-theorem orderAt_prod [NoZeroDivisors R] [Nontrivial R] {ι : Type*}
-    (p : ι → MvPolynomial σ R) (s : Finset ι) (a : σ → R) :
-    (∏ i ∈ s, p i).orderAt a = ∑ i ∈ s, (p i).orderAt a := by
-  simpa only [orderAt_def, ← coeToMvPowerSeries.ringHom_apply, map_prod] using
-    MvPowerSeries.order_prod (fun i ↦ (taylor a (p i) : MvPowerSeries σ R)) s
 
 /-- Substitution does not decrease the order: if `g` maps the point `b` to `a`, that is,
 `eval b (g i) = a i` for every `i`, then the order of `aeval g p` at `b` is at least the order
@@ -499,7 +499,7 @@ end CommRing
 
 section Derivative
 
-variable [CommRing R] [IsAddTorsionFree R] {p : MvPolynomial σ R} {a : σ → R}
+variable [CommSemiring R] [IsAddTorsionFree R] {p : MvPolynomial σ R} {a : σ → R}
 
 /-- Over a ring without additive torsion, `p` has order at least `n + 1` at `a`, for `n : ℕ∞`,
 if and only if `p` vanishes at `a` and every partial derivative has order at least `n` there. -/
@@ -522,6 +522,22 @@ theorem orderAt_eq_one_of_eval_pderiv_ne_zero (hp : eval a p = 0) {i : σ}
     exact hi hpos
   · simpa only [Order.one_le_iff_pos, orderAt_pos_iff] using hp
 
+/-- Over a ring without additive torsion, `p` has order at least `n` at `a` if and only if, for
+every list `l` of fewer than `n` variables, the iterated partial derivative of `p` along `l`
+vanishes at `a`. -/
+theorem le_orderAt_iff_eval_foldl_pderiv {n : ℕ} :
+    (n : ℕ∞) ≤ p.orderAt a ↔
+      ∀ l : List σ, l.length < n → eval a (l.foldl (fun q i ↦ pderiv i q) p) = 0 := by
+  induction n generalizing p with
+  | zero => simp
+  | succ n ih =>
+    simp only [Nat.cast_add, Nat.cast_one, succ_le_orderAt_iff, ih]
+    refine ⟨fun ⟨h0, h⟩ l hl ↦ ?_, fun h ↦ ⟨h [] (by simp), fun i l hl ↦
+      h (i :: l) (by simpa using hl)⟩⟩
+    cases l with
+    | nil => exact h0
+    | cons i l => exact h i l (by simpa using hl)
+
 open Classical in
 /-- If the fiber through a point is separable, its ambient order is one at a zero
 and zero otherwise. No degree preservation in nearby fibers is needed. -/
@@ -540,21 +556,11 @@ theorem orderAt_eq_ite_of_separable_map_finSuccEquiv [Nontrivial R] {n : ℕ}
     simpa using hsep.eval₂_derivative_ne_zero (RingHom.id R) hroot
   · exact orderAt_eq_zero_iff.mpr hp
 
-/-- Over a ring without additive torsion, `p` has order at least `n` at `a` if and only if, for
-every list `l` of fewer than `n` variables, the iterated partial derivative of `p` along `l`
-vanishes at `a`. -/
-theorem le_orderAt_iff_eval_foldl_pderiv {n : ℕ} :
-    (n : ℕ∞) ≤ p.orderAt a ↔
-      ∀ l : List σ, l.length < n → eval a (l.foldl (fun q i ↦ pderiv i q) p) = 0 := by
-  induction n generalizing p with
-  | zero => simp
-  | succ n ih =>
-    simp only [Nat.cast_add, Nat.cast_one, succ_le_orderAt_iff, ih]
-    refine ⟨fun ⟨h0, h⟩ l hl ↦ ?_, fun h ↦ ⟨h [] (by simp), fun i l hl ↦
-      h (i :: l) (by simpa using hl)⟩⟩
-    cases l with
-    | nil => exact h0
-    | cons i l => exact h i l (by simpa using hl)
+end Derivative
+
+section DerivativeRing
+
+variable [CommRing R] [IsAddTorsionFree R] {p : MvPolynomial σ R} {a : σ → R}
 
 /-- Over a ring without additive torsion, the order of `p` at a point is determined by which
 iterated partial derivatives of `p`, of order at most the total degree of `p`, vanish there: if
@@ -579,7 +585,7 @@ theorem orderAt_eq_of_forall_eval_foldl_pderiv_eq_zero_iff {b : σ → R}
   rw [← hk, ← hk'] at key ⊢
   exact le_antisymm ((key hka).1 le_rfl) ((key hkb).2 le_rfl)
 
-end Derivative
+end DerivativeRing
 
 end OrderAt
 

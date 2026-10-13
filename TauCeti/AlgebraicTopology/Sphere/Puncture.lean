@@ -54,8 +54,8 @@ namespace TauCeti
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
-private theorem smul_sub_smul_ne_zero_of_ne {E : Type*} [SeminormedAddCommGroup E]
-    [NormedSpace ℝ E] {x p : E} (hx : ‖x‖ = 1) (hp : ‖p‖ = 1)
+private theorem smul_sub_smul_ne_zero_of_ne {E : Type*} [SeminormedAddGroup E]
+    [MulAction ℝ E] [NormSMulClass ℝ E] {x p : E} (hx : ‖x‖ = 1) (hp : ‖p‖ = 1)
     (hxp : x ≠ p) (u : ℝ) : (1 - u) • x - u • p ≠ 0 := by
   intro h
   have h' : (1 - u) • x = u • p := by rwa [sub_eq_zero] at h

@@ -83,9 +83,10 @@ theorem _root_.Representation.finrank_moduleCat_asModule
 
 namespace Representation
 
-variable {k G V W : Type*} [CommSemiring k] [Monoid G]
-variable [AddCommMonoid V] [Module k V] [AddCommMonoid W] [Module k W]
-variable {ρ : _root_.Representation k G V} {σ : _root_.Representation k G W}
+section Semiring
+
+variable {k G V : Type*} [Semiring k] [Monoid G] [AddCommMonoid V] [Module k V]
+variable {ρ : _root_.Representation k G V}
 
 /-- **Evaluation of the identification of `ρ.asModule` with `V`.** `Representation.asModuleEquiv`
 is the identity map of the underlying type, so it may be erased from an application; naming that
@@ -100,6 +101,12 @@ theorem _root_.Representation.asModuleEquiv_apply (x : ρ.asModule) :
 theorem _root_.Representation.asModuleEquiv_symm_apply (x : V) :
     ρ.asModuleEquiv.symm x = x :=
   (rfl)
+
+end Semiring
+
+variable {k G V W : Type*} [CommSemiring k] [Monoid G]
+variable [AddCommMonoid V] [Module k V] [AddCommMonoid W] [Module k W]
+variable {ρ : _root_.Representation k G V} {σ : _root_.Representation k G W}
 
 /-- **Evaluation of the `k[G]`-linear map attached to an intertwining map.** The map
 `Representation.IntertwiningMap.equivLinearMapAsModule ρ σ f` is `f` itself on the underlying

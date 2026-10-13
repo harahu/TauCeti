@@ -53,7 +53,11 @@ open Filter Metric Set Topology
 
 namespace Flow
 
-variable {α : Type*} [MetricSpace α] {φ : _root_.Flow ℝ α} {x : α} {r : ℝ}
+variable {α : Type*}
+
+section PseudoMetricSpace
+
+variable [PseudoMetricSpace α] {φ : _root_.Flow ℝ α} {x : α} {r : ℝ}
 
 /-- Points close enough to a rest point stay within any prescribed distance of it for any
 prescribed compact stretch of time. -/
@@ -65,6 +69,10 @@ private theorem eventually_forall_Icc_dist_lt (hx : ∀ t, φ t x = x) (hr : 0 <
   have hlim := hcont.tendsto
   simp only [hx] at hlim
   exact hlim (ball_mem_nhds x hr)
+
+end PseudoMetricSpace
+
+variable [MetricSpace α] {φ : _root_.Flow ℝ α} {x : α} {r : ℝ}
 
 /-- One step of the construction: for every `k`, some `u n` with `n ≥ k` enters the ball of radius
 `r` about `x` at a time `s ≥ 0` and, at least `k` units of time later, reaches its boundary for the
