@@ -6,6 +6,7 @@ Authors: The Tau Ceti contributors
 module
 
 public import Mathlib.Analysis.Calculus.DifferentialForm.Basic
+public import TauCeti.Analysis.Normed.Module.Alternating.Basic
 
 import TauCeti.Analysis.Calculus.FDeriv.Comp
 
@@ -28,7 +29,7 @@ the domain (`TauCeti.contDiffOn_pullback_continuousLinearMap`).
 in the coefficient space, and `TauCeti.extDerivWithin_smul_field` extends `extDerivWithin_smul` to
 scalars, such as `ℂ`, that act on the coefficients but not on the domain, and
 `TauCeti.extDerivWithin_function_smul` is the Leibniz rule for multiplication by a scalar
-function, again with values in any normed field acting on the coefficients.
+function, with values in any normed algebra acting on the coefficients, such as the quaternions.
 `DifferentiableAt.extDerivWithin` is the exterior-derivative version of
 `DifferentiableAt.fderivWithin`, and `TauCeti.tsupport_extDeriv_subset` and
 `HasCompactSupport.extDeriv` are the versions of `tsupport_fderiv_subset` and
@@ -194,10 +195,12 @@ theorem extDeriv_smul_field {R : Type*} [DivisionSemiring R] [Module R F]
 /-- The **Leibniz rule** for the exterior derivative within a set of a form multiplied by a
 scalar function: `d (c • ω) = c • dω + dc ∧ ω`. The term `dc ∧ ω` is the alternatization of
 `v ↦ dc(v) • ω`, which evaluates as `∑ i, (-1) ^ i • dc(vᵢ) • ω(v₀, …, v̂ᵢ, …, vₙ)`. The function
-`c` may take values in any normed field `𝕜'` acting on the coefficients compatibly with `𝕜`, such
-as a complex-valued function multiplying a complex-valued form on a real space. -/
-theorem extDerivWithin_function_smul {𝕜' : Type*} [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜']
-    [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F] {c : E → 𝕜'} (hs : UniqueDiffWithinAt 𝕜 s x)
+`c` may take values in any normed `𝕜`-algebra `𝕜'` acting boundedly on the coefficients
+compatibly with `𝕜`, such as a complex-valued function multiplying a complex-valued form, or a
+quaternion-valued function multiplying a quaternion-valued form, on a real space. -/
+theorem extDerivWithin_function_smul {𝕜' : Type*} [NormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
+    [Module 𝕜' F] [IsBoundedSMul 𝕜' F] [IsScalarTower 𝕜 𝕜' F] {c : E → 𝕜'}
+    (hs : UniqueDiffWithinAt 𝕜 s x)
     (hc : DifferentiableWithinAt 𝕜 c s x) (hω : DifferentiableWithinAt 𝕜 ω s x) :
     extDerivWithin (c • ω) s x = c x • extDerivWithin ω s x +
       ContinuousAlternatingMap.alternatizeUncurryFin ((fderivWithin 𝕜 c s x).smulRight (ω x)) := by
@@ -206,10 +209,11 @@ theorem extDerivWithin_function_smul {𝕜' : Type*} [NormedField 𝕜'] [Normed
     ContinuousAlternatingMap.alternatizeUncurryFin_smul, extDerivWithin]
 
 /-- The **Leibniz rule** for the exterior derivative of a form multiplied by a scalar function
-with values in a normed field `𝕜'` acting on the coefficients: `d (c • ω) = c • dω + dc ∧ ω`,
-where `dc ∧ ω` is the alternatization of `v ↦ dc(v) • ω`. -/
-theorem extDeriv_function_smul {𝕜' : Type*} [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜']
-    [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F] {c : E → 𝕜'} (hc : DifferentiableAt 𝕜 c x)
+with values in a normed `𝕜`-algebra `𝕜'` acting boundedly on the coefficients:
+`d (c • ω) = c • dω + dc ∧ ω`, where `dc ∧ ω` is the alternatization of `v ↦ dc(v) • ω`. -/
+theorem extDeriv_function_smul {𝕜' : Type*} [NormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
+    [Module 𝕜' F] [IsBoundedSMul 𝕜' F] [IsScalarTower 𝕜 𝕜' F] {c : E → 𝕜'}
+    (hc : DifferentiableAt 𝕜 c x)
     (hω : DifferentiableAt 𝕜 ω x) :
     extDeriv (c • ω) x = c x • extDeriv ω x +
       ContinuousAlternatingMap.alternatizeUncurryFin ((fderiv 𝕜 c x).smulRight (ω x)) := by

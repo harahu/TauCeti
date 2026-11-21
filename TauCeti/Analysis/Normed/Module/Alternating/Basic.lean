@@ -45,3 +45,26 @@ theorem fderivCompContinuousLinearMap_comp (f : F [⋀^ι]→L[𝕜] G) (g : E �
   · simp [Function.update_of_ne hj]
 
 end ContinuousAlternatingMap
+
+/-!
+### Bounded scalar multiplication
+
+Mathlib gives `ContinuousMultilinearMap` an `IsBoundedSMul` instance for every seminormed ring of
+scalars acting boundedly on the codomain, but gives `ContinuousAlternatingMap` only a
+`NormedSpace` instance over normed fields. `ContinuousAlternatingMap.instIsBoundedSMul` supplies the
+ring version, so that, for instance, quaternion-valued functions multiplying quaternion-valued
+differential forms on a real space satisfy the Leibniz rule `fderiv_smul`.
+-/
+
+namespace ContinuousAlternatingMap
+
+variable {𝕜 𝕜' E F ι : Type*} [NontriviallyNormedField 𝕜] [SeminormedRing 𝕜']
+  [SeminormedAddCommGroup E] [NormedSpace 𝕜 E] [SeminormedAddCommGroup F] [NormedSpace 𝕜 F]
+  [Module 𝕜' F] [IsBoundedSMul 𝕜' F] [SMulCommClass 𝕜 𝕜' F] [Fintype ι]
+
+/-- Continuous alternating maps into a space with bounded scalar multiplication by a seminormed
+ring have bounded scalar multiplication: `‖c • f‖ ≤ ‖c‖ * ‖f‖` for the operator norm. -/
+instance instIsBoundedSMul : IsBoundedSMul 𝕜' (E [⋀^ι]→L[𝕜] F) :=
+  .of_norm_smul_le fun c f ↦ f.toContinuousMultilinearMap.opNorm_smul_le c
+
+end ContinuousAlternatingMap
